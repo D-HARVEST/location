@@ -1,0 +1,5 @@
+        <div class="form-group col-md-4 col-12 my-2">
+            <strong class="mb-2 text-dark"> {{ Form::label('{{column}}') }} <span class="text-danger">*</span> </strong>
+            {{ Form::text('{{column}}', ${{modelNameLowerCase}}->{{column}}, ['class' => 'form-control' . ($errors->has('{{column}}') ? ' is-invalid' : ''), 'required' => 'required']) }}
+            {!! $errors->first('{{column}}', '<div class="invalid-feedback">:message</div>') !!}
+        </div>

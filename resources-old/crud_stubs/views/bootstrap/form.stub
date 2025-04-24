@@ -1,0 +1,8 @@
+<div class="">
+    <div class="row">
+        {{form}}
+    </div>
+    <div class="box-footer mt-3">
+        <button type="submit" class="btn btn-success">Enregistrer</button>
+    </div>
+</div>

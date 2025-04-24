@@ -1,0 +1,6 @@
+
+                        <div class="col-lg-4">
+                            <strong class="text-dark ">{{title}}:</strong>
+                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ ${{modelNameLowerCase}}->{{column}} }}"
+                                readonly>
+                        </div>

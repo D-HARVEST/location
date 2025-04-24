@@ -1,0 +1,5 @@
+        <div class="form-group mb-2 mb20">
+            <strong> <label for="{{column_snake}}" class="form-label">{{ __('{{title}}') }}</label> {{-- <strong class="text-danger"> * </strong> --}}  </strong>
+            <input type="text" name="{{column}}" class="form-control @error('{{column}}') is-invalid @enderror rounded-05" value="{{ old('{{column}}', ${{modelNameLowerCase}}?->{{column}}) }}" id="{{column_snake}}" >
+            {!! $errors->first('{{column}}', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div>

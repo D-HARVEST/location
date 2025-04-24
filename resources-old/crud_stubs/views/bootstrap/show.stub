@@ -1,0 +1,30 @@
+@php
+    $pagetitle = 'Détails {{modelTitle}}';
+    $breadcrumbs = ['Liste des {{modelTitle}}' => route('{{modelRoute}}.index'), 'Détails {{modelTitle}}' => ''];
+@endphp
+
+@extends('{{layout}}')
+
+@section('template_title')
+    Détails  {{modelTitle}}
+@endsection
+
+@section('content')
+    <section class="">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+
+
+                    <div class="card-body">
+                     <div class="text-end">
+                            <a href="{{ route('{{modelRoute}}.index') }}" class="btn btn-sm btn-primary"> Retour</a>
+                        </div>
+
+                        {{viewRows}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+@endsection
