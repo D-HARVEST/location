@@ -160,7 +160,9 @@ class LouerchambreController extends Controller
                 'quittanceUrl' => null,
             ]);
 
-            return view("layouts.succes", ["message" => "Paiement effectué avec succès."]);
+            return Redirect::route('louerchambres.show',  ['chambre' => $louerchambre->chambre_id])
+            ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
+
         }
 
         return view("layouts.echec", ["message" => "Le paiement a échoué ou n’a pas été retrouvé."]);
