@@ -57,7 +57,17 @@
                                             <td>{{ ++$i }}</td>
 
 										<td >{{ $chambre->libelle }}</td>
-										<td >{{ $chambre->statut }}</td>
+										<td >                       @php
+                                            $badgeClass = $chambre->statut === 'Disponible' ? 'bg-success' : 'bg-danger';
+                                        @endphp
+
+                                        <div class="col-lg-4">
+                                            
+                                            <span class="badge {{ $badgeClass }} my-1">
+                                                {{ $chambre->statut }}
+                                            </span>
+                                        </div>
+                                        </td>
 										<td >{{ $chambre->jourPaiementLoyer }}</td>
 										<td >{{ $chambre->loyer }}</td>
 										<td>{{ $chambre->category?->libelle ?? 'N/A' }}</td>

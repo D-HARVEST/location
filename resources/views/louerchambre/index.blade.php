@@ -30,12 +30,13 @@
                                 <p>{{ $message }}</p>
                             </div>
                         @endif
-
+                       @role('gerant')
                         <div class="text-end mb-3">
                             <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createChambreModal">
                                 + Lier locataire à une chambre
                             </button>
                         </div>
+                       @endrole
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">Louerchambre(s)</h5>
                             <span>Liste des Louerchambre(s)</span>
@@ -120,6 +121,7 @@
                                                                 <i class="fs-4 ti ti-edit"></i> Modifier
                                                             </a>
                                                         </li>
+                                                        @role('gerant')
                                                         <li>
                                                             <form action="{{ route('louerchambres.destroy',$louerchambre->id) }}" method="POST">
                                                                 @csrf
@@ -130,6 +132,7 @@
                                                             </form>
 
                                                         </li>
+                                                        @endrole
                                                         @if($louerchambre->statut == 'EN ATTENTE')
                                                             <li>
                                                                 <a href="#" class="dropdown-item d-flex align-items-center text-success gap-3"
