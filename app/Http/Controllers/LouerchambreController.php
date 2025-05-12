@@ -123,11 +123,14 @@ class LouerchambreController extends Controller
     {
 
 
-
         $louerchambre = Louerchambre::where('user_id', auth()->id())
-            ->where('statut', 'CONFIRMER')
             ->latest()
             ->first();
+
+        // Vérifie si un louerchambre existe
+        if (!$louerchambre) {
+            return view("layouts.echec", ["message" => "Aucune chambre louée trouvée pour cet utilisateur."]);
+        }
 
 
 
@@ -160,9 +163,8 @@ class LouerchambreController extends Controller
                 'quittanceUrl' => null,
             ]);
 
-            return Redirect::route('louerchambres.show',  ['chambre' => $louerchambre->chambre_id])
-            ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
-
+            return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+                ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
         }
 
         return view("layouts.echec", ["message" => "Le paiement a échoué ou n’a pas été retrouvé."]);

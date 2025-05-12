@@ -67,7 +67,13 @@ class RegisterController extends Controller
 
         $data = $request->all();
 
-        $user = User::where('npi', $data['npi'])->orWhere('email', $data['email'])->first();
+        $user = User::where('email', $data['email'])->first();
+
+        if ($user && $user->npi !== null && $user->npi !== $data['npi']) {
+            return back()->withErrors([
+                'npi' => 'NPI incorrect. Veuillez contacter votre propriétaire.',
+            ])->withInput();
+        }
 
 
         if ($user && $user->hasRole('locataire') && $data['role'] !== 'locataire') {

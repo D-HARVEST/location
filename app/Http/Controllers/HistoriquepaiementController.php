@@ -68,6 +68,8 @@ class HistoriquepaiementController extends Controller
         $all=$request->validated();
         $historiquepaiement->update($all);
 
+        
+
         return Redirect::route('louerchambres.show', ['louerchambre' => $historiquepaiement->louerchambre_id])
             ->with('success', 'Historiquepaiement a été mis(e) à jour avec succes !');
     }

@@ -142,9 +142,14 @@
                                     <td >{{ $historiquepaiement->montant }}</td>
                                     <td >{{ $historiquepaiement->modePaiement }}</td>
 
-                                        <td>
-                                            {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') ?? 'Date invalide' }}
-                                        </td>
+                                    <td>
+                                        @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
+                                            {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+
 
 
 
