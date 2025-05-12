@@ -180,7 +180,7 @@
                         </div>
 
                         <div class="col-lg-4">
-                            <strong class="text-dark ">Jour de paiement:</strong>
+                            <strong class="text-dark ">Jour de paiement de loyer:</strong>
                             <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->jourPaiementLoyer }}"
                                 readonly>
                         </div>
