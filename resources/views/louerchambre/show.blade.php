@@ -38,7 +38,7 @@
 
                         <div class="col-lg-4">
                             <strong class="text-dark">Prix du loyer:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->loyer }}" readonly>
+                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->chambre->loyer }}" readonly>
                         </div>
 
                         <div class="col-lg-4">
