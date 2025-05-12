@@ -19,7 +19,7 @@ return new class extends Migration
             $table->double('montant');
             $table->string('modePaiement')->nullable();
             $table->string('idTransaction');
-            $table->string('moisPaiement');
+            $table->string('moisPaiement')->nullable();
             $table->foreignId('user_id')->constrained("users")->cascadeOnUpdate();
             $table->timestamps();
         });

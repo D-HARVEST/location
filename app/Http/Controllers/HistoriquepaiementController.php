@@ -4,12 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\HistoriquepaiementRequest;
 use App\Models\Historiquepaiement;
-use App\Models\Louerchambre;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Louerchambre;
 
 class HistoriquepaiementController extends Controller
 {
@@ -68,7 +68,7 @@ class HistoriquepaiementController extends Controller
         $all=$request->validated();
         $historiquepaiement->update($all);
 
-        return Redirect::route('historiquepaiements.index')
+        return Redirect::route('louerchambres.show', ['louerchambre' => $historiquepaiement->louerchambre_id])
             ->with('success', 'Historiquepaiement a été mis(e) à jour avec succes !');
     }
 
@@ -84,7 +84,7 @@ class HistoriquepaiementController extends Controller
         }
 
 
-        return Redirect::route('historiquepaiements.index')
+        return Redirect::route('louerchambres.show', ['louerchambre' => $data->louerchambre_id])
             ->with('success', 'Historiquepaiement a été supprimé(e) avec succes !');
     }
 

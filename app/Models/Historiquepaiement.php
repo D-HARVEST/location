@@ -34,7 +34,7 @@ class Historiquepaiement extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['louerchambres_id', 'datePaiement', 'quittanceUrl', 'montant', 'modePaiement', 'idTransaction', 'moisPaiement', 'user_id'];
+    protected $fillable = ['louerchambre_id', 'datePaiement', 'quittanceUrl', 'montant', 'modePaiement', 'idTransaction', 'moisPaiement', 'user_id'];
 
 
     /**
@@ -42,7 +42,7 @@ class Historiquepaiement extends Model
      */
     public function louerchambre()
     {
-        return $this->belongsTo(Louerchambre::class, 'louerchambres_id');
+        return $this->belongsTo(Louerchambre::class, 'louerchambre_id');
     }
 
 
