@@ -119,11 +119,20 @@ class LouerchambreController extends Controller
     }
 
 
-    public function enregistrerPaiement( string $transaction_id)
+    public function enregistrerPaiement(string $transaction_id)
     {
 
 
-        $response = Http::withToken(env("FEDAPAY_PRIVATE_KEY"))
+
+        $louerchambre = Louerchambre::where('user_id', auth()->id())
+            ->where('statut', 'CONFIRMER')
+            ->latest()
+            ->first();
+
+
+
+
+        $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
             ->accept('application/json')
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
                 'include' => 'customer.phone_number,currency,payment_method',
@@ -131,23 +140,22 @@ class LouerchambreController extends Controller
             ]);
 
 
-            $transaction = $response->json('transaction');
+        $transaction = $response->json();
 
-         $louerchambre = Louerchambre::where('user_id', auth()->id())
-            ->where('statut', 'CONFIRMER')
-            ->latest()
-            ->first();
+        if (
+            isset($transaction['v1/transaction']['status'])
+            && $transaction['v1/transaction']['status'] == 'approved'
+            && isset($transaction['v1/transaction']['amount'])
+            && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
+        ) {
 
 
-
-        if (isset($transaction['v1/transaction']['status']) && $transaction['v1/transaction']['status'] == 'approved' && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->montant)) {
             Historiquepaiement::create([
                 'louerchambre_id' => $louerchambre->id,
                 'datePaiement' => now(),
-                'montant' => $transaction['amount'],
-                'modePaiement' => $transaction['payment_method'] ?? 'Inconnu',
+                'montant' => $transaction['v1/transaction']['amount'],
+                'modePaiement' =>  'MTN',
                 'idTransaction' => $transaction_id,
-                'moisPaiement' => now()->format('Y-m'),
                 'user_id' => auth()->id(),
                 'quittanceUrl' => null,
             ]);
