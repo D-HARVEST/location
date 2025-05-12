@@ -3,5 +3,4 @@
 return [
     'gerer users',
     'gerer roles',
-
 ];

@@ -9,6 +9,8 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Louerchambre;
+
 
 
 
@@ -55,5 +57,21 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password', 'image', 'last_login_at'];
+    protected $fillable = ['name', 'email', 'password', 'npi', 'google_id', 'image', 'last_login_at'];
+
+    // User.php
+    public function louerchambres()
+    {
+        return $this->hasMany(Louerchambre::class);
+    }
+
+    public function chambre()
+    {
+        return $this->belongsTo(Chambre::class, 'chambre_id');
+    }
+
+    public function louerchambre()
+    {
+        return $this->hasOne(Louerchambre::class)->latestOfMany();
+    }
 }

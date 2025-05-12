@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-..." crossorigin="anonymous" />
 
     <!-- Favicon icon-->
     <link rel="shortcut icon" type="image/svg" href="{{ asset('logo-dh.svg') }}" />
@@ -79,6 +80,23 @@
     <!-- solar icons -->
     <script src="https://cdn.jsdelivr.net/npm/iconify-icon@1.0.8/dist/iconify-icon.min.js"></script>
     @include('auth.show-hide-password')
+
+
+    
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const togglePassword = document.querySelector("#togglePassword");
+        const password = document.querySelector("#password");
+        const eyeIcon = document.querySelector("#eyeIcon");
+
+        togglePassword.addEventListener("click", function () {
+            const type = password.getAttribute("type") === "password" ? "text" : "password";
+            password.setAttribute("type", type);
+            eyeIcon.classList.toggle("fa-eye");
+            eyeIcon.classList.toggle("fa-eye-slash");
+        });
+    });
+</script>
 
 </body>
 

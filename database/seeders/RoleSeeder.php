@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role;
 
 class RoleSeeder extends Seeder
 {
@@ -14,17 +14,21 @@ class RoleSeeder extends Seeder
     {
         $roles = [
             ['name' => 'Super-admin', 'guard_name' => 'web'],
+            ['name' => 'locataire', 'guard_name' => 'web'],
+            ['name' => 'gerant', 'guard_name' => 'web'],
         ];
 
         foreach ($roles as $role) {
-            if (\Spatie\Permission\Models\Role::where('name', $role['name'])->exists()) {
-                continue;
+            if (!Role::where('name', $role['name'])->exists()) {
+                Role::create($role);
             }
-            \Spatie\Permission\Models\Role::create($role);
         }
 
-        $permissions = config('permissions');
-        $adminRole = \Spatie\Permission\Models\Role::where('name', 'Super-admin')->first();
-        $adminRole->syncPermissions($permissions);
+        // Optionnel : attribuer toutes les permissions à Super-admin
+        $permissions = config('permissions'); 
+        $adminRole = Role::where('name', 'Super-admin')->first();
+        if ($adminRole && is_array($permissions)) {
+            $adminRole->syncPermissions($permissions);
+        }
     }
 }

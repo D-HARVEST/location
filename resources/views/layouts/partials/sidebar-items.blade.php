@@ -23,8 +23,6 @@
     </a>
 </li> --}}
 
-
-
 @haspermission('gerer bourses')
     <li class="sidebar-item">
         <a class="sidebar-link primary-hover-bg" href="{{ route('bourses.index') }}" aria-expanded="false">
@@ -62,6 +60,69 @@
         </ul>
     </li>
 @endrole
+
+
+@role('Super-admin|gerant')
+    <li class="sidebar-item">
+        <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">
+            <iconify-icon icon="solar:layers-line-duotone" class="fs-6 aside-icon"></iconify-icon>
+            <span class="hide-menu ps-1">Parametre de base</span>
+        </a>
+        <ul aria-expanded="false" class="collapse first-level">
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link primary-hover-bg" href="{{ route('types.index') }}" aria-expanded="false">
+                        <iconify-icon icon="icomoon-free:users" class="fs-6 aside-icon"></iconify-icon>
+                        <span class="hide-menu ps-1">Types de chambres</span>
+                    </a>
+                </li>
+
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link primary-hover-bg" href="{{ route('categories.index') }}" aria-expanded="false">
+                        <iconify-icon icon="hugeicons:hierarchy-square-02" class="fs-6 aside-icon"></iconify-icon>
+                        <span class="hide-menu ps-1">Catégorie de chambres</span>
+                    </a>
+                </li>
+
+                <li class="sidebar-item">
+                    <a class="sidebar-link primary-hover-bg" href="{{ route('maisons.index') }}" aria-expanded="false">
+                        <iconify-icon icon="hugeicons:hierarchy-square-02" class="fs-6 aside-icon"></iconify-icon>
+                        <span class="hide-menu ps-1">
+                            Maisons
+                        </span>
+                    </a>
+                </li>
+
+
+        </ul>
+    </li>
+@endrole
+
+
+
+
+
+@role('locataire')
+<li class="sidebar-item">
+    <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">
+        <iconify-icon icon="solar:layers-line-duotone" class="fs-6 aside-icon"></iconify-icon>
+        <span class="hide-menu ps-1">Locataire/Occupant</span>
+    </a>
+    <ul aria-expanded="false" class="collapse first-level">
+        @if(Auth::user()->louerchambre)
+            <li class="sidebar-item">
+                <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
+                    <iconify-icon icon="icomoon-free:users" class="fs-6 aside-icon"></iconify-icon>
+                    <span class="hide-menu ps-1">Lier locataire à une chambre</span>
+                </a>
+            </li>
+        @endif
+    </ul>
+</li>
+@endrole
+
+
 @haspermission('gerer parametre de base systeme')
     <li class="sidebar-item">
         <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">

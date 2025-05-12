@@ -36,7 +36,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="exampleInputEmail1" class="form-label">Email / Identifiant</label>
+            <label for="exampleInputEmail1" class="form-label">Email</label>
             <input id="email" type="email" class="form-control  @error('email') is-invalid @enderror"
                 id="exampleInputEmail1" required autocomplete="email" autofocus name="email" value="{{ old('email') }}">
             @error('email')
@@ -46,15 +46,55 @@
             @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="npi" class="form-label">Numéro personnel d'identifiaction(NPI)</label>
+            <input id="npi" type="text" class="form-control  @error('npi') is-invalid @enderror"
+                id="npi" required autocomplete="npi" autofocus name="npi" value="{{ old('npi') }}">
+            @error('npi')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+        </div>
+
+
+        <div class="mb-3">
+            <label class="form-label">Choisissez votre rôle <strong class="text-danger">*</strong></label>
+            <div class="d-flex gap-3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role_locataire" value="locataire" {{ old('role') == 'locataire' ? 'checked' : '' }} required>
+                    <label class="form-check-label" for="role_locataire">
+                        Locataire
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="role" id="role_gerant" value="gerant" {{ old('role') == 'gerant' ? 'checked' : '' }} required>
+                    <label class="form-check-label" for="role_gerant">
+                        Gérant
+                    </label>
+                </div>
+            </div>
+            @error('role')
+                <span class="invalid-feedback d-block" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+        </div>
+
+
 
         <div class="mb-4">
             <div class="d-flex align-items-center justify-content-between">
                 <label for="exampleInputPassword1" class="form-label">Mot de passe</label>
             </div>
-            <div class="pass_show_hide">
+            <div class="input-group pass_show_hide">
                 <input id="password" type="password" class="form-control @error('password') is-invalid @enderror"
                     name="password" required autocomplete="current-password">
+                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                    <i class="fa fa-eye" id="eyeIcon"></i>
+                </button>
             </div>
+
 
             @error('password')
                 <span class="invalid-feedback" role="alert">
@@ -130,3 +170,4 @@
 
     </div> --}}
 @endsection
+

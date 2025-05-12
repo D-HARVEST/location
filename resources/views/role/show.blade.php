@@ -48,7 +48,8 @@
                                                         id="permission-{{ $permission->id }}"
                                                         value="{{ $permission->name }}" name="permissions[]"
                                                         @if (in_array($permission->id, $rolePermissions)) checked @endif>
-                                                    <label class="form-check-label text-dark fs-5 ms-2 text-capitalize "
+
+                                                        <label class="form-check-label text-dark fs-5 ms-2 text-capitalize "
                                                         for="permission-{{ $permission->id }}">
                                                         {{ $permission->name }}
                                                         {{-- <h5 class="text-dark">

@@ -22,10 +22,12 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'name' => 'required|string',
-			'email' => 'required|string',
-			'password' => 'required|string',
+			'name' => 'nullable|string',
+			'email' => 'nullable|string',
+			'password' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
+            // 'phone' => 'nullable|string',
+            'npi' => 'nullable|string',
         ];
     }
 }

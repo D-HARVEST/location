@@ -1,10 +1,38 @@
 <?php
 
 use App\Http\Controllers\Auth\GoogleAuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ChambreController;
+use App\Http\Controllers\LouerchambreController;
+use App\Http\Controllers\MaisonController;
+use App\Http\Controllers\OccupantchambreController;
+use App\Http\Controllers\PhotoController;
+use App\Http\Controllers\TypeController;
 use Illuminate\Support\Facades\Route;
+
+
+
+
+
+
 
 
 
 
 Route::get('/login/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
+
+Route::middleware(['auth'])->group(function () {
+Route::resource('types', TypeController::class);
+Route::resource('categories', CategoryController::class);
+Route::resource('maisons', MaisonController::class);
+Route::resource('chambres', ChambreController::class);
+Route::resource('photos', PhotoController::class);
+Route::resource('louerchambres', LouerchambreController::class);
+
+
+
+Route::get('/maison/{id}', [MaisonController::class, 'show'])->name('maison.show');
+
+
+});
