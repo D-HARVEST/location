@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\HistoriquepaiementRequest;
 use App\Models\Historiquepaiement;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -65,13 +66,24 @@ class HistoriquepaiementController extends Controller
      */
     public function update(HistoriquepaiementRequest $request, Historiquepaiement $historiquepaiement): RedirectResponse
     {
-        $all=$request->validated();
-        $historiquepaiement->update($all);
+        $data = $request->validated();
 
-        
+        if ($request->hasFile('quittanceUrl')) {
+            $file = $request->file('quittanceUrl');
+
+            // Facultatif : supprimer l'ancienne quittance si elle existe
+            if ($historiquepaiement->quittanceUrl) {
+                Storage::disk('public')->delete($historiquepaiement->quittanceUrl);
+            }
+
+            $path = $file->store('quittances', 'public');
+            $data['quittanceUrl'] = $path;
+        }
+
+        $historiquepaiement->update($data);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $historiquepaiement->louerchambre_id])
-            ->with('success', 'Historiquepaiement a été mis(e) à jour avec succes !');
+            ->with('success', 'Historiquepaiement mis à jour avec succès.');
     }
 
     public function destroy($id): RedirectResponse
