@@ -173,11 +173,8 @@
                                 readonly>
                         </div>
 
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Statut:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->statut }}"
-                                readonly>
-                        </div>
+
+
 
                         <div class="col-lg-4">
                             <strong class="text-dark ">Jour de paiement de loyer:</strong>
@@ -208,6 +205,19 @@
                             <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->maison->libelle }}"
                                 readonly>
                         </div>
+
+
+                        @php
+                        $badgeClass = $chambre->statut === 'Disponible' ? 'bg-success' : 'bg-danger';
+                       @endphp
+
+                    <div class="col-lg-4 mt-4">
+                        <strong class="text-dark">Statut:</strong>
+                        <span class="badge {{ $badgeClass }} my-1">
+                            {{ $chambre->statut }}
+                        </span>
+                    </div>
+
 
                         </div>
                     </div>

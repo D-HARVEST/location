@@ -19,11 +19,11 @@
 
                     <div class="card-body">
                         <div class="text-end">
-                            <a href="{{ route('louerchambres.show', $historiquepaiement->louerchambre_id) }}" class="btn btn-sm btn-primary">Retour</a> 
+                            <a href="{{ route('louerchambres.show', $historiquepaiement->louerchambre_id) }}" class="btn btn-sm btn-primary">Retour</a>
                         </div>
                         <div class="col mb-2">
-                            <h5 class="card-title text-dark fw-bolder mb-0">Mettre à jour Historiquepaiement</h5>
-                            <span>Formulaire de modification: Historiquepaiement</span>
+                            <h5 class="card-title text-dark fw-bolder mb-0">Quittance et mois de paiement</h5>
+                            <span>Ajouter la quittance de paiement et le mois</span>
                             <hr>
                         </div>
                         <form method="POST" action="{{ route('historiquepaiements.update', $historiquepaiement->id) }}"  role="form" enctype="multipart/form-data">
