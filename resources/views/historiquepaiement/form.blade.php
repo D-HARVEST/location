@@ -14,10 +14,10 @@
 
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="quittance_url" class="form-label">{{ __('Quittanceurl') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="file" name="quittanceUrl" class="form-control @error('quittanceUrl') is-invalid @enderror rounded-05" value="{{ old('quittanceUrl', $historiquepaiement?->quittanceUrl) }}" id="quittance_url" >
+            <input type="file" name="quittanceUrl" class="form-control @error('quittanceUrl') is-invalid @enderror rounded-05" id="quittance_url">
             {!! $errors->first('quittanceUrl', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        
+
         <div class="col-lg-6 form-group mb-2 mb20" style="display: none">
             <strong> <label for="montant" class="form-label">{{ __('Montant') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="text" name="montant" class="form-control @error('montant') is-invalid @enderror rounded-05" value="{{ old('montant', $historiquepaiement?->montant) }}" id="montant" >

@@ -64,12 +64,14 @@
                         <div class="col-lg-4">
                             <strong class="text-dark">Copie du contrat:</strong><br>
                             @if($louerchambre->copieContrat)
-                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" class="btn btn-sm btn-success mt-1" download>
-                                    Télécharger la copie du contrat
-                                </a>
-                            @else
-                                <p class="mt-1">Aucun fichier disponible</p>
-                            @endif
+                            <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                                Voir la copie du contrat
+                            </a>
+                        @else
+                            <span class="badge bg-danger">
+                                Aucun fichier disponible
+                            </span>
+                        @endif
                         </div>
 
                         <div class="col-lg-4 mt-3">
@@ -121,7 +123,7 @@
 
 
                                 <th >Date de paiement</th>
-                                <th >Quittance url</th>
+                                <th >Quittance</th>
                                 <th >Montant</th>
                                 <th >Mode de paiement</th>
                                 <th >Mois de paiement</th>
@@ -138,7 +140,18 @@
                                     <tr>
                                         <td>{{ ++$i }}</td>
                                     <td >{{ $historiquepaiement->datePaiement }}</td>
-                                    <td >{{ $historiquepaiement->quittanceUrl }}</td>
+                                    <td>
+                                        @if($historiquepaiement->quittanceUrl)
+                                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                                                Voir la quittance
+                                            </a>
+                                        @else
+                                            <span class="badge bg-danger">
+                                                Aucune quittance
+                                            </span>
+                                        @endif
+                                    </td>
+
                                     <td >{{ $historiquepaiement->montant }}</td>
                                     <td >{{ $historiquepaiement->modePaiement }}</td>
 

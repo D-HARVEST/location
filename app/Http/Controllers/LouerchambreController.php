@@ -209,19 +209,24 @@ class LouerchambreController extends Controller
 
 
         if ($request->hasFile('copieContrat')) {
-        // Supprimer l'ancien fichier s'il existe
-        if ($louerchambre->copie_contrat) {
-            Storage::disk('public')->delete($louerchambre->copie_contrat);
+
+            $file = $request->file('copieContrat');
+
+
+            if ($louerchambre->copieContrat) {
+                Storage::disk('public')->delete($louerchambre->copieContrat);
+            }
+            $path = $file->store('contrats', 'public');
+            $data['copieContrat'] = $path;
+
+
+            // $file = $request->file('copieContrat');
+            // $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            // $path = $file->storeAs('contrats', $filename, 'public');
+
+            // Enregistrer le nouveau chemin relatif
+            // $data['copie_contrat'] = $path;
         }
-
-        // Stocker le nouveau fichier
-        $file = $request->file('copieContrat');
-        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-        $path = $file->storeAs('contrats', $filename, 'public');
-
-        // Enregistrer le nouveau chemin dans les données à mettre à jour
-        $data['copie_contrat'] = $path;
-    }        // dd($request->hasFile('copieContrat'), $request->file('copieContrat'), $request->all());
 
 
         $louerchambre->update($data);
@@ -234,10 +239,10 @@ class LouerchambreController extends Controller
     public function destroy(Request $request, $id): RedirectResponse
     {
         dd([
-        'hasFile' => $request->hasFile('copieContrat'),
-        'file' => $request->file('copieContrat'),
-        'all_inputs' => $request->all()
-    ]);
+            'hasFile' => $request->hasFile('copieContrat'),
+            'file' => $request->file('copieContrat'),
+            'all_inputs' => $request->all()
+        ]);
         $data = Louerchambre::findOrFail($id);
 
         try {
@@ -254,7 +259,8 @@ class LouerchambreController extends Controller
             ->with('success', 'Louerchambre a été supprimé(e) avec succes !');
     }
 
-    public function validateStatut(Request $request){
+    public function validateStatut(Request $request)
+    {
         $request->validate([
             'statut' => ['required', 'string', 'in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER'],
             'id' => ['required', 'exists:louerchambres,id'],

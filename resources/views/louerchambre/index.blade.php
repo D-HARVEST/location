@@ -73,7 +73,18 @@
 										<td >{{ $louerchambre->cautionLoyer ?? '-' }}</td>
 										<td >{{ $louerchambre->cautionElectricite ?? '-' }}</td>
 										<td >{{ $louerchambre->cautionEau ?? '-' }}</td>
-										<td >{{ $louerchambre->copieContrat ?? '-' }}</td>
+                                        <td>
+                                            @if($louerchambre->copieContrat)
+                                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Voir la copie du contrat
+                                                </a>
+                                            @else
+                                                <span class="badge bg-danger">
+                                                    Aucun fichier disponible
+                                                </span>
+                                            @endif
+                                        </td>
+
 										{{-- <td >{{ $louerchambre->jourPaiementLoyer ?? '-' }}</td> --}}
                                         <td>
                                             {{-- Affichage du statut avec un badge --}}
