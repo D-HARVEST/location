@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LouerchambreRequest;
-use App\Models\Chambre;
-use App\Models\Historiquepaiement;
-use App\Models\Louerchambre;
-use App\Models\User;
 use id;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use App\Models\Chambre;
+use Illuminate\View\View;
+use Illuminate\Support\Str;
+use App\Models\Louerchambre;
 use Illuminate\Http\Request;
+use App\Models\Historiquepaiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\LouerchambreRequest;
 
 class LouerchambreController extends Controller
 {
@@ -196,16 +197,19 @@ class LouerchambreController extends Controller
 
 
         if ($request->hasFile('copieContrat')) {
-            if ($louerchambre->copie_contrat) {
-                Storage::disk('public')->delete($louerchambre->copie_contrat);
-            }
-
-            $path = $request->file('copieContrat')->store('contrats', 'public');
-
-            $data['copie_contrat'] = $path;
+        // Supprimer l'ancien fichier s'il existe
+        if ($louerchambre->copie_contrat) {
+            Storage::disk('public')->delete($louerchambre->copie_contrat);
         }
 
-        // dd($request->hasFile('copieContrat'), $request->file('copieContrat'), $request->all());
+        // Stocker le nouveau fichier
+        $file = $request->file('copieContrat');
+        $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+        $path = $file->storeAs('contrats', $filename, 'public');
+
+        // Enregistrer le nouveau chemin dans les données à mettre à jour
+        $data['copie_contrat'] = $path;
+    }        // dd($request->hasFile('copieContrat'), $request->file('copieContrat'), $request->all());
 
 
         $louerchambre->update($data);
@@ -217,6 +221,11 @@ class LouerchambreController extends Controller
 
     public function destroy(Request $request, $id): RedirectResponse
     {
+        dd([
+        'hasFile' => $request->hasFile('copieContrat'),
+        'file' => $request->file('copieContrat'),
+        'all_inputs' => $request->all()
+    ]);
         $data = Louerchambre::findOrFail($id);
 
         try {
@@ -231,5 +240,19 @@ class LouerchambreController extends Controller
 
         return Redirect::route('chambres.show', ['chambre' => $chambreId])
             ->with('success', 'Louerchambre a été supprimé(e) avec succes !');
+    }
+
+    public function validateStatut(Request $request){
+        $request->validate([
+            'statut' => ['required', 'string', 'in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER'],
+            'id' => ['required', 'exists:louerchambres,id'],
+        ]);
+
+        $louerchambre = Louerchambre::findOrFail($request->id);
+        $louerchambre->update([
+            'statut' => $request->statut
+        ]);
+
+        return redirect()->back()->with('success', "Statut mis à jour avec succès !");
     }
 }

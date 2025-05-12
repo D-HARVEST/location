@@ -179,8 +179,8 @@
                         </div>
 
                         <div class="col-lg-4">
-                            <strong class="text-dark ">Jourpaiement:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->jourPaiement }}"
+                            <strong class="text-dark ">Jour paiement loyer:</strong>
+                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->jourPaiementLoyer }}"
                                 readonly>
                         </div>
 
