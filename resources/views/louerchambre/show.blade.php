@@ -146,7 +146,7 @@
                                             {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') ?? 'Date invalide' }}
                                         </td>
 
-                                    
+
 
 
 
