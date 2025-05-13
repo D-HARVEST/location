@@ -55,21 +55,21 @@
                                 <input type="text" name="statut" class="form-control @error('statut') is-invalid @enderror rounded-05" value="{{ old('statut', $louerchambre?->statut) }}" id="statut" >
                                 {!! $errors->first('statut', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
                             </div> --}}
-                            {{-- <div class="col-lg-6 form-group mb-2 mb20">
+                            <div class="col-lg-6 form-group mb-2 mb20">
                                 <strong> <label for="caution_loyer" class="form-label">{{ __('Prix caution du loyer') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-                                <input type="text" name="cautionLoyer" class="form-control @error('cautionLoyer') is-invalid @enderror rounded-05" value="{{ old('cautionLoyer', $louerchambre?->cautionLoyer) }}" id="caution_loyer" >
+                                <input type="number" name="cautionLoyer" class="form-control @error('cautionLoyer') is-invalid @enderror rounded-05" value="{{ old('cautionLoyer', $louerchambre?->cautionLoyer) }}" id="caution_loyer" >
                                 {!! $errors->first('cautionLoyer', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                            </div> --}}
-                            {{-- <div class="col-lg-6 form-group mb-2 mb20">
+                            </div>
+                            <div class="col-lg-6 form-group mb-2 mb20">
                                 <strong> <label for="caution_electricite" class="form-label">{{ __('Prix caution electricite') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-                                <input type="text" name="cautionElectricite" class="form-control @error('cautionElectricite') is-invalid @enderror rounded-05" value="{{ old('cautionElectricite', $louerchambre?->cautionElectricite) }}" id="caution_electricite" >
+                                <input type="number" name="cautionElectricite" class="form-control @error('cautionElectricite') is-invalid @enderror rounded-05" value="{{ old('cautionElectricite', $louerchambre?->cautionElectricite) }}" id="caution_electricite" >
                                 {!! $errors->first('cautionElectricite', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                            </div> --}}
-                            {{-- <div class="col-lg-6 form-group mb-2 mb20">
+                            </div>
+                            <div class="col-lg-6 form-group mb-2 mb20">
                                 <strong> <label for="caution_eau" class="form-label">{{ __('Prix caution eau') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-                                <input type="text" name="cautionEau" class="form-control @error('cautionEau') is-invalid @enderror rounded-05" value="{{ old('cautionEau', $louerchambre?->cautionEau) }}" id="caution_eau" >
+                                <input type="number" name="cautionEau" class="form-control @error('cautionEau') is-invalid @enderror rounded-05" value="{{ old('cautionEau', $louerchambre?->cautionEau) }}" id="caution_eau" >
                                 {!! $errors->first('cautionEau', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-                            </div> --}}
+                            </div>
                             {{-- <div class="col-lg-6 form-group mb-2 mb20">
                                 <strong> <label for="copie_contrat" class="form-label">{{ __('Copie du contrat') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
                                 <input type="file" name="copieContrat" class="form-control @error('copieContrat') is-invalid @enderror rounded-05" value="{{ old('copieContrat', $louerchambre?->copieContrat) }}" id="copie_contrat" >

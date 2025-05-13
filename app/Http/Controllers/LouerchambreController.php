@@ -89,6 +89,9 @@ class LouerchambreController extends Controller
     }
 
 
+
+
+
     /**
      * Display the specified resource.
      */
@@ -146,6 +149,12 @@ class LouerchambreController extends Controller
         }
 
 
+        // Vérifier si le statut est bien "CONFIRMER"
+        if ($louerchambre->statut !== 'CONFIRMER') {
+            return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+                ->with('error', 'statut non confirmer');
+        }
+
 
 
         $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
@@ -180,7 +189,8 @@ class LouerchambreController extends Controller
                 ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
         }
 
-        return view("layouts.echec", ["message" => "Le paiement a échoué ou n’a pas été retrouvé."]);
+        return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+        ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
     }
 
 
@@ -210,8 +220,8 @@ class LouerchambreController extends Controller
 
 
         if ($data['statut'] === 'CONFIRMER') {
-            // Trouver la chambre correspondante et la marquer comme "Non disponible"
-            $chambre = $louerchambre->chambre;  // Lier le locataire à la chambre via la relation
+
+            $chambre = $louerchambre->chambre;
             $chambre->update(['statut' => 'Non disponible']);  // Mettre à jour le statut de la chambre
         } else {
 
@@ -247,6 +257,11 @@ class LouerchambreController extends Controller
         return Redirect::route('chambres.show', ['chambre' => $request->chambre_id])
             ->with('success', 'Louerchambre et utilisateur ont été mis à jour avec succès !');
     }
+
+
+
+
+
 
     public function destroy(Request $request, $id): RedirectResponse
     {

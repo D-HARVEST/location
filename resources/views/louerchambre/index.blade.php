@@ -76,8 +76,8 @@
 										<td >{{ $louerchambre->cautionEau ?? '-' }}</td>
                                         <td>
                                             @if($louerchambre->copieContrat)
-                                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
-                                                    Voir la copie du contrat
+                                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Télecharger la copie du contrat
                                                 </a>
                                             @else
                                                 <span class="badge bg-danger">
@@ -113,15 +113,24 @@
                                                         data-popper-placement="left-start">
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.show',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                                <i class="fs-4 ti ti-eye"></i> Détails et paiement loyer
                                                             </a>
                                                         </li>
                                                         <li>
+                                                            @role('locataire')
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.edit',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Modifier
+                                                                <i class="fs-4 ti ti-edit"></i> Informations complémentaires
                                                             </a>
+                                                            @endrole
+                                                            @role('gerant')
+                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.edit',$louerchambre->id) }}">
+                                                                <i class="fs-4 ti ti-edit"></i> Modifier louerchambre
+                                                            </a>
+                                                            @endrole
                                                         </li>
-                                                        @role('gerant')
+
+
+                                                        {{-- @role('gerant')
                                                         <li>
                                                             <form action="{{ route('louerchambres.destroy',$louerchambre->id) }}" method="POST">
                                                                 @csrf
@@ -132,7 +141,7 @@
                                                             </form>
 
                                                         </li>
-                                                        @endrole
+                                                        @endrole --}}
                                                         @if($louerchambre->statut == 'EN ATTENTE')
                                                             <li>
                                                                 <a href="#" class="dropdown-item d-flex align-items-center text-success gap-3"

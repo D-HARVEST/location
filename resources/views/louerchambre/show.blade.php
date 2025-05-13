@@ -64,7 +64,7 @@
                         <div class="col-lg-4">
                             <strong class="text-dark">Copie du contrat:</strong><br>
                             @if($louerchambre->copieContrat)
-                            <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                            <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank"  class="badge bg-success text-white" style="text-decoration: none;">
                                 Voir la copie du contrat
                             </a>
                         @else
@@ -101,8 +101,10 @@
                 <div class="card">
 
                     <div class="my-3 mx-3">
+
                         <div class="card border">
                             <div class="card-body">
+                                @if ($louerchambre->statut === 'CONFIRMER')
                                 <button type="button" class="btn btn-success w-100 rounded-1"
                                         onclick="payer(this);"
                                         title="Payer la location"
@@ -110,6 +112,11 @@
                                     <i class="fa fa-credit-card me-2"></i>
                                     Payer le loyer pour ({{ $montantLoyer }} F CFA)
                                 </button>
+                                @else
+                                <div class="alert alert-warning mb-0 text-center">
+                                    Paiement indisponible tant que le statut n’est pas confirmé.
+                                </div>
+                            @endif
                             </div>
                         </div>
                     </div>
@@ -121,15 +128,11 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>N°</th>
-
-
-                                    <th >Date de paiement</th>
-                                    <th >Quittance</th>
-                                    <th >Montant</th>
-                                    <th >Mode de paiement</th>
-                                    <th >Mois de paiement</th>
-
-
+                                        <th >Date de paiement</th>
+                                        <th >Quittance</th>
+                                        <th >Montant</th>
+                                        <th >Mode de paiement</th>
+                                        <th >Mois de paiement</th>
                                         <th></th>
                                     </tr>
                                 </thead>
@@ -151,6 +154,7 @@
                                                     Aucune quittance
                                                 </span>
                                             @endif
+
                                         </td>
 
                                         <td >{{ $historiquepaiement->montant }}</td>
@@ -163,16 +167,7 @@
                                                 -
                                             @endif
                                         </td>
-
-
-
-
-
-
-
                                     {{-- <td>{{ \Carbon\Carbon::create()->month($historiquepaiement->moisPaiement)->locale('fr')->monthName }}</td> --}}
-
-
 
                                             <td>
                                                 <div class="dropdown dropstart">
@@ -190,7 +185,7 @@
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Quittance
+                                                                <i class="fs-4 ti ti-edit"></i> Quittance et mois de paiement
                                                             </a>
                                                         </li>
                                                         {{-- <li>
