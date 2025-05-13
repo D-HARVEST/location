@@ -22,7 +22,7 @@
                         @endif
 
                         <div class="text-end">
-                            <a href="{{ route('maisons.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
+                            <a href="{{ route('maisons.create') }}" class="btn btn-sm btn-primary rounded-05">+ Ajouter une maison</a>
                         </div>
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">Maison(s)</h5>
