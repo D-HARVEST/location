@@ -121,11 +121,6 @@ class LouerchambreController extends Controller
         $louer = Louerchambre::with(['chambre.maison', 'user'])
         ->findOrFail($id);
 
-
-        if ($louer->chambre->maison->user_id !== $user->id) {
-            abort(403, 'Accès non autorisé.');
-        }
-
         $paiements = HistoriquePaiement::where('louerchambre_id', $louer->id)->get();
 
         $montantLoyer = $louerchambre->loyer;
