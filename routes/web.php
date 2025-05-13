@@ -32,13 +32,14 @@ Route::get('theme-toggle', function () {
     }
     return back();
 })->name('theme-toggle');
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::redirect('/home', '/');
+// Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::redirect('/home', '/');
 
 Route::get('/landing', function () {
     return view('landing.landing');
 })->name('landing');
-Route::redirect('/', '/landing')->name('home');
+
+// Route::redirect('/', '/landing')->name('home');
 
 Route::middleware(['auth', 'update-last-login', 'permission:gerer users',])->group(function () {
     Route::resource("users", UserController::class);
