@@ -76,8 +76,8 @@
 										<td >{{ $louerchambre->cautionEau ?? '-' }}</td>
                                         <td>
                                             @if($louerchambre->copieContrat)
-                                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
-                                                    Voir la copie du contrat
+                                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Télecharger la copie du contrat
                                                 </a>
                                             @else
                                                 <span class="badge bg-danger">

@@ -70,7 +70,7 @@
                                                         data-popper-placement="left-start">
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('maisons.show',$maison->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                            <i class="fs-5 ms-1 ti ti-plus"></i> Ajouter chambre
                                                             </a>
                                                         </li>
                                                         <li>

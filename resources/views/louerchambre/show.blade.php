@@ -64,7 +64,7 @@
                         <div class="col-lg-4">
                             <strong class="text-dark">Copie du contrat:</strong><br>
                             @if($louerchambre->copieContrat)
-                            <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                            <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank"  class="badge bg-success text-white" style="text-decoration: none;">
                                 Voir la copie du contrat
                             </a>
                         @else
@@ -142,8 +142,8 @@
                                     <td >{{ $historiquepaiement->datePaiement }}</td>
                                     <td>
                                         @if($historiquepaiement->quittanceUrl)
-                                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
-                                                Voir la quittance
+                                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
+                                                Télecharger la quittance
                                             </a>
                                         @else
                                             <span class="badge bg-danger">
@@ -189,7 +189,7 @@
                                                     </li>
                                                     <li>
                                                         <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
-                                                            <i class="fs-4 ti ti-edit"></i> Quittance
+                                                            <i class="fs-4 ti ti-edit"></i> Quittance et mois de paiement
                                                         </a>
                                                     </li>
                                                     {{-- <li>
