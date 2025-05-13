@@ -6,5 +6,7 @@
             background="transparent" speed="1" style="height:400px" loop autoplay="" class="my-5"></lottie-player>
 
         {{ $message }}
+
+        redirect('louerchambre.show');
     </div>
 @endsection

@@ -2,19 +2,20 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LouerchambreRequest;
-use App\Models\Chambre;
-use App\Models\Historiquepaiement;
-use App\Models\Louerchambre;
-use App\Models\User;
 use id;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use App\Models\Chambre;
+use Illuminate\View\View;
+use Illuminate\Support\Str;
+use App\Models\Louerchambre;
 use Illuminate\Http\Request;
+use App\Models\Historiquepaiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\LouerchambreRequest;
 
 class LouerchambreController extends Controller
 {
@@ -119,11 +120,23 @@ class LouerchambreController extends Controller
     }
 
 
-    public function enregistrerPaiement( string $transaction_id)
+    public function enregistrerPaiement(string $transaction_id)
     {
 
 
-        $response = Http::withToken(env("FEDAPAY_PRIVATE_KEY"))
+        $louerchambre = Louerchambre::where('user_id', auth()->id())
+            ->latest()
+            ->first();
+
+        // Vérifie si un louerchambre existe
+        if (!$louerchambre) {
+            return view("layouts.echec", ["message" => "Aucune chambre louée trouvée pour cet utilisateur."]);
+        }
+
+
+
+
+        $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
             ->accept('application/json')
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
                 'include' => 'customer.phone_number,currency,payment_method',
@@ -131,28 +144,28 @@ class LouerchambreController extends Controller
             ]);
 
 
-            $transaction = $response->json('transaction');
+        $transaction = $response->json();
 
-         $louerchambre = Louerchambre::where('user_id', auth()->id())
-            ->where('statut', 'CONFIRMER')
-            ->latest()
-            ->first();
+        if (
+            isset($transaction['v1/transaction']['status'])
+            && $transaction['v1/transaction']['status'] == 'approved'
+            && isset($transaction['v1/transaction']['amount'])
+            && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
+        ) {
 
 
-
-        if (isset($transaction['v1/transaction']['status']) && $transaction['v1/transaction']['status'] == 'approved' && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->montant)) {
             Historiquepaiement::create([
                 'louerchambre_id' => $louerchambre->id,
                 'datePaiement' => now(),
-                'montant' => $transaction['amount'],
-                'modePaiement' => $transaction['payment_method'] ?? 'Inconnu',
+                'montant' => $transaction['v1/transaction']['amount'],
+                'modePaiement' =>  'MTN',
                 'idTransaction' => $transaction_id,
-                'moisPaiement' => now()->format('Y-m'),
                 'user_id' => auth()->id(),
                 'quittanceUrl' => null,
             ]);
 
-            return view("layouts.succes", ["message" => "Paiement effectué avec succès."]);
+            return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+                ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
         }
 
         return view("layouts.echec", ["message" => "Le paiement a échoué ou n’a pas été retrouvé."]);
@@ -196,16 +209,24 @@ class LouerchambreController extends Controller
 
 
         if ($request->hasFile('copieContrat')) {
-            if ($louerchambre->copie_contrat) {
-                Storage::disk('public')->delete($louerchambre->copie_contrat);
+
+            $file = $request->file('copieContrat');
+
+
+            if ($louerchambre->copieContrat) {
+                Storage::disk('public')->delete($louerchambre->copieContrat);
             }
+            $path = $file->store('contrats', 'public');
+            $data['copieContrat'] = $path;
 
-            $path = $request->file('copieContrat')->store('contrats', 'public');
 
-            $data['copie_contrat'] = $path;
+            // $file = $request->file('copieContrat');
+            // $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
+            // $path = $file->storeAs('contrats', $filename, 'public');
+
+            // Enregistrer le nouveau chemin relatif
+            // $data['copie_contrat'] = $path;
         }
-
-        // dd($request->hasFile('copieContrat'), $request->file('copieContrat'), $request->all());
 
 
         $louerchambre->update($data);
@@ -217,6 +238,11 @@ class LouerchambreController extends Controller
 
     public function destroy(Request $request, $id): RedirectResponse
     {
+        dd([
+            'hasFile' => $request->hasFile('copieContrat'),
+            'file' => $request->file('copieContrat'),
+            'all_inputs' => $request->all()
+        ]);
         $data = Louerchambre::findOrFail($id);
 
         try {
@@ -231,5 +257,20 @@ class LouerchambreController extends Controller
 
         return Redirect::route('chambres.show', ['chambre' => $chambreId])
             ->with('success', 'Louerchambre a été supprimé(e) avec succes !');
+    }
+
+    public function validateStatut(Request $request)
+    {
+        $request->validate([
+            'statut' => ['required', 'string', 'in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER'],
+            'id' => ['required', 'exists:louerchambres,id'],
+        ]);
+
+        $louerchambre = Louerchambre::findOrFail($request->id);
+        $louerchambre->update([
+            'statut' => $request->statut
+        ]);
+
+        return redirect()->back()->with('success', "Statut mis à jour avec succès !");
     }
 }

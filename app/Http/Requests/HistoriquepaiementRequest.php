@@ -22,13 +22,13 @@ class HistoriquepaiementRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'louerchambres_id' => 'required',
+			'louerchambre_id' => 'required',
 			'datePaiement' => 'required',
-			'quittanceUrl' => 'nullable|string',
+			'quittanceUrl' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf',
 			'montant' => 'required',
 			'modePaiement' => 'nullable|string',
 			'idTransaction' => 'nullable|string',
-			'moisPaiement' => 'required',
+			'moisPaiement' => 'nullable',
 			'user_id' => 'required',
         ];
     }

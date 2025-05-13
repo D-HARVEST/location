@@ -60,8 +60,5 @@ Route::resource('historiquepaiements', HistoriquepaiementController::class);
 
 Route::get('/paiement/{transaction_id}', [LouerchambreController::class, 'enregistrerPaiement'])->name('paiement');
 
-Route::post('/fedapay/log-error', function (\Illuminate\Http\Request $request) {
-    Log::error('FedaPay Error:', $request->all());
-    return response()->json(['status' => 'logged']);
-});
+
 
