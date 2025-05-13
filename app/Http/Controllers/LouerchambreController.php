@@ -116,7 +116,7 @@ class LouerchambreController extends Controller
 
         // }
 
-        $historiquepaiements = Historiquepaiement::where('user_id', $user)->get();
+        $historiquepaiements = Historiquepaiement::where('user_id', $user->id)->get();
 
         $louer = Louerchambre::with(['chambre.maison', 'user'])
         ->findOrFail($id);
