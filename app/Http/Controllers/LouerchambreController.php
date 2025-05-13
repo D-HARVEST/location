@@ -89,6 +89,9 @@ class LouerchambreController extends Controller
     }
 
 
+
+
+
     /**
      * Display the specified resource.
      */
@@ -198,8 +201,8 @@ class LouerchambreController extends Controller
 
 
         if ($data['statut'] === 'CONFIRMER') {
-            // Trouver la chambre correspondante et la marquer comme "Non disponible"
-            $chambre = $louerchambre->chambre;  // Lier le locataire à la chambre via la relation
+
+            $chambre = $louerchambre->chambre;
             $chambre->update(['statut' => 'Non disponible']);  // Mettre à jour le statut de la chambre
         } else {
 
@@ -235,6 +238,11 @@ class LouerchambreController extends Controller
         return Redirect::route('chambres.show', ['chambre' => $request->chambre_id])
             ->with('success', 'Louerchambre et utilisateur ont été mis à jour avec succès !');
     }
+
+
+
+
+
 
     public function destroy(Request $request, $id): RedirectResponse
     {

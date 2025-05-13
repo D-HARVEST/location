@@ -117,11 +117,20 @@
                                                             </a>
                                                         </li>
                                                         <li>
+                                                            @role('locataire')
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.edit',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Modifier
+                                                                <i class="fs-4 ti ti-edit"></i> Informations complémentaires
                                                             </a>
+                                                            @endrole
+                                                            @role('gerant')
+                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.edit',$louerchambre->id) }}">
+                                                                <i class="fs-4 ti ti-edit"></i> Modifier louerchambre
+                                                            </a>
+                                                            @endrole
                                                         </li>
-                                                        @role('gerant')
+
+
+                                                        {{-- @role('gerant')
                                                         <li>
                                                             <form action="{{ route('louerchambres.destroy',$louerchambre->id) }}" method="POST">
                                                                 @csrf
@@ -132,7 +141,7 @@
                                                             </form>
 
                                                         </li>
-                                                        @endrole
+                                                        @endrole --}}
                                                         @if($louerchambre->statut == 'EN ATTENTE')
                                                             <li>
                                                                 <a href="#" class="dropdown-item d-flex align-items-center text-success gap-3"

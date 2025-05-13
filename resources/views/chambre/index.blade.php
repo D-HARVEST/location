@@ -62,7 +62,7 @@
                                         @endphp
 
                                         <div class="col-lg-4">
-                                            
+
                                             <span class="badge {{ $badgeClass }} my-1">
                                                 {{ $chambre->statut }}
                                             </span>
@@ -86,7 +86,7 @@
                                                         data-popper-placement="left-start">
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('chambres.show',$chambre->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                                <i class="fs-5 ms-1 ti ti-plus"></i>Asssocier un locataire
                                                             </a>
                                                         </li>
                                                         <li>

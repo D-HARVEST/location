@@ -76,6 +76,19 @@ class RegisterController extends Controller
         }
 
 
+        // Vérifie si le NPI est déjà utilisé par un autre utilisateur
+        if (isset($data['npi'])) {
+            $existingNpiUser = User::where('npi', $data['npi'])
+                ->where('email', '!=', $data['email'])
+                ->first();
+
+            if ($existingNpiUser) {
+                return back()->withErrors([
+                    'npi' => 'Ce NPI est déjà utilisé par un autre compte.',
+                ])->withInput();
+            }
+        }
+
         if ($user && $user->hasRole('locataire') && $data['role'] !== 'locataire') {
             return back()->withErrors([
                 'role' => 'Cet utilisateur est déjà inscrit en tant que locataire. Veuillez choisir le rôle "locataire".',

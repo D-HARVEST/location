@@ -1,7 +1,7 @@
   <!-- Footer Start -->
   <footer class="w-100 bg-secondary ">
       <div class="container pt-4">
-          <div class="pb-4 mb-4 border-bottom border-warning">
+          {{-- <div class="pb-4 mb-4 border-bottom border-warning">
               <div class="row g-4">
                   <div class="col-lg-3">
                       <h1 class="text-warning ">NCD
@@ -11,14 +11,15 @@
                   <div class="col-lg-2">
                       <a href="#">
 
-                          {{-- <p class="text-white mb-0">Commandez, Savourez</p> --}}
+                          <p class="text-white mb-0">Commandez, Savourez</p>
                       </a>
                   </div>
                   <div class="col-lg-4"></div>
+
                   <div class="col-lg-3">
                       <img src="{{ asset('spike/hj.png') }}" alt="" width="140" class="img-fluid">
 
-                      {{-- <div class="">
+                      <div class="">
 
                           <div class="d-flex justify-content-end pt-3">
 
@@ -27,12 +28,14 @@
                                       class="fab fa-facebook-f"></i></a>
 
                           </div>
-                      </div> --}}
+                      </div>
 
                   </div>
+
               </div>
 
-          </div>
+          </div> --}}
+
           <div class=" copyright bg-secondary  py-4 text-light">
               <div class="">
                   <div class="row">

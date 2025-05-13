@@ -98,7 +98,7 @@
     <div class="row mt-4">
         <div class="col-md-12">
             <div class="card">
-
+         @role('locataire')
                 <div class="my-3 mx-3">
                     <div class="card border">
                         <div class="card-body">
@@ -112,7 +112,7 @@
                         </div>
                     </div>
                 </div>
-
+            @endrole
                 <div class="card-body">
                     <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                     <div class="table-responsive">
