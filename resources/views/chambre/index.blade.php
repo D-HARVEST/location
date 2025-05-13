@@ -62,7 +62,7 @@
                                         @endphp
 
                                         <div class="col-lg-4">
-                                            
+
                                             <span class="badge {{ $badgeClass }} my-1">
                                                 {{ $chambre->statut }}
                                             </span>

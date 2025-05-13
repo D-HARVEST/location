@@ -101,7 +101,7 @@ class LouerchambreController extends Controller
 
         $louerchambre = Louerchambre::with(['chambre', 'user', 'historiquesPaiements'])
             ->findOrFail($id);
-        $historiquepaiements = $louerchambre->historiquesPaiements;
+        // $historiquepaiements = $louerchambre->historiquesPaiements;
 
 
         // $louerchambre = Louerchambre::where('user_id', $user->id)
@@ -113,10 +113,22 @@ class LouerchambreController extends Controller
 
         // }
 
+        $historiquepaiements = Historiquepaiement::where('user_id', $user)->get();
+
+        $louer = Louerchambre::with(['chambre.maison', 'user'])
+        ->findOrFail($id);
+
+
+        if ($louer->chambre->maison->user_id !== $user->id) {
+            abort(403, 'Accès non autorisé.');
+        }
+
+        $paiements = HistoriquePaiement::where('louerchambre_id', $louer->id)->get();
+
         $montantLoyer = $louerchambre->loyer;
 
 
-        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer'));
+        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer','paiements'));
     }
 
 
@@ -257,20 +269,5 @@ class LouerchambreController extends Controller
 
         return Redirect::route('chambres.show', ['chambre' => $chambreId])
             ->with('success', 'Louerchambre a été supprimé(e) avec succes !');
-    }
-
-    public function validateStatut(Request $request)
-    {
-        $request->validate([
-            'statut' => ['required', 'string', 'in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER'],
-            'id' => ['required', 'exists:louerchambres,id'],
-        ]);
-
-        $louerchambre = Louerchambre::findOrFail($request->id);
-        $louerchambre->update([
-            'statut' => $request->statut
-        ]);
-
-        return redirect()->back()->with('success', "Statut mis à jour avec succès !");
     }
 }

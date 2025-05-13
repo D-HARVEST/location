@@ -134,4 +134,27 @@ class ChambreController extends Controller
         return Redirect::route('maison.show', ['id' => $maisonId])
             ->with('success', 'Chambre a été supprimé(e) avec succes !');
     }
+
+    public function validateStatut(Request $request)
+    {
+        $request->validate([
+            'statut' => ['required', 'string', 'in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER'],
+            'id' => ['required', 'exists:louerchambres,id'],
+        ]);
+
+        $louerchambre = Louerchambre::findOrFail($request->id);
+        $louerchambre->update([
+            'statut' => $request->statut
+        ]);
+        
+        $chambre = Chambre::find($louerchambre->chambre_id);
+
+        if ($request->statut === 'CONFIRMER') {
+            if ($chambre) {
+                $chambre->update(['statut' => 'Non disponible']);
+            }
+        }
+
+        return redirect()->back()->with('success', "Statut mis à jour avec succès !");
+    }
 }

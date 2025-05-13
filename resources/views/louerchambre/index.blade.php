@@ -179,9 +179,10 @@
             </div>
         </div>
     </div>
+
     <form id="statutForm" method="POST" action="{{ route('louerchambres.validate') }}">
-    @csrf
-    <input type="hidden" name="id" id="louerchambre_id">
-    <input type="hidden" name="statut" id="statut_value">
-</form>
+        @csrf
+        <input type="hidden" name="id" id="louerchambre_id">
+        <input type="hidden" name="statut" id="statut_value">
+    </form>
 {{-- @endsection --}}

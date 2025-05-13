@@ -60,4 +60,16 @@ class Chambre extends Model
     {
         return $this->hasMany(Photo::class, 'chambre_id', 'id');
     }
+
+    public function historiquePaiements()
+    {
+        return $this->hasManyThrough(
+            HistoriquePaiement::class,
+            LouerChambre::class,
+            'chambre_id',            // Foreign key sur `louer_chambres`
+            'louerchambre_id',       // Foreign key sur `historique_paiements`
+            'id',                    // Local key sur `chambres`
+            'id'                     // Local key sur `louer_chambres`
+        );
+    }
 }

@@ -94,7 +94,12 @@
                     </a>
                 </li>
 
-
+                {{-- <li class="sidebar-item">
+                    <a class="sidebar-link primary-hover-bg" href="{{route('suivi_mensuel.create')}}" aria-expanded="false">
+                        <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
+                        <span class="hide-menu ps-1">Suivi Mensuel</span>
+                    </a>
+                </li> --}}
         </ul>
     </li>
 @endrole
@@ -104,22 +109,24 @@
 
 
 @role('locataire')
-<li class="sidebar-item">
-    <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">
-        <iconify-icon icon="solar:layers-line-duotone" class="fs-6 aside-icon"></iconify-icon>
-        <span class="hide-menu ps-1">Locataire</span>
-    </a>
-    <ul aria-expanded="false" class="collapse first-level">
-        @if(Auth::user()->louerchambre)
-            <li class="sidebar-item">
-                <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
-                    <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
-                    <span class="hide-menu ps-1">Ma chambre</span>
-                </a>
-            </li>
-        @endif
-    </ul>
-</li>
+    @if(Auth::user()->louerchambre)
+        <li class="sidebar-item">
+            <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
+                <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
+                <span class="hide-menu ps-1">Ma chambre</span>
+            </a>
+            {{-- <ul aria-expanded="false" class="collapse first-level">
+                @if(Auth::user()->louerchambre)
+                    <li class="sidebar-item">
+                        <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
+                            <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
+                            <span class="hide-menu ps-1">Ma chambre</span>
+                        </a>
+                    </li>
+                @endif
+            </ul> --}}
+        </li>
+    @endif
 @endrole
 
 

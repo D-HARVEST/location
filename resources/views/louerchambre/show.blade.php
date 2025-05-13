@@ -93,146 +93,271 @@
             </div>
         </div>
     </div>
-    
-    <!-- Paiement + Historique -->
-    <div class="row mt-4">
-        <div class="col-md-12">
-            <div class="card">
 
-                <div class="my-3 mx-3">
-                    <div class="card border">
-                        <div class="card-body">
-                            <button type="button" class="btn btn-success w-100 rounded-1"
-                                    onclick="payer(this);"
-                                    title="Payer la location"
-                                    data-montant="{{ $montantLoyer }}">
-                                <i class="fa fa-credit-card me-2"></i>
-                                Payer le loyer pour ({{ $montantLoyer }} F CFA)
-                            </button>
+    <!-- Paiement + Historique -->
+    @role('locataire')
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+
+                    <div class="my-3 mx-3">
+                        <div class="card border">
+                            <div class="card-body">
+                                <button type="button" class="btn btn-success w-100 rounded-1"
+                                        onclick="payer(this);"
+                                        title="Payer la location"
+                                        data-montant="{{ $montantLoyer }}">
+                                    <i class="fa fa-credit-card me-2"></i>
+                                    Payer le loyer pour ({{ $montantLoyer }} F CFA)
+                                </button>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="card-body">
-                    <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
-                    <div class="table-responsive">
-                        <table class="table table-striped table-hover datatable">
-                            <thead class="thead">
-                                <tr>
-                                    <th>N°</th>
-
-
-                                <th >Date de paiement</th>
-                                <th >Quittance</th>
-                                <th >Montant</th>
-                                <th >Mode de paiement</th>
-                                <th >Mois de paiement</th>
-
-
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @php
-                                    $i = 0;
-                                @endphp
-                                @foreach ($historiquepaiements as $historiquepaiement)
+                    <div class="card-body">
+                        <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover datatable">
+                                <thead class="thead">
                                     <tr>
-                                        <td>{{ ++$i }}</td>
-                                    <td >{{ $historiquepaiement->datePaiement }}</td>
-                                    <td>
-                                        @if($historiquepaiement->quittanceUrl)
-                                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
-                                                Voir la quittance
-                                            </a>
-                                        @else
-                                            <span class="badge bg-danger">
-                                                Aucune quittance
-                                            </span>
-                                        @endif
-                                    </td>
-
-                                    <td >{{ $historiquepaiement->montant }}</td>
-                                    <td >{{ $historiquepaiement->modePaiement }}</td>
-
-                                    <td>
-                                        @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
-                                            {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
+                                        <th>N°</th>
 
 
+                                    <th >Date de paiement</th>
+                                    <th >Quittance</th>
+                                    <th >Montant</th>
+                                    <th >Mode de paiement</th>
+                                    <th >Mois de paiement</th>
 
 
-
-
-
-                                  {{-- <td>{{ \Carbon\Carbon::create()->month($historiquepaiement->moisPaiement)->locale('fr')->monthName }}</td> --}}
-
-
-
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $i = 0;
+                                    @endphp
+                                    @foreach ($historiquepaiements as $historiquepaiement)
+                                        <tr>
+                                            <td>{{ ++$i }}</td>
+                                        <td >{{ $historiquepaiement->datePaiement }}</td>
                                         <td>
-                                            <div class="dropdown dropstart">
-                                                <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                    aria-expanded="true">
-                                                    <i class="ti ti-dots-vertical fs-5"></i>
+                                            @if($historiquepaiement->quittanceUrl)
+                                                <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Voir la quittance
                                                 </a>
-                                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                    style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
-                                                    data-popper-placement="left-start">
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.show',$historiquepaiement->id) }}">
-                                                            <i class="fs-4 ti ti-eye"></i> Détails
-                                                        </a>
-                                                    </li>
-                                                    <li>
-                                                        <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
-                                                            <i class="fs-4 ti ti-edit"></i> Quittance
-                                                        </a>
-                                                    </li>
-                                                    {{-- <li>
-                                                        <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger">
-                                                            <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
-                                                            </button>
-                                                        </form>
-
-                                                    </li> --}}
-                                                </ul>
-                                            </div>
-                                            {{--
-                                                <div class="dropdown">
-                                                    <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                        Actions
-                                                    </button>
-                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                        <a class="dropdown-item" href="{{ route('historiquepaiements.show',$historiquepaiement->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
-                                                        <a class="dropdown-item" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
-                                                        <div class="dropdown-divider"></div>
-                                                        <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
-                                                        </form>
-                                                    </div>
-                                                </div>
-                                            --}}
+                                            @else
+                                                <span class="badge bg-danger">
+                                                    Aucune quittance
+                                                </span>
+                                            @endif
                                         </td>
 
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                                        <td >{{ $historiquepaiement->montant }}</td>
+                                        <td >{{ $historiquepaiement->modePaiement }}</td>
 
+                                        <td>
+                                            @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
+                                                {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+
+
+
+
+
+
+
+                                    {{-- <td>{{ \Carbon\Carbon::create()->month($historiquepaiement->moisPaiement)->locale('fr')->monthName }}</td> --}}
+
+
+
+                                            <td>
+                                                <div class="dropdown dropstart">
+                                                    <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                        aria-expanded="true">
+                                                        <i class="ti ti-dots-vertical fs-5"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                        style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
+                                                        data-popper-placement="left-start">
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.show',$historiquepaiement->id) }}">
+                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                            </a>
+                                                        </li>
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
+                                                                <i class="fs-4 ti ti-edit"></i> Quittance
+                                                            </a>
+                                                        </li>
+                                                        {{-- <li>
+                                                            <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
+                                                                </button>
+                                                            </form>
+
+                                                        </li> --}}
+                                                    </ul>
+                                                </div>
+                                                {{--
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Actions
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <a class="dropdown-item" href="{{ route('historiquepaiements.show',$historiquepaiement->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
+                                                            <a class="dropdown-item" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                --}}
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
+    @endrole
+    @role('gerant')
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card">
+
+
+                    <div class="card-body">
+                        <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
+                        <div class="table-responsive">
+                            <table class="table table-striped table-hover datatable">
+                                <thead class="thead">
+                                    <tr>
+                                        <th>N°</th>
+
+
+                                    <th >Date de paiement</th>
+                                    <th >Quittance</th>
+                                    <th >Montant</th>
+                                    <th >Mode de paiement</th>
+                                    <th >Mois de paiement</th>
+
+
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @php
+                                        $i = 0;
+                                    @endphp
+                                    @foreach ($paiements as $paiement)
+                                        <tr>
+                                            <td>{{ ++$i }}</td>
+                                        <td >{{ $paiement->datePaiement }}</td>
+                                        <td>
+                                            @if($paiement->quittanceUrl)
+                                                <a href="{{ asset('storage/' . $paiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Voir la quittance
+                                                </a>
+                                            @else
+                                                <span class="badge bg-danger">
+                                                    Aucune quittance
+                                                </span>
+                                            @endif
+                                        </td>
+
+                                        <td >{{ $paiement->montant }}</td>
+                                        <td >{{ $paiement->modePaiement }}</td>
+
+                                        <td>
+                                            @if(!empty($paiement) && !empty($paiement->moisPaiement))
+                                                {{ \Carbon\Carbon::parse($paiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+
+
+
+
+
+
+
+                                    {{-- <td>{{ \Carbon\Carbon::create()->month($historiquepaiement->moisPaiement)->locale('fr')->monthName }}</td> --}}
+
+
+
+                                            <td>
+                                                <div class="dropdown dropstart">
+                                                    <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                        aria-expanded="true">
+                                                        <i class="ti ti-dots-vertical fs-5"></i>
+                                                    </a>
+                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                        style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
+                                                        data-popper-placement="left-start">
+                                                        <li>
+                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.show',$paiement->id) }}">
+                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                            </a>
+                                                        </li>
+
+                                                        {{-- <li>
+                                                            <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger">
+                                                                <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
+                                                                </button>
+                                                            </form>
+
+                                                        </li> --}}
+                                                    </ul>
+                                                </div>
+                                                {{--
+                                                    <div class="dropdown">
+                                                        <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                            Actions
+                                                        </button>
+                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                            <a class="dropdown-item" href="{{ route('historiquepaiements.show',$historiquepaiement->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
+                                                            <a class="dropdown-item" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
+                                                            <div class="dropdown-divider"></div>
+                                                            <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                                <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                --}}
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    @endrole
 </section>
 @endsection
 
