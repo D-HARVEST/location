@@ -100,8 +100,10 @@
             <div class="card">
          @role('locataire')
                 <div class="my-3 mx-3">
+
                     <div class="card border">
                         <div class="card-body">
+                            @if ($louerchambre->statut === 'CONFIRMER')
                             <button type="button" class="btn btn-success w-100 rounded-1"
                                     onclick="payer(this);"
                                     title="Payer la location"
@@ -109,6 +111,11 @@
                                 <i class="fa fa-credit-card me-2"></i>
                                 Payer le loyer pour ({{ $montantLoyer }} F CFA)
                             </button>
+                            @else
+                            <div class="alert alert-warning mb-0 text-center">
+                                Paiement indisponible tant que le statut n’est pas confirmé.
+                            </div>
+                        @endif
                         </div>
                     </div>
                 </div>

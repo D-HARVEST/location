@@ -113,7 +113,7 @@
                                                         data-popper-placement="left-start">
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.show',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                                <i class="fs-4 ti ti-eye"></i> Détails et paiement loyer
                                                             </a>
                                                         </li>
                                                         <li>
