@@ -2,20 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use id;
-use App\Models\User;
+use App\Http\Requests\LouerchambreRequest;
 use App\Models\Chambre;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use App\Models\Louerchambre;
-use Illuminate\Http\Request;
 use App\Models\Historiquepaiement;
+use App\Models\Louerchambre;
+use App\Models\Paiementenattente;
+use App\Models\User;
+use id;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Requests\LouerchambreRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class LouerchambreController extends Controller
 {
@@ -102,21 +103,13 @@ class LouerchambreController extends Controller
         // $louerchambre = Louerchambre::findOrFail($id);
         $chambres = Chambre::pluck('libelle', 'id');
 
+
         $louerchambre = Louerchambre::with(['chambre', 'user', 'historiquesPaiements'])
             ->findOrFail($id);
-        // $historiquepaiements = $louerchambre->historiquesPaiements;
 
+         $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->paginate();
 
-        // $louerchambre = Louerchambre::where('user_id', $user->id)
-        //                     ->latest()
-        //                     ->first();
-
-        // // Vérifier si le statut est bien "CONFIRMER"
-        // if (!$louerchambre || $louerchambre->statut !== 'CONFIRMER') {
-
-        // }
-
-        $historiquepaiements = Historiquepaiement::where('user_id', $user->id)->get();
+         $historiquepaiements = Historiquepaiement::where('user_id', $user->id)->get();
 
         $louer = Louerchambre::with(['chambre.maison', 'user'])
         ->findOrFail($id);
@@ -126,7 +119,7 @@ class LouerchambreController extends Controller
         $montantLoyer = $louerchambre->loyer;
 
 
-        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer','paiements'));
+        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer','paiements', 'paiementenattentes'));
     }
 
 

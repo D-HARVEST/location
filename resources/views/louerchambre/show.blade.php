@@ -91,8 +91,16 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </div>
+
+    <div class="row">
+         @include('paiementenattente.index')
+    </div>
+
+
+
 
     <!-- Paiement + Historique -->
     @role('locataire')
