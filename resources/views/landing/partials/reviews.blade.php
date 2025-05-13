@@ -46,7 +46,7 @@
                 <div class=" col-lg-4 ">
 
                     <div class="card shadow-none"
-                        style="background: url('{{ asset('reviews/woman1.jpeg') }}'); height: 350px; background-size: cover;">
+                        style="background: url('{{ asset('assets/woman1.jpg') }}'); height: 350px; background-size: cover;">
                         <div class="bg-white p-2 px-3 rounded-end-pill mb-3"
                             style="position: absolute; bottom: 0;left: 0;">
                             <h6 class="mb-0">— Amina</h6>
@@ -55,19 +55,19 @@
                     </div>
 
                     <div class="card shadow-none bg-primary-subtle p-3 rounded-3">
-                        <h6>Une expérience d'achat rapide et sécurisée</h6>
-                        <p>Je suis vraiment satisfait de l'application D-Go ! J'ai acheté un forfait Internet en quelques clics seulement, et la transaction a été super sécurisée via MoMo. En plus, j'ai reçu mon forfait instantanément. C'est exactement ce que je cherchais.</p>
+                        <h6>Une gestion simple, rapide et sécurisée </h6>
+                        <p>Je suis vraiment satisfait de l’application Go-Location ! J’ai pu enregistrer un nouveau locataire et suivre ses paiements en quelques clics seulement. Tout est clair, sécurisé et bien organisé. C’est exactement la solution qu’il me fallait pour gérer mes locations sans stress.</p>
                     </div>
                 </div>
                 <div class="col-lg-4 ">
                     <div class="card shadow-none bg-warning-subtle p-3 rounded-3">
                         <h6>Le meilleur rapport qualité-prix du marché</h6>
                         <p>
-                            Je recommande vivement D-Go à tous ceux qui cherchent des forfaits Internet à des prix imbattables. J'ai comparé avec d'autres plateformes, et D-Go reste la plus compétitive. Je n'ai jamais eu un meilleur rapport qualité-prix.
+                            Je recommande vivement cette application à tous les propriétaires qui souhaitent gérer leurs locations facilement et à moindre coût. J’ai testé d’autres solutions, mais celle-ci reste la plus complète et économique. Un excellent outil pour maximiser mes revenus sans me compliquer la vie.
                         </p>
                     </div>
                     <div class="card shadow-none"
-                        style="background: url('{{ asset('reviews/man1.jpeg') }}'); height: 350px; background-size: cover;">
+                        style="background: url('{{ asset('assets/man1.jpg') }}'); height: 350px; background-size: cover;">
                         <div class="bg-white p-2 px-3 rounded-end-pill mb-3"
                             style="position: absolute; bottom: 0;left: 0;">
                             <h6 class="mb-0">— Franklin</h6>
@@ -78,7 +78,7 @@
                 </div>
                 <div class=" col-lg-4">
                     <div class="card"
-                        style="background: url('{{ asset('reviews/man2.jpeg') }}'); height: 350px; background-size: cover;">
+                        style="background: url('{{ asset('assets/man2.jpg') }}'); height: 350px; background-size: cover;">
                         <div class="bg-white p-2 px-3 rounded-end-pill mb-3"
                             style="position: absolute; bottom: 0;left: 0;">
                             <h6 class="mb-0">— Jean-Pierre</h6>
@@ -87,10 +87,8 @@
                     </div>
                     <div class="bg-success-subtle p-3 rounded-3">
 
-                        <h6>Une solution fiable pour mes besoins de données</h6>
-                        <p>
-                            D-Go est devenu ma solution préférée pour acheter des forfaits Internet. J'ai testé plusieurs offres et je n'ai jamais été déçu. La livraison est instantanée et le service client est réactif en cas de problème. Je suis client fidèle maintenant !
-                        </p>
+                       <h6>Une solution fiable pour gérer mes locations</h6> 
+                       <p> Go-Location a transformé ma façon de gérer mes chambres. Grâce aux rappels automatiques, au suivi des paiements et à la fiche locataire complète, je gagne du temps au quotidien. L’interface est simple à utiliser et le service client est toujours réactif. C’est devenu un outil indispensable pour moi. </p>
                     </div>
                 </div>
             </div>

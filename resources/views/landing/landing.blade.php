@@ -52,23 +52,23 @@
             <div class="row">
                 <div class="col-md-4">
                     <div class="card w-100 border p-3">
-                        <i class="fa-solid fa-money-bill-wave feature-icon text-primary"></i>
-                        <h5 class="card-title">Tarifs Compétitifs</h5>
-                        <p class="card-text">Des prix imbattables pour toutes vos données Internet.</p>
+                        <i class="fa-solid fa-calendar-check feature-icon text-primary"></i>
+                        <h5 class="card-title">Gestion du planning</h5>
+                        <p class="card-text">Visualisez en un coup d’œil l’occupation de vos chambres. Grâce à un calendrier interactif, vous suivez les entrées, les sorties et les périodes disponibles.</p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card w-100 border p-3">
-                        <i class="fa-solid fa-lock feature-icon text-primary"></i>
-                        <h5 class="card-title">Paiements Sécurisés</h5>
-                        <p class="card-text">Effectuez vos transactions en toute sécurité via MoMo</p>
+                        <i class="fa-solid fa-wallet feature-icon text-primary"></i>
+                        <h5 class="card-title"> Suivi des paiements </h5>
+                        <p class="card-text">Gardez le contrôle sur tous les loyers. L’application vous montre rapidement quels locataires ont payé, quels paiements sont en retard. </p>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card w-100 border p-3">
-                        <i class="fa-solid fa-clock feature-icon text-primary"></i>
-                        <h5 class="card-title">Livraison Immédiate</h5>
-                        <p class="card-text">Recevez vos forfaits en quelques secondes seulement.</p>
+                        <i class="fa-solid fa-chart-line feature-icon text-primary"></i>
+                        <h5 class="card-title"> Rapports automatiques</h5>
+                        <p class="card-text">Obtenez des statistiques claires sur la performance de votre location : revenus mensuels, taux d’occupation, loyers impayés</p>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
     </section>
 
     <!-- Section Partenaires -->
-    <section id="partners" class="py-5 partners">
+    {{-- <section id="partners" class="py-5 partners">
         <div class="container text-center" >
             <h2 class="mb-5">Ils nous font confiance</h2>
             <div class="row justify-content-center">
@@ -91,13 +91,13 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
     @include('landing.partials.reviews');
 
 
       <!-- Section FAQ (Foire aux Questions) -->
-     <section id="faq" class="faq py-5">
+     {{-- <section id="faq" class="faq py-5">
             <div class="container text-center">
                 <h2 class="mb-5">Foire aux Questions</h2>
                 <div class="accordion" id="faqAccordion">
@@ -139,7 +139,7 @@
                     </div>
                 </div>
             </div>
-        </section>
+        </section> --}}
 
 
 

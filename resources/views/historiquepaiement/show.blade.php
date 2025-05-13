@@ -72,7 +72,7 @@
                         <div class="col-lg-4 mt-4">
                             <strong class="text-dark ">Quittance</strong>
                             @if($historiquepaiement->quittanceUrl)
-                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
+                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank"  class="badge bg-success text-white" style="text-decoration: none;">
                                 Voir la quittance
                             </a>
                         @else

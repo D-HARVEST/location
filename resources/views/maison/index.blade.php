@@ -22,7 +22,7 @@
                         @endif
 
                         <div class="text-end">
-                            <a href="{{ route('maisons.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
+                            <a href="{{ route('maisons.create') }}" class="btn btn-sm btn-primary rounded-05">+ Ajouter une maison</a>
                         </div>
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">Maison(s)</h5>
@@ -70,7 +70,7 @@
                                                         data-popper-placement="left-start">
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('maisons.show',$maison->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i> Détails
+                                                            <i class="fs-5 ms-1 ti ti-plus"></i> Ajouter chambre
                                                             </a>
                                                         </li>
                                                         <li>

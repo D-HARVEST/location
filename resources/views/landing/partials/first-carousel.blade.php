@@ -6,15 +6,40 @@
     <div class="carousel-inner rounded-3">
         <div class="carousel-item active " data-bs-interval="10000">
 
-            <div style="background-image: url('{{ asset('assets/image/futuristic-smart-city-with-5g-global-network-technology_53876-98438.avif') }}'); background-size: cover; background-position: center; background-color: rgba(0, 0, 0, 0.5);"
+            <div style="background-image: url('{{ asset('assets/home10.jpg') }}'); background-size: cover; background-position: center; background-color: rgba(0, 0, 0, 0.9);"
                 class="d-block w-100  img-car" alt="..."> </div>
+
             <div class="carousel-caption d-none d-md-block">
-                <h1 class="text-white text-shadow" >D-Go</h1>
-                <h5 class="text-white text-shadow">Achetez vos forfaits Internet facilement</h5>
+                <h1 class="text-white text-shadow" >Go-Location</h1>
+                <h5 class="text-white text-shadow">Gérez vos chambres en toute simplicité</h5>
                 <p class="text-shadow">
-                    Profitez de tarifs avantageux et d'une expérience rapide et sécurisée.
+                    Une solution tout-en-un pour suivre les réservations, les paiements, et vos locataires.
                 </p>
             </div>
+        </div>
+        <div class="carousel-item" data-bs-interval="2000">
+
+            <div style="background-image: url('{{ asset('assets/home12.jpg') }}'); "
+                class="d-block w-100  img-car" alt="..."> </div>
+            <div class="carousel-caption d-none d-md-block">
+                <h5 class="text-white text-shadow">Suivez vos Locations en Temps Réel</h5>
+                <p class="text-shadow">
+                    Gardez un œil sur vos performances grâce à un tableau de bord en direct : taux d’occupation, revenus générés, paiements en attente… tout est à portée de main.
+                </p>
+            </div>
+
+        </div>
+        <div class="carousel-item ">
+
+            <div style="background-image: url('{{ asset('assets/home12.jpg') }}'); background-color: rgba(0, 0, 0, 0.8); "
+                class="d-block w-100  img-car" alt="..."> </div>
+            <div class="carousel-caption d-none d-md-block">
+                <h5 class="text-white text-shadow">Recevez des Alertes pour un Stock Critique</h5>
+                <p class="text-shadow">
+                    Ne manquez jamais une opportunité de vente, grâce aux notifications de stock bas.
+                </p>
+            </div>
+
         </div>
 
         <div class="know-more ">
@@ -30,9 +55,7 @@
 
 
                 <p class="bg-white rounded-start-3 rounded-bottom-3 bg-white px-4 py-3 mt-0 mb-0 inverted-radius-at-bottom-left position-relative"
-                    style="border-bottom-left-radius: 0 !important; ">Devenez Smart dans la gestion de
-                    votre
-                    boutique.
+                    style="border-bottom-left-radius: 0 !important; ">Devenez Smart dans la gestion de vos maisons.
 
                 </p>
 
