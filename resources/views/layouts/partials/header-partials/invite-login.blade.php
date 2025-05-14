@@ -20,7 +20,7 @@
         <button class="btn btn-xl btn-outline-secondary rounded-1 py-1 px-3 ms-2 fw-bold ">
             S'authentifier
         </button>
-        <div class="dropdown-menu " aria-labelledby="dropdownMenuButton" data-popper-placement="bottom-end">
+        <div class="dropdown-menu " aria-labelledby="dropdownMenuButton" data-popper-placement="bottom-end" style="margin-left: -225px;">
             <a class="dropdown-item" href="{{ route('login') }}">
                 <div class="d-flex align-items-center pb-9 position-relative">
                     <div class="bg-light-subtle rounded-1 me-3 p-6 d-flex align-items-center justify-content-center">
