@@ -21,9 +21,9 @@
                             </div>
                         @endif
 
-                        <div class="text-end">
+                        {{-- <div class="text-end">
                             <a href="{{ route('paiementenattentes.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
-                        </div>
+                        </div> --}}
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">Paiementenattente(s)</h5>
                             <span>Liste des Paiementenattente(s)</span>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                {!! $paiementenattentes->withQueryString()->links() !!}
+                {{-- {!! $paiementenattentes->withQueryString()->links() !!} --}}
             </div>
         </div>
     </div>

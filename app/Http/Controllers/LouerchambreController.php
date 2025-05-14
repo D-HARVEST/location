@@ -11,6 +11,7 @@ use App\Models\User;
 use id;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
@@ -100,26 +101,70 @@ class LouerchambreController extends Controller
     {
 
         $user = Auth::user();
-        // $louerchambre = Louerchambre::findOrFail($id);
         $chambres = Chambre::pluck('libelle', 'id');
-
-
         $louerchambre = Louerchambre::with(['chambre', 'user', 'historiquesPaiements'])
             ->findOrFail($id);
-
-         $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->paginate();
-
-         $historiquepaiements = Historiquepaiement::where('user_id', $user->id)->get();
-
+        $historiquepaiements = Historiquepaiement::where('user_id', $user->id)->get();
         $louer = Louerchambre::with(['chambre.maison', 'user'])
-        ->findOrFail($id);
-
+            ->findOrFail($id);
         $paiements = HistoriquePaiement::where('louerchambre_id', $louer->id)->get();
-
         $montantLoyer = $louerchambre->loyer;
 
+        $jourPaiement = $louerchambre->jourPaiementLoyer;
+        $today = Carbon::today();
 
-        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer','paiements', 'paiementenattentes'));
+        $moisPaiement = $today->format('Y-m');
+
+        // Jour limite de paiement pour ce mois
+        $dateLimite = Carbon::create($today->year, $today->month, $jourPaiement);
+
+        // Condition 1 : date d’aujourd’hui a dépassé le jour de paiement
+        $jourDepasse = $today->greaterThan($dateLimite);
+
+
+        $paiementExiste = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)
+            ->where('moisPaiement', $moisPaiement)
+            ->exists();
+
+
+        if ($paiementExiste) {
+            // 🧹 Nettoyage : suppression du paiement en attente pour ce mois
+            Paiementenattente::where('louerchambre_id', $louerchambre->id)
+                ->whereMonth('dateLimite', $today->month)
+                ->whereYear('dateLimite', $today->year)
+                ->delete();
+           }
+
+        if ($jourDepasse && !$paiementExiste) {
+
+            // Vérifie si un paiement en attente existe déjà
+            $attenteExiste = Paiementenattente::where('louerchambre_id', $louerchambre->id)
+                ->whereDate('dateLimite', $dateLimite)
+                ->exists();
+
+            if (!$attenteExiste) {
+                // Crée le paiement en attente
+                Paiementenattente::create([
+                    'louerchambre_id' => $louerchambre->id,
+                    'dateLimite' => $dateLimite,
+                    'montant' => $montantLoyer,
+                    'etat' => 'en attente',
+                ]);
+            }
+        } elseif ($paiementExiste) {
+            // Supprimer tout paiement en attente s’il y a déjà eu paiement
+            Paiementenattente::where('louerchambre_id', $louerchambre->id)
+                ->whereDate('dateLimite', $dateLimite)
+                ->delete();
+        }
+
+
+        $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
+
+
+
+
+        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer', 'paiements', 'paiementenattentes'));
     }
 
 
@@ -178,7 +223,7 @@ class LouerchambreController extends Controller
         }
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
-        ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
+            ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
     }
 
 
