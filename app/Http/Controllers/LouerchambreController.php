@@ -133,7 +133,7 @@ class LouerchambreController extends Controller
                 ->whereMonth('dateLimite', $today->month)
                 ->whereYear('dateLimite', $today->year)
                 ->delete();
-           }
+        }
 
         if ($jourDepasse && !$paiementExiste) {
 
@@ -192,6 +192,7 @@ class LouerchambreController extends Controller
 
         $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
             ->accept('application/json')
+            ->timeout(60)
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
                 'include' => 'customer.phone_number,currency,payment_method',
                 'locale' => 'fr'
@@ -206,8 +207,7 @@ class LouerchambreController extends Controller
             && isset($transaction['v1/transaction']['amount'])
             && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
         ) {
-
-
+            
             Historiquepaiement::create([
                 'louerchambre_id' => $louerchambre->id,
                 'datePaiement' => now(),

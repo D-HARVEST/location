@@ -150,6 +150,28 @@
 @endrole
 
 
+@role('locataire|gerant|Super-admin')
+    @if(Auth::user()->louerchambre)
+        <li class="sidebar-item">
+            <a class="sidebar-link primary-hover-bg" href="{{ route('interventions.index') }}" aria-expanded="false">
+                <iconify-icon icon="mdi:tools" class="fs-6 aside-icon"></iconify-icon>
+                <span class="hide-menu ps-1">Interventions</span>
+            </a>
+            {{-- <ul aria-expanded="false" class="collapse first-level">
+                @if(Auth::user()->louerchambre)
+                    <li class="sidebar-item">
+                        <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
+                            <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
+                            <span class="hide-menu ps-1">Ma chambre</span>
+                        </a>
+                    </li>
+                @endif
+            </ul> --}}
+        </li>
+    @endif
+@endrole
+
+
 @haspermission('gerer parametre de base systeme')
     <li class="sidebar-item">
         <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">

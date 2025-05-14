@@ -65,6 +65,11 @@ class Louerchambre extends Model
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 
+    public function interventions()
+    {
+        return $this->hasMany(Intervention::class);
+    }
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */

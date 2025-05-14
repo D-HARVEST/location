@@ -134,6 +134,7 @@
                                     </thead>
                                     <tbody>
                                         @php $i = 0; @endphp
+                                        
                                         @foreach ($paiementenattentes as $paiementenattente)
                                             <tr>
                                                 <td>{{ ++$i }}</td>
@@ -202,6 +203,7 @@
                                                         </div>
                                                     --}}
                                                 </td>
+
 
                                             </tr>
                                         @endforeach
