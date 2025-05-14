@@ -102,74 +102,66 @@
     <section class="">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-
-
+                <div class="card shadow-sm border-0">
                     <div class="card-body">
+                        <div class="text-end mb-3">
+                            <a href="{{ route('maisons.index') }}" class="btn btn-sm btn-primary">Retour</a>
+                        </div>
 
-
-
-
-                        <div class="col-auto">
-                            <div class="text-end">
-                                <a href="{{ route('maisons.index') }}" class="btn btn-sm btn-primary"> Retour</a>
+                        <div class="row g-4">
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Nom de la maison</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->libelle }}</div>
+                                </div>
                             </div>
 
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Pays</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->Pays }}</div>
+                                </div>
+                            </div>
 
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Ville</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->ville }}</div>
+                                </div>
+                            </div>
 
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Quartier</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->quartier }}</div>
+                                </div>
+                            </div>
 
-                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Adresse</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->adresse }}</div>
+                                </div>
+                            </div>
 
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Gérant</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->user->name }}</div>
+                                </div>
+                            </div>
 
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Nom de la maison:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->libelle }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Pays:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->Pays }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Ville:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->ville }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Quartier:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->quartier }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Adresse:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->adresse }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Gérant:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->user->name }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Jour de paiement loyer:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $maison->jourPaiementLoyer }}"
-                                readonly>
-                        </div>
-
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Jour de paiement du loyer</div>
+                                    <div class="fw-semibold text-dark">{{ $maison->jourPaiementLoyer }}</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
-
-
             </div>
+
             <div class="row">
                 <div class="col-md-12">
                     @include('chambre.index')
