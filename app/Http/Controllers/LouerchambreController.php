@@ -2,22 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LouerchambreRequest;
-use App\Models\Chambre;
-use App\Models\Historiquepaiement;
-use App\Models\Louerchambre;
-use App\Models\Paiementenattente;
-use App\Models\User;
 use id;
-use Illuminate\Http\RedirectResponse;
+use App\Models\User;
+use App\Models\Chambre;
+use Carbon\CarbonPeriod;
+use Illuminate\View\View;
+use Illuminate\Support\Str;
+use App\Models\Louerchambre;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\Paiementenattente;
+use App\Models\Historiquepaiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\LouerchambreRequest;
 
 class LouerchambreController extends Controller
 {
@@ -111,58 +112,51 @@ class LouerchambreController extends Controller
         $montantLoyer = $louerchambre->loyer;
 
         $jourPaiement = $louerchambre->jourPaiementLoyer;
-        $today = Carbon::today();
 
-        $moisPaiement = $today->format('Y-m');
+        $debut = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+        $fin = Carbon::today()->startOfMonth();
 
-        // Jour limite de paiement pour ce mois
-        $dateLimite = Carbon::create($today->year, $today->month, $jourPaiement);
+        // Créer une période mensuelle
+        $moisPeriode = CarbonPeriod::create($debut, '1 month', $fin);
 
-        // Condition 1 : date d’aujourd’hui a dépassé le jour de paiement
-        $jourDepasse = $today->greaterThan($dateLimite);
+        foreach ($moisPeriode as $mois) {
+            $moisFormat = $mois->format('Y-m');
 
+            // Date limite pour ce mois
+            $dateLimite = Carbon::create($mois->year, $mois->month, $jourPaiement);
 
-        $paiementExiste = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)
-            ->where('moisPaiement', $moisPaiement)
-            ->exists();
-
-
-        if ($paiementExiste) {
-            // 🧹 Nettoyage : suppression du paiement en attente pour ce mois
-            Paiementenattente::where('louerchambre_id', $louerchambre->id)
-                ->whereMonth('dateLimite', $today->month)
-                ->whereYear('dateLimite', $today->year)
-                ->delete();
-        }
-
-        if ($jourDepasse && !$paiementExiste) {
-
-            // Vérifie si un paiement en attente existe déjà
-            $attenteExiste = Paiementenattente::where('louerchambre_id', $louerchambre->id)
-                ->whereDate('dateLimite', $dateLimite)
+            // Vérifier si le paiement pour ce mois existe
+            $paiementExiste = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)
+                ->where('moisPaiement', $moisFormat)
                 ->exists();
 
-            if (!$attenteExiste) {
-                // Crée le paiement en attente
-                Paiementenattente::create([
-                    'louerchambre_id' => $louerchambre->id,
-                    'dateLimite' => $dateLimite,
-                    'montant' => $montantLoyer,
-                    'etat' => 'en attente',
-                ]);
+            // ✅ Si un paiement a été effectué, on supprime l'éventuel paiement en attente
+            if ($paiementExiste) {
+                Paiementenattente::where('louerchambre_id', $louerchambre->id)
+                    ->whereDate('dateLimite', $dateLimite)
+                    ->delete();
+                continue; // passe au mois suivant
             }
-        } elseif ($paiementExiste) {
-            // Supprimer tout paiement en attente s’il y a déjà eu paiement
-            Paiementenattente::where('louerchambre_id', $louerchambre->id)
-                ->whereDate('dateLimite', $dateLimite)
-                ->delete();
+
+            // Si aucun paiement et que la date est dépassée, on vérifie ou crée un en attente
+            if (!$paiementExiste && $dateLimite->lessThanOrEqualTo(Carbon::today())) {
+                $attenteExiste = Paiementenattente::where('louerchambre_id', $louerchambre->id)
+                    ->whereDate('dateLimite', $dateLimite)
+                    ->exists();
+
+                if (!$attenteExiste) {
+                    Paiementenattente::create([
+                        'louerchambre_id' => $louerchambre->id,
+                        'dateLimite' => $dateLimite,
+                        'montant' => $montantLoyer, // assure-toi que cette variable est bien définie
+                        'etat' => 'en attente',
+                    ]);
+                }
+            }
         }
 
-
+        // Récupérer tous les paiements en attente
         $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
-
-
-
 
         return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer', 'paiements', 'paiementenattentes'));
     }
@@ -192,7 +186,6 @@ class LouerchambreController extends Controller
 
         $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
             ->accept('application/json')
-            ->timeout(60)
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
                 'include' => 'customer.phone_number,currency,payment_method',
                 'locale' => 'fr'
@@ -207,7 +200,8 @@ class LouerchambreController extends Controller
             && isset($transaction['v1/transaction']['amount'])
             && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
         ) {
-            
+
+
             Historiquepaiement::create([
                 'louerchambre_id' => $louerchambre->id,
                 'datePaiement' => now(),

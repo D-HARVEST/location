@@ -22,23 +22,26 @@ class InterventionController extends Controller
 
         // Si l'utilisateur est un "locataire"
         if ($user->hasRole('locataire')) {
-            // Récupérer la chambre louée par l'utilisateur connecté
             $louerchambre = Louerchambre::where('user_id', $user->id)->first();
 
             if (!$louerchambre) {
                 return view('intervention.index', ['interventions' => []])
                     ->with('message', 'Aucune chambre associée à cet utilisateur.');
             }
-
-            // Récupérer les interventions liées à la chambre de l'utilisateur
             $interventions = Intervention::where('louerchambre_id', $louerchambre->id)->paginate();
-        }
-
-        else if ($user->hasRole('gerant')) {
-
-            $interventions = Intervention::whereHas('louerchambre', function ($query) use ($user) {
+        } else if ($user->hasRole('gerant')) {
+            // Récupère les ID des chambres des maisons gérées par le gérant
+            $chambreIds = \App\Models\Chambre::whereHas('maison', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
-            })->paginate();
+            })->pluck('id');
+
+            // Récupère les ID des locations associées à ces chambres
+            $louerchambreIds = \App\Models\Louerchambre::whereIn('chambre_id', $chambreIds)->pluck('id');
+
+            // Récupère les interventions associées à ces louerchambres
+            $interventions = Intervention::whereIn('louerchambre_id', $louerchambreIds)->latest()->paginate(10);
+        } else if ($user->hasRole('Super-Admin')) {
+            $interventions = Intervention::latest()->paginate(10);
         }
 
         return view('intervention.index', compact('interventions'))
@@ -70,7 +73,7 @@ class InterventionController extends Controller
 
         // Valider et créer l'intervention
         $all = $request->validated();
-        $all['louerchambre_id'] = $louerchambre->id;  
+        $all['louerchambre_id'] = $louerchambre->id;
 
         Intervention::create($all);
 
@@ -126,6 +129,23 @@ class InterventionController extends Controller
         return Redirect::route('interventions.index')
             ->with('success', 'Intervention mise à jour avec succès !');
     }
+
+    public function confirmer($id): RedirectResponse
+    {
+        $intervention = Intervention::findOrFail($id);
+        $intervention->update(['statut' => 'CONFIRMER']);
+
+        return redirect()->route('interventions.index')->with('success', 'Intervention confirmée avec succès.');
+    }
+
+    public function rejeter($id): RedirectResponse
+    {
+        $intervention = Intervention::findOrFail($id);
+        $intervention->update(['statut' => 'REJETER']);
+
+        return redirect()->route('interventions.index')->with('success', 'Intervention rejetée avec succès.');
+    }
+
 
     public function destroy($id): RedirectResponse
     {

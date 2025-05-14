@@ -36,6 +36,7 @@
                                         <th>N°</th>
 
                                     <th>locataire</th>
+                                    <th>chambre</th>
 									<th >Libelle</th>
 									<th >Description</th>
                                     <th >Date de soumission d'intervention</th>
@@ -50,10 +51,24 @@
                                             <td>{{ ++$i }}</td>
 
                                         <td >{{ $intervention->louerchambre->user->name ?? '-' }}</td>
+                                        <td >{{ $intervention->louerchambre->chambre->libelle ?? '-' }}</td>
 										<td >{{ $intervention->libelle }}</td>
 										<td >{{ $intervention->description }}</td>
                                         <td >{{ $intervention->created_at }}</td>
-										<td >{{ $intervention->statut }}</td>
+										<td>
+                                            @php
+                                                $badgeColor = match($intervention->statut) {
+                                                    'EN ATTENTE' => 'warning',
+                                                    'CONFIRMER' => 'success',
+                                                    'REJETER' => 'danger',
+
+                                                };
+                                            @endphp
+                                            <span class="badge bg-{{ $badgeColor }}">
+                                                {{ $intervention->statut }}
+                                            </span>
+                                        </td>
+
 
                                             <td>
                                                 <div class="dropdown dropstart">
@@ -69,11 +84,36 @@
                                                                 <i class="fs-4 ti ti-eye"></i> Détails
                                                             </a>
                                                         </li>
+                                                        @if($intervention->statut === 'EN ATTENTE')
+                                                      @role('gerant')
+                                                     <li>
+                                                        <form action="{{ route('interventions.confirmer', $intervention->id) }}" method="POST">
+                                                            @csrf
+                                                            @method('PATCH')
+                                                            <button type="submit" class="dropdown-item text-success d-flex align-items-center gap-3">
+                                                                <i class="fs-4 ti ti-check"></i> Confirmer
+                                                            </button>
+                                                        </form>
+                                                           </li>
+
+                                                           <li>
+                                                        <form action="{{ route('interventions.rejeter', $intervention->id) }}" method="POST">
+                                                                   @csrf
+                                                                   @method('PATCH')
+                                                                   <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-3">
+                                                                       <i class="fs-4 ti ti-x"></i> Rejeter
+                                                                   </button>
+                                                               </form>
+                                                           </li>
+
+                                                       @endrole
+
+                                                        @role('locataire')
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('interventions.edit',$intervention->id) }}">
                                                                 <i class="fs-4 ti ti-edit"></i> Modifier
                                                             </a>
-                                                        </li>
+                                                         </li>
                                                         <li>
                                                             <form action="{{ route('interventions.destroy',$intervention->id) }}" method="POST">
                                                                 @csrf
@@ -82,8 +122,10 @@
                                                                 <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
                                                                 </button>
                                                             </form>
-
                                                         </li>
+                                                        @endrole
+                                                        @endif
+
                                                     </ul>
                                                 </div>
                                                 {{--

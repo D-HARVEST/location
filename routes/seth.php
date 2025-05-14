@@ -40,5 +40,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/maison/{id}', [MaisonController::class, 'show'])->name('maison.show');
         Route::resource('paiementenattentes', PaiementenattenteController::class);
         Route::resource('interventions', InterventionController::class);
+
+        Route::patch('/interventions/{id}/confirmer', [InterventionController::class, 'confirmer'])->name('interventions.confirmer');
+        Route::patch('/interventions/{id}/rejeter', [InterventionController::class, 'rejeter'])->name('interventions.rejeter');
     });
 });

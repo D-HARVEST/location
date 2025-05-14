@@ -134,7 +134,7 @@
                                     </thead>
                                     <tbody>
                                         @php $i = 0; @endphp
-                                        
+
                                         @foreach ($paiementenattentes as $paiementenattente)
                                             <tr>
                                                 <td>{{ ++$i }}</td>
@@ -275,8 +275,8 @@
                                         <td >{{ $historiquepaiement->datePaiement }}</td>
                                         <td>
                                             @if($historiquepaiement->quittanceUrl)
-                                                <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
-                                                    Voir la quittance
+                                                <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Télecharger la quittance
                                                 </a>
                                             @else
                                                 <span class="badge bg-danger">
@@ -393,8 +393,8 @@
                                         <td >{{ $paiement->datePaiement }}</td>
                                         <td>
                                             @if($paiement->quittanceUrl)
-                                                <a href="{{ asset('storage/' . $paiement->quittanceUrl) }}" target="_blank" class="badge bg-success text-white" style="text-decoration: none;">
-                                                    Voir la quittance
+                                                <a href="{{ asset('storage/' . $paiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
+                                                    Télecharger la quittance
                                                 </a>
                                             @else
                                                 <span class="badge bg-danger">

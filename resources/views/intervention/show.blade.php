@@ -43,10 +43,21 @@
                                 readonly>
                         </div>
 
-                        <div class="col-lg-4">
+                        <div class="col-lg-4 mt-4">
                             <strong class="text-dark ">Statut:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $intervention->statut }}"
-                                readonly>
+                            {{-- <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $intervention->statut }}"
+                                readonly> --}}
+                                @php
+                                $badgeColor = match($intervention->statut) {
+                                    'EN ATTENTE' => 'warning',
+                                    'CONFIRMER' => 'success',
+                                    'REJETER' => 'danger',
+
+                                };
+                            @endphp
+                            <span class="badge bg-{{ $badgeColor }}">
+                                {{ $intervention->statut }}
+                            </span>
                         </div>
 
                         </div>
