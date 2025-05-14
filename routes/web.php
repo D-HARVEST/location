@@ -1,14 +1,15 @@
 <?php
 
-use App\Http\Controllers\HistoriquepaiementController;
-use App\Http\Controllers\LouerchambreController;
-use App\Http\Controllers\ProfilController;
+use App\Models\Louerchambre;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Models\Louerchambre;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ProfilController;
+use App\Http\Controllers\LouerchambreController;
+use App\Http\Controllers\HistoriquepaiementController;
 
 
 
