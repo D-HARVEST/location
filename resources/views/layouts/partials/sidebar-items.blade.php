@@ -5,7 +5,7 @@
     </a>
 </li> --}}
 <li class="sidebar-item">
-    <a class="sidebar-link primary-hover-bg" href="" aria-expanded="false">
+    <a class="sidebar-link primary-hover-bg" href="{{ route('dashboard') }}" aria-expanded="false">
         <iconify-icon icon="iconamoon:home" class="fs-6 aside-icon"></iconify-icon>
         <span class="hide-menu ps-1">Accueil</span>
     </a>
