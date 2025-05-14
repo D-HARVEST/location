@@ -14,84 +14,61 @@
     <section class="">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-
-
+                <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <div class="text-end">
-                            <a href="{{ route('louerchambres.show', $historiquepaiement->louerchambre_id) }}" class="btn btn-sm btn-primary">Retour</a>
-                        </div>
-                        <div class="row">
-
-
-
-                        {{-- <div class="col-lg-4">
-                            <strong class="text-dark ">Louerchambres Id:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $historiquepaiement->louerchambres_id }}"
-                                readonly>
-                        </div> --}}
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Date de paiement:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $historiquepaiement->datePaiement }}"
-                                readonly>
+                        <div class="text-end mb-3">
+                            <a href="{{ route('louerchambres.show', $historiquepaiement->louerchambre_id) }}" class="btn btn-sm btn-primary"> Retour</a>
                         </div>
 
+                        <div class="row g-4">
+                            @php
+                                $infos = [
+                                    'Date de paiement' => $historiquepaiement->datePaiement,
+                                    'Montant' => number_format($historiquepaiement->montant, 0, ',', ' ') . ' FCFA',
+                                    'Mode de paiement' => $historiquepaiement->modePaiement,
+                                ];
+                            @endphp
 
+                            @foreach ($infos as $label => $value)
+                                <div class="col-lg-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="text-muted small">{{ $label }}</div>
+                                        <div class="fw-semibold text-dark">{{ $value }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
 
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Montant:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $historiquepaiement->montant }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Mode de paiement:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $historiquepaiement->modePaiement }}"
-                                readonly>
-                        </div>
-
-                        {{-- <div class="col-lg-4">
-                            <strong class="text-dark ">Idtransaction:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $historiquepaiement->idTransaction }}"
-                                readonly>
-                        </div> --}}
-
-                        <div class="col-lg-4 mt-4">
-                            <strong class="text-dark ">Mois de paiement:</strong>
-                            <div class="badge bg-success text-white">
-                                @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
-                                {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                            @else
-                                -
-                            @endif
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Mois de paiement</div>
+                                    <div class="fw-semibold text-dark">
+                                        @if (!empty($historiquepaiement->moisPaiement))
+                                            {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                        @else
+                                            -
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
 
-                        </div>
-
-                        <div class="col-lg-4 mt-4">
-                            <strong class="text-dark ">Quittance</strong>
-                            @if($historiquepaiement->quittanceUrl)
-                            <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank"  class="badge bg-success text-white" style="text-decoration: none;">
-                                Voir la quittance
-                            </a>
-                        @else
-                            <span class="badge bg-danger">
-                                Aucune quittance
-                            </span>
-                        @endif
-                        </div>
-
-                        {{-- <div class="col-lg-4">
-                            <strong class="text-dark ">User Id:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $historiquepaiement->user_id }}"
-                                readonly>
-                        </div> --}}
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Quittance</div>
+                                    @if ($historiquepaiement->quittanceUrl)
+                                        <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="text-success fw-semibold text-decoration-none">
+                                            Voir la quittance
+                                        </a>
+                                    @else
+                                        <span class="text-danger fw-semibold">Aucune quittance</span>
+                                    @endif
+                                </div>
+                            </div>
 
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
     </section>
 @endsection

@@ -36,9 +36,10 @@
                                         <th>N°</th>
 
                                     <th>locataire</th>
+                                    <th>Maison</th>
                                     <th>chambre</th>
 									<th >Libelle</th>
-									<th >Description</th>
+									{{-- <th >Description</th> --}}
                                     <th >Date de soumission d'intervention</th>
 									<th >Statut</th>
 
@@ -51,9 +52,10 @@
                                             <td>{{ ++$i }}</td>
 
                                         <td >{{ $intervention->louerchambre->user->name ?? '-' }}</td>
+                                        <td >{{ $intervention->louerchambre->chambre->maison->libelle ?? '-' }}</td>
                                         <td >{{ $intervention->louerchambre->chambre->libelle ?? '-' }}</td>
 										<td >{{ $intervention->libelle }}</td>
-										<td >{{ $intervention->description }}</td>
+										{{-- <td >{{ $intervention->description }}</td> --}}
                                         <td >{{ $intervention->created_at }}</td>
 										<td>
                                             @php

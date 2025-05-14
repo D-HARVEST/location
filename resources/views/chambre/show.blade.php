@@ -156,73 +156,48 @@
     <section class="">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-
-
+                <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        <div class="text-end">
-                            <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary"> Retour</a>
-                        </div>
-                        <div class="row">
-
-
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Libelle:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->libelle }}"
-                                readonly>
+                        <div class="text-end mb-3">
+                            <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary">Retour</a>
                         </div>
 
+                        <div class="row g-4">
+                            @php
+                                $infos = [
+                                    'Libellé' => $chambre->libelle,
+                                    'Jour de paiement de loyer' => $chambre->jourPaiementLoyer,
+                                    'Loyer' => number_format($chambre->loyer, 0, ',', ' ') . ' FCFA',
+                                    'Catégorie' => optional($chambre->category)->libelle,
+                                    'Type' => optional($chambre->type)->libelle,
+                                    'Maison' => optional($chambre->maison)->libelle,
+                                ];
+                            @endphp
 
+                            @foreach ($infos as $label => $value)
+                                <div class="col-lg-4">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="text-muted small">{{ $label }}</div>
+                                        <div class="fw-semibold text-dark">{{ $value }}</div>
+                                    </div>
+                                </div>
+                            @endforeach
 
+                            @php
+                                $badgeClass = $chambre->statut === 'Disponible' ? 'success' : 'danger';
+                            @endphp
 
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Jour de paiement de loyer:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->jourPaiementLoyer }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Loyer:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->loyer }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Categorie:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->category->libelle }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Type :</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->type->libelle }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Maison :</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $chambre->maison->libelle }}"
-                                readonly>
-                        </div>
-
-
-                        @php
-                        $badgeClass = $chambre->statut === 'Disponible' ? 'bg-success' : 'bg-danger';
-                       @endphp
-
-                    <div class="col-lg-4 mt-4">
-                        <strong class="text-dark">Statut:</strong>
-                        <span class="badge {{ $badgeClass }} my-1">
-                            {{ $chambre->statut }}
-                        </span>
-                    </div>
-
-
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Statut</div>
+                                    <span class="badge bg-{{ $badgeClass }}">{{ $chambre->statut }}</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-md-12">

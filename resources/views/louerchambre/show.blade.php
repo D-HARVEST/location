@@ -14,86 +14,71 @@
 <section>
     <div class="row">
         <div class="col-md-12">
-            <div class="card">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <div class="text-end">
+                    <div class="text-end mb-3">
                         <a href="{{ route('chambres.show', $louerchambre->chambre_id) }}" class="btn btn-sm btn-primary">Retour</a>
                     </div>
 
-                    <div class="row mt-3">
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Chambre:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ optional($louerchambre->chambre)->libelle }}" readonly>
-                        </div>
+                    <div class="row g-4">
+                        @php
+                            $fields = [
+                                'Chambre' => optional($louerchambre->chambre)->libelle,
+                                'Locataire' => optional($louerchambre->user)->name,
+                                'Date d\'entrée' => $louerchambre->debutOccupation,
+                                'Prix du loyer' => number_format($louerchambre->chambre->loyer, 0, ',', ' ') . ' FCFA',
+                                'Caution du loyer' => number_format($louerchambre->cautionLoyer, 0, ',', ' ') . ' FCFA',
+                                'Caution d\'électricité' => number_format($louerchambre->cautionElectricite, 0, ',', ' ') . ' FCFA',
+                                'Caution d\'eau' => number_format($louerchambre->cautionEau, 0, ',', ' ') . ' FCFA',
+                                'Jour du paiement du loyer' => $louerchambre->jourPaiementLoyer,
+                            ];
+                        @endphp
+
+                        @foreach($fields as $label => $value)
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">{{ $label }}</div>
+                                    <div class="fw-semibold text-dark">{{ $value }}</div>
+                                </div>
+                            </div>
+                        @endforeach
 
                         <div class="col-lg-4">
-                            <strong class="text-dark">Locataire:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ optional($louerchambre->user)->name }}" readonly>
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Copie du contrat</div>
+                                @if($louerchambre->copieContrat)
+                                    <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" class="text-success fw-semibold text-decoration-none">
+                                        Voir la copie du contrat
+                                    </a>
+                                @else
+                                    <span class="text-danger fw-semibold">Aucun fichier disponible</span>
+                                @endif
+                            </div>
                         </div>
 
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Date d'entrée:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->debutOccupation }}" readonly>
+                        <div class="col-lg-12">
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Statut</div>
+                                @php
+                                    $statut = $louerchambre->statut;
+                                    $classes = [
+                                        'EN ATTENTE' => 'warning',
+                                        'CONFIRMER' => 'success',
+                                        'REJETER' => 'danger',
+                                        'ARCHIVER' => 'secondary',
+                                    ];
+                                    $class = $classes[$statut] ?? 'secondary';
+                                @endphp
+                                <span class="badge bg-{{ $class }}">{{ $statut }}</span>
+                            </div>
                         </div>
 
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Prix du loyer:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->chambre->loyer }}" readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Caution du loyer:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->cautionLoyer }}" readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Caution d'électricité:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->cautionElectricite }}" readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Caution d'eau:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->cautionEau }}" readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Jour du paiement du loyer:</strong>
-                            <input type="text" class="form-control rounded my-1 text-dark" value="{{ $louerchambre->jourPaiementLoyer }}" readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark">Copie du contrat:</strong><br>
-                            @if($louerchambre->copieContrat)
-                            <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank"  class="badge bg-success text-white" style="text-decoration: none;">
-                                Voir la copie du contrat
-                            </a>
-                        @else
-                            <span class="badge bg-danger">
-                                Aucun fichier disponible
-                            </span>
-                        @endif
-                        </div>
-
-                        <div class="col-lg-4 mt-3">
-                            <strong class="text-dark">Statut:</strong><br>
-                            @php
-                                $statut = $louerchambre->statut;
-                                $classes = [
-                                    'EN ATTENTE' => 'warning',
-                                    'CONFIRMER' => 'success',
-                                    'REJETER' => 'danger',
-                                    'ARCHIVER' => 'danger',
-                                ];
-                                $class = $classes[$statut] ?? 'secondary';
-                            @endphp
-                            <span class="badge bg-{{ $class }}">{{ $statut }}</span>
-                        </div>
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
+
 
     <div class="row">
         <div class="">
