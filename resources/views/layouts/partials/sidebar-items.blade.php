@@ -151,7 +151,7 @@
 
 
 @role('locataire|gerant|Super-admin')
-    @if(Auth::user()->louerchambre)
+
         <li class="sidebar-item">
             <a class="sidebar-link primary-hover-bg" href="{{ route('interventions.index') }}" aria-expanded="false">
                 <iconify-icon icon="mdi:tools" class="fs-6 aside-icon"></iconify-icon>
@@ -168,7 +168,7 @@
                 @endif
             </ul> --}}
         </li>
-    @endif
+
 @endrole
 
 
