@@ -142,20 +142,22 @@
 
                                                         </li>
                                                         @endrole --}}
-                                                        @if($louerchambre->statut == 'EN ATTENTE')
-                                                            <li>
-                                                                <a href="#" class="dropdown-item d-flex align-items-center text-success gap-3"
-                                                                onclick="submitStatutForm('CONFIRMER', {{ $louerchambre->id }})">
-                                                                    <i class="ti ti-circle-check fs-4 text-success"></i> Confirmer
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a href="#" class="dropdown-item d-flex align-items-center text-danger gap-3"
-                                                                onclick="submitStatutForm('REJETER', {{ $louerchambre->id }})">
-                                                                    <i class="ti ti-circle-x fs-4 text-danger"></i> Rejeter
-                                                                </a>
-                                                            </li>
-                                                        @endif
+                                                        @role('locataire')
+                                                            @if($louerchambre->statut == 'EN ATTENTE')
+                                                                <li>
+                                                                    <a href="#" class="dropdown-item d-flex align-items-center text-success gap-3"
+                                                                    onclick="submitStatutForm('CONFIRMER', {{ $louerchambre->id }})">
+                                                                        <i class="ti ti-circle-check fs-4 text-success"></i> Confirmer
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a href="#" class="dropdown-item d-flex align-items-center text-danger gap-3"
+                                                                    onclick="submitStatutForm('REJETER', {{ $louerchambre->id }})">
+                                                                        <i class="ti ti-circle-x fs-4 text-danger"></i> Rejeter
+                                                                    </a>
+                                                                </li>
+                                                            @endif
+                                                        @endrole
                                                     </ul>
                                                 </div>
                                                 {{--
