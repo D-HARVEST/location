@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="shortcut icon" type="image/png" href="{{ asset('logo-dh.svg') }}" />
-    <title>D-Go - Revente de Forfaits Internet</title>
+    <title>Go-location</title>
 
     <!-- Lien Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
@@ -48,7 +48,7 @@
 
     <section id="features" class="features">
         <div class="container text-center">
-            <h2 class="mb-5">Pourquoi choisir D-Go ?</h2>
+            <h2 class="mb-5">Pourquoi choisir Go-Location ?</h2>
             <div class="row">
                 <div class="col-md-4">
                     <div class="card w-100 border p-3">
@@ -97,23 +97,23 @@
 
 
       <!-- Section FAQ (Foire aux Questions) -->
-     {{-- <section id="faq" class="faq py-5">
+     <section id="faq" class="faq py-5">
             <div class="container text-center">
                 <h2 class="mb-5">Foire aux Questions</h2>
                 <div class="accordion" id="faqAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
-                                Comment puis-je acheter un forfait ?
+                                Comment puis-je me conecter sur Go-Location ?
                             </button>
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Vous pouvez acheter un forfait directement depuis notre site en sélectionnant l'offre qui vous intéresse et en suivant les étapes de paiement sécurisées.
+                                Comment utiliser Go-Location ?
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-item">
+                    {{-- <div class="accordion-item">
                         <h2 class="accordion-header" id="headingTwo">
                             <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                                 Quels modes de paiement acceptez-vous ?
@@ -136,10 +136,10 @@
                                 Une fois le forfait acheté, vous pouvez demander un remboursement sous 24 heures en contactant notre support client.
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
-        </section> --}}
+        </section>
 
 
 
