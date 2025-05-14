@@ -1,15 +1,17 @@
 <?php
 
-use App\Models\Louerchambre;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\HistoriquepaiementController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\LouerchambreController;
+use App\Http\Controllers\ProfilController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\ProfilController;
-use App\Http\Controllers\LouerchambreController;
-use App\Http\Controllers\HistoriquepaiementController;
+use App\Models\Louerchambre;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -33,13 +35,10 @@ Route::get('theme-toggle', function () {
     }
     return back();
 })->name('theme-toggle');
-Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::redirect('/home', '/');
+// Route::get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+// Route::redirect('/home', '/');
 
-// Route::get('/landing', function () {
-//     return view('landing.landing');
-// })->name('landing');
-// Route::redirect('/', '/landing')->name('home');
+
 
 Route::middleware(['auth', 'update-last-login', 'permission:gerer users',])->group(function () {
     Route::resource("users", UserController::class);
@@ -63,3 +62,11 @@ Route::get('/paiement/{transaction_id}', [LouerchambreController::class, 'enregi
 
 
 
+Route::get('/landing', function () {
+    return view('landing');
+})->name('landing');
+
+Route::redirect('/', '/landing')->name('home');
+Route::redirect('/home', '/landing');
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
