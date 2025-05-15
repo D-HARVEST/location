@@ -8,7 +8,10 @@
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="montant" class="form-label">{{ __('Montant') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="Montant" class="form-control @error('Montant') is-invalid @enderror rounded-05" value="{{ old('Montant', $paiementespece?->Montant) }}" id="montant" >
+            <input type="hidden" name="Montant" value="{{ $louerchambre->id }}">
+
+            <input type="text" class="form-control" readonly
+                value="{{ $louerchambre->loyer }}">
             {!! $errors->first('Montant', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
