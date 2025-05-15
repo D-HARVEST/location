@@ -1,5 +1,5 @@
 @php
-    $pagetitle = 'Détails Maison';
+    $pagetitle = 'Les chambres';
     $breadcrumbs = ['Liste des Maison' => route('maisons.index'), 'Détails Maison' => ''];
 @endphp
 
@@ -9,7 +9,7 @@
 
 
 @section('template_title')
-    Détails  Maison
+    Les chambres
 @endsection
 
 
@@ -101,7 +101,7 @@
 
     <section class="">
         <div class="row">
-            <div class="col-md-12">
+            {{-- <div class="col-md-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <div class="text-end mb-3">
@@ -160,7 +160,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
             <div class="row">
                 <div class="col-md-12">

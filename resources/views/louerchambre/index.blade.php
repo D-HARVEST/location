@@ -20,7 +20,7 @@
     <div class="">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card">
+                <div class="">
 
 
 
@@ -30,160 +30,126 @@
                                 <p>{{ $message }}</p>
                             </div>
                         @endif
-                       @role('gerant')
-                        <div class="text-end mb-3">
-                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createChambreModal">
-                                + Lier locataire à une chambre
-                            </button>
-                        </div>
-                       @endrole
-                        <div class="col mb-2">
-                            <h5 class="card-title text-dark fw-bolder mb-0">Louerchambre(s)</h5>
-                            <span>Liste des Louerchambre(s)</span>
-                            <hr>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover datatable">
-                                <thead class="thead">
-                                    <tr>
-                                    <th>N°</th>
 
-									{{-- <th >Chambre</th>--}}
-									<th >Locataire</th>
-									<th >Debut d'entrée</th>
-									{{-- <th >Prix du loyer</th> --}}
-									<th >Caution loyer</th>
-									<th >Caution electricite</th>
-									<th >Caution eau</th>
-									<th >Copie contrat</th>
-									{{-- <th >Jour paiement loyer</th> --}}
-                                    <th >Statut</th>
-                                    <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $i = 0; @endphp
-                                    @foreach ($louerchambres as $louerchambre)
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
 
-										{{-- <td >{{ $louerchambre->chambre->libelle }}</td> --}}
-										<td >{{ $louerchambre->user->name ?? '-'}}</td>
-										<td >{{ $louerchambre->debutOccupation ?? '-' }}</td>
-										{{-- <td >{{ $louerchambre->chambre->loyer ?? '-' }}</td> --}}
-										<td >{{ $louerchambre->cautionLoyer ?? '-' }}</td>
-										<td >{{ $louerchambre->cautionElectricite ?? '-' }}</td>
-										<td >{{ $louerchambre->cautionEau ?? '-' }}</td>
-                                        <td>
-                                            @if($louerchambre->copieContrat)
-                                                <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
-                                                    Télecharger la copie du contrat
-                                                </a>
-                                            @else
-                                                <span class="badge bg-danger">
-                                                    Aucun fichier disponible
-                                                </span>
+                    @if($chambre->statut == 'Disponible')
+                         @role('gerant')
+                             <div class="text-end mb-3">
+                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createChambreModal">
+                                     + Lier locataire à une chambre
+                                 </button>
+                             </div>
+
+                         @endif
+                      @endrole
+
+                      @role('gerant')
+                      <div class="text-end">
+                            <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary"> Retour</a>
+                     </div>
+                      @endrole
+
+
+
+
+
+                       <div class="row mt-4">
+                @forelse ($louerchambres as $louerchambre)
+                    <div class="col-md-6 mb-4">
+                        <div class="card shadow-sm h-100" style="border-left: 5px solid
+                            @if($louerchambre->statut == 'CONFIRMER') #28a745
+                            @elseif($louerchambre->statut == 'EN ATTENTE') #ffc107
+                            @elseif($louerchambre->statut == 'ARCHIVER') #6c757d
+                            @else #dc3545 @endif;">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1 text-primary">
+                                            <i class="ti ti-user me-1"></i> {{ $louerchambre->user->name ?? 'Locataire inconnu' }}
+                                        </h5>
+                                        <p class="mb-1"><i class="ti ti-calendar me-1"></i> Début : {{ $louerchambre->debutOccupation ?? '-' }}</p>
+                                        <p class="mb-1"><i class="ti ti-number me-1"></i> NPI : {{ $louerchambre->user->npi ?? '-' }}</p>
+                                        <div class="text-muted">
+                                            <p class="mb-1"><strong>Prix du Loyer:</strong> {{ $louerchambre->loyer ?? '-' }} FCFA</p>
+                                            <p class="mb-1"><strong>Caution Loyer:</strong> {{ $louerchambre->cautionLoyer ?? '-' }} FCFA</p>
+                                            <p class="mb-1"><strong>Caution Électricité:</strong> {{ $louerchambre->cautionElectricite ?? '-' }} FCFA</p>
+                                            <p class="mb-1"><strong>Caution Eau:</strong> {{ $louerchambre->cautionEau ?? '-' }} FCFA</p>
+                                        </div>
+                                    </div>
+                                    <div class="text-end">
+                                        @if($louerchambre->statut == 'EN ATTENTE')
+                                            <span class="badge bg-warning">En attente de confirmation</span>
+                                        @elseif($louerchambre->statut == 'CONFIRMER')
+                                            <span class="badge bg-success">Chambre Occupée</span>
+                                        @elseif($louerchambre->statut == 'ARCHIVER')
+                                            <span class="badge bg-secondary">Archiver</span>
+                                        @elseif($louerchambre->statut == 'REJETER')
+                                            <span class="badge bg-danger">Rejeter</span>
+                                        @else
+                                            <span class="badge bg-secondary">Inconnu</span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <div class="mt-3">
+                                    @if($louerchambre->copieContrat)
+                                        <a href="{{ asset('storage/' . $louerchambre->copieContrat) }}" target="_blank" download class="btn btn-outline-success btn-sm me-2">
+                                            <i class="ti ti-download me-1"></i> Télécharger contrat
+                                        </a>
+                                    @else
+                                        <span class="badge bg-secondary">Aucun contrat disponible, Ajoutez votre contrat s'il vous plaît</span>
+                                    @endif
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2 mt-4">
+                                    <a href="{{ route('louerchambres.show', $louerchambre->id) }}" class="btn btn-sm btn-primary">
+                                        <i class="ti ti-eye me-1"></i> Détails
+                                    </a>
+
+                                    @if(!in_array($louerchambre->statut, ['ARCHIVER', 'REJETER']))
+                                        @role('locataire')
+                                            <a href="{{ route('louerchambres.edit', $louerchambre->id) }}" class="btn btn-sm btn-warning">
+                                                <i class="ti ti-edit me-1"></i> Ajouter votre contrat
+                                            </a>
+                                        @endrole
+
+                                        @role('gerant')
+                                            <a href="{{ route('louerchambres.edit', $louerchambre->id) }}" class="btn btn-sm btn-warning">
+                                                <i class="ti ti-edit me-1"></i> Modifier
+                                            </a>
+                                        @endrole
+
+                                        @role('gerant')
+                                        @if(!in_array($louerchambre->statut, ['CONFIRMER', 'En attente']))
+                                                <button class="btn btn-sm btn-secondary" onclick="submitStatutForm('ARCHIVER', {{ $louerchambre->id }})">
+                                                    <i class="ti ti-circle-check me-1"></i> Archiver
+                                                </button>
                                             @endif
-                                        </td>
+                                        @endrole
+                                        
 
-										{{-- <td >{{ $louerchambre->jourPaiementLoyer ?? '-' }}</td> --}}
-                                        <td>
-                                            {{-- Affichage du statut avec un badge --}}
+                                        @role('locataire')
                                             @if($louerchambre->statut == 'EN ATTENTE')
-                                                <span class="badge bg-warning">EN ATTENTE</span>
-                                            @elseif($louerchambre->statut == 'CONFIRMER')
-                                                <span class="badge bg-success">CONFIRMER</span>
-                                            @elseif($louerchambre->statut == 'REJETER')
-                                                <span class="badge bg-danger">REJETER</span>
-                                            @elseif($louerchambre->statut == 'ARCHIVER')
-                                                <span class="badge bg-danger">ARCHIVER</span>
-                                            @else
-                                                <span class="badge bg-secondary">Inconnu</span>
+                                                <button class="btn btn-sm btn-success" onclick="submitStatutForm('CONFIRMER', {{ $louerchambre->id }})">
+                                                    <i class="ti ti-circle-check me-1"></i> Confirmer
+                                                </button>
+                                                <button class="btn btn-sm btn-danger" onclick="submitStatutForm('REJETER', {{ $louerchambre->id }})">
+                                                    <i class="ti ti-circle-x me-1"></i> Rejeter
+                                                </button>
                                             @endif
-                                        </td>
-
-                                            <td>
-                                                <div class="dropdown dropstart">
-                                                    <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                        aria-expanded="true">
-                                                        <i class="ti ti-dots-vertical fs-5"></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                        style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
-                                                        data-popper-placement="left-start">
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.show',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i> Détails et paiement loyer
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            @role('locataire')
-                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.edit',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Informations complémentaires
-                                                            </a>
-                                                            @endrole
-                                                            @role('gerant')
-                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('louerchambres.edit',$louerchambre->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Modifier louerchambre
-                                                            </a>
-                                                            @endrole
-                                                        </li>
-
-
-                                                        {{-- @role('gerant')
-                                                        <li>
-                                                            <form action="{{ route('louerchambres.destroy',$louerchambre->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="dropdown-item text-danger">
-                                                                <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
-                                                                </button>
-                                                            </form>
-
-                                                        </li>
-                                                        @endrole --}}
-                                                        @role('locataire')
-                                                            @if($louerchambre->statut == 'EN ATTENTE')
-                                                                <li>
-                                                                    <a href="#" class="dropdown-item d-flex align-items-center text-success gap-3"
-                                                                    onclick="submitStatutForm('CONFIRMER', {{ $louerchambre->id }})">
-                                                                        <i class="ti ti-circle-check fs-4 text-success"></i> Confirmer
-                                                                    </a>
-                                                                </li>
-                                                                <li>
-                                                                    <a href="#" class="dropdown-item d-flex align-items-center text-danger gap-3"
-                                                                    onclick="submitStatutForm('REJETER', {{ $louerchambre->id }})">
-                                                                        <i class="ti ti-circle-x fs-4 text-danger"></i> Rejeter
-                                                                    </a>
-                                                                </li>
-                                                            @endif
-                                                        @endrole
-                                                    </ul>
-                                                </div>
-                                                {{--
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Actions
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item" href="{{ route('louerchambres.show',$louerchambre->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
-                                                            <a class="dropdown-item" href="{{ route('louerchambres.edit',$louerchambre->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <form action="{{ route('louerchambres.destroy',$louerchambre->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                --}}
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                                        @endrole
+                                    @endif
+                                </div>
+                            </div>
                         </div>
+                    </div>
+                @empty
+                    <div class="alert alert-info w-100 text-center" style="max-width: 700px;">
+                        <i class="ti ti-info-circle me-1"></i> Aucune location enregistrée pour le moment.
+                    </div>
+                @endforelse
+            </div>
+
                     </div>
                 </div>
                 {!! $louerchambres->withQueryString()->links() !!}

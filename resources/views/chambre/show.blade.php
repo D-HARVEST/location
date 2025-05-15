@@ -1,12 +1,12 @@
 @php
-    $pagetitle = 'Détails Chambre';
-    $breadcrumbs = ['Liste des Chambre' => route('chambres.index'), 'Détails Chambre' => ''];
+    $pagetitle = 'Ma Chambre';
+    $breadcrumbs = ['Liste des Chambre' => route('chambres.index'), 'Ma  chambre' => ''];
 @endphp
 
 @extends('layouts.app')
 
 @section('template_title')
-    Détails  Chambre
+    Ma Chambre
 @endsection
 
 @section('content')
@@ -155,7 +155,7 @@
 
     <section class="">
         <div class="row">
-            <div class="col-md-12">
+            {{-- <div class="col-md-12">
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <div class="text-end mb-3">
@@ -196,7 +196,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> --}}
 
 
             <div class="row">

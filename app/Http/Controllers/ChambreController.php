@@ -135,6 +135,7 @@ class ChambreController extends Controller
             ->with('success', 'Chambre a été supprimé(e) avec succes !');
     }
 
+
     public function validateStatut(Request $request)
     {
         $request->validate([
@@ -146,12 +147,13 @@ class ChambreController extends Controller
         $louerchambre->update([
             'statut' => $request->statut
         ]);
-        
-        $chambre = Chambre::find($louerchambre->chambre_id);
 
-        if ($request->statut === 'CONFIRMER') {
-            if ($chambre) {
+        $chambre = Chambre::find($louerchambre->chambre_id);
+        if ($chambre) {
+            if ($request->statut === 'CONFIRMER') {
                 $chambre->update(['statut' => 'Non disponible']);
+            } else {
+                $chambre->update(['statut' => 'Disponible']);
             }
         }
 
