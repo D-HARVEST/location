@@ -34,7 +34,7 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>N°</th>
-                                        
+
 									<th >Libelle</th>
 
                                         <th></th>
@@ -44,7 +44,7 @@
                                     @foreach ($categories as $category)
                                         <tr>
                                             <td>{{ ++$i }}</td>
-                                            
+
 										<td >{{ $category->libelle }}</td>
 
                                             <td>
@@ -67,7 +67,9 @@
                                                             </a>
                                                         </li>
                                                         <li>
-                                                            <form action="{{ route('categories.destroy',$category->id) }}" method="POST">
+                                                            <form action="{{ route('categories.destroy',$category->id) }}" method="POST"
+                                                                 onsubmit="event.preventDefault(); showDeleteAlert(() => this.submit());">
+                                                                 @include('sweetalert')
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="dropdown-item text-danger">

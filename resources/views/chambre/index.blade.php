@@ -10,7 +10,7 @@
     <div class="">
         <div class="row">
             <div class="col-sm-12">
-                <div class="card">
+                <div class="">
 
 
 
@@ -28,108 +28,68 @@
                                 + Ajouter Chambre
                             </button>
                         </div>
-                        <div class="col mb-2">
-                            <h5 class="card-title text-dark fw-bolder mb-0">Chambre(s)</h5>
-                            <span>Liste des Chambre(s)</span>
-                            <hr>
+                         <div class="text-end">
+                            <a href="{{ route('maisons.index', $maison->chambre_id) }}" class="btn btn-sm btn-primary"> Retour</a>
+                     </div>
+
+                          {{-- <div class="text-end mb-3">
+                            <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary">Retour</a>
+                        </div> --}}
+
+                      <div class="row  mt-4">
+             @foreach ($chambres as $chambre)
+            <div class="col-md-4 mb-4">
+                <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100">
+                    <div class="bg-primary text-white p-4 d-flex align-items-center justify-content-between">
+                        <div>
+                            <h5 class="mb-0">{{ $chambre->libelle }}</h5>
+                            <small>{{ $chambre->type?->libelle ?? 'Type inconnu' }}</small>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover datatable">
-                                <thead class="thead">
-                                    <tr>
-                                        <th>N°</th>
-
-									<th >Désignation de la chambre</th>
-									<th >Statut</th>
-									<th >Jour de paiement</th>
-									<th > Prix du loyer</th>
-									<th >Categorie </th>
-									<th >Type</th>
-
-
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @php $i = 0; @endphp
-                                    @foreach ($chambres as $chambre)
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
-
-										<td >{{ $chambre->libelle }}</td>
-										<td >                       @php
-                                            $badgeClass = $chambre->statut === 'Disponible' ? 'bg-success' : 'bg-danger';
-                                        @endphp
-
-                                        <div class="col-lg-4">
-
-                                            <span class="badge {{ $badgeClass }} my-1">
-                                                {{ $chambre->statut }}
-                                            </span>
-                                        </div>
-                                        </td>
-										<td >{{ $chambre->jourPaiementLoyer }}</td>
-										<td >{{ $chambre->loyer }}</td>
-										<td>{{ $chambre->category?->libelle ?? 'N/A' }}</td>
-                                        <td>{{ $chambre->type?->libelle ?? 'N/A' }}</td>
-
-
-
-                                            <td>
-                                                <div class="dropdown dropstart">
-                                                    <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                        aria-expanded="true">
-                                                        <i class="ti ti-dots-vertical fs-5"></i>
-                                                    </a>
-                                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                        style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
-                                                        data-popper-placement="left-start">
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('chambres.show',$chambre->id) }}">
-                                                                <i class="fs-4 ti ti-eye"></i></i>Détail / Asssocier un locataire
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('chambres.edit',$chambre->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Modifier
-                                                            </a>
-                                                        </li>
-                                                        <li>
-                                                            <form action="{{ route('chambres.destroy',$chambre->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="dropdown-item text-danger">
-                                                                <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
-                                                                </button>
-                                                            </form>
-
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                                {{--
-                                                    <div class="dropdown">
-                                                        <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                            Actions
-                                                        </button>
-                                                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                            <a class="dropdown-item" href="{{ route('chambres.show',$chambre->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
-                                                            <a class="dropdown-item" href="{{ route('chambres.edit',$chambre->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
-                                                            <div class="dropdown-divider"></div>
-                                                            <form action="{{ route('chambres.destroy',$chambre->id) }}" method="POST">
-                                                                @csrf
-                                                                @method('DELETE')
-                                                                <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                --}}
-                                            </td>
-
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
+                        <i class="ti ti-bed" style="font-size: 2.5rem;"></i>
+                    </div>
+                    <div class="card-body bg-light">
+                        <div class="mb-2 d-flex justify-content-between">
+                            <span class="text-muted">Statut :</span>
+                            @php
+                                $badgeClass = $chambre->statut === 'Disponible' ? 'bg-success' : 'bg-danger';
+                            @endphp
+                            <span class="badge {{ $badgeClass }}">{{ $chambre->statut }}</span>
                         </div>
+                        <div class="mb-2 d-flex justify-content-between">
+                            <span class="text-muted">Jour paiement :</span>
+                            <span>{{ $chambre->jourPaiementLoyer }}</span>
+                        </div>
+                        <div class="mb-2 d-flex justify-content-between">
+                            <span class="text-muted">Loyer :</span>
+                            <span class="fw-bold text-dark">{{ number_format($chambre->loyer, 0, ',', ' ') }} FCFA</span>
+                        </div>
+                        <div class="mb-2 d-flex justify-content-between">
+                            <span class="text-muted">Catégorie :</span>
+                            <span>{{ $chambre->category?->libelle ?? 'N/A' }}</span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-white border-0 d-flex justify-content-between px-3 pb-3 pt-2">
+                        <a href="{{ route('chambres.show', $chambre->id) }}" class="btn btn-sm btn-outline-primary">
+                            <i class="ti ti-eye"></i>
+                        </a>
+                        <a href="{{ route('chambres.edit', $chambre->id) }}" class="btn btn-sm btn-outline-secondary">
+                            <i class="ti ti-edit"></i>
+                        </a>
+                        <form action="{{ route('chambres.destroy', $chambre->id) }}" method="POST"
+                             onsubmit="event.preventDefault(); showDeleteAlert(() => this.submit());">
+                             @include('sweetalert')
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                <i class="ti ti-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+
                     </div>
                 </div>
                 {!! $chambres->withQueryString()->links() !!}
