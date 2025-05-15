@@ -10,6 +10,7 @@ use Illuminate\View\View;
 use Illuminate\Support\Str;
 use App\Models\Louerchambre;
 use Illuminate\Http\Request;
+use App\Models\Paiementespece;
 use Illuminate\Support\Carbon;
 use App\Models\Paiementenattente;
 use App\Models\Historiquepaiement;
@@ -158,7 +159,8 @@ class LouerchambreController extends Controller
         // Récupérer tous les paiements en attente
         $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
 
-        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer', 'paiements', 'paiementenattentes'));
+        $paiementespeces = Paiementespece::where('louerchambre_id', $louerchambre->id)->get();
+        return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer', 'paiements', 'paiementenattentes', 'paiementespeces'));
     }
 
 

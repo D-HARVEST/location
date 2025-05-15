@@ -171,6 +171,17 @@
 
 @endrole
 
+@role('locataire|gerant')
+
+        <li class="sidebar-item">
+            <a class="sidebar-link primary-hover-bg" href="{{ route('paiementespeces.index') }}" aria-expanded="false">
+                <iconify-icon icon="mdi:cash-multiple" class="fs-6 aside-icon"></iconify-icon>
+                <span class="hide-menu ps-1">Paiement en espèce</span>
+            </a>
+        </li>
+
+@endrole
+
 
 @haspermission('gerer parametre de base systeme')
     <li class="sidebar-item">
