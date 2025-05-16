@@ -32,22 +32,21 @@
                         @endif --}}
 
 
-                    @if($chambre->statut == 'Disponible')
-                         @role('gerant')
-                             <div class="text-end mb-3">
-                                 <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createChambreModal">
-                                     + Lier locataire à une chambre
-                                 </button>
-                             </div>
+                    @role('gerant')
+                        <div class="d-flex justify-content-end gap-2 mb-3">
+                            @if($chambre->statut == 'Disponible')
+                                <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createChambreModal">
+                                    + Lier locataire à cette chambre
+                                </button>
+                            @endif
 
-                         @endif
-                      @endrole
+                            <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary">
+                                Retour
+                            </a>
+                        </div>
+                    @endrole
 
-                      @role('gerant')
-                      <div class="text-end">
-                            <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary"> Retour</a>
-                     </div>
-                      @endrole
+
 
 
 
