@@ -67,8 +67,9 @@
                                         <h5 class="mb-1 text-primary">
                                             <i class="ti ti-user me-1"></i> {{ $louerchambre->user->name ?? 'Locataire inconnu' }}
                                         </h5>
-                                        <p class="mb-1"><i class="ti ti-calendar me-1"></i> Début : {{ $louerchambre->debutOccupation ?? '-' }}</p>
-                                        <p class="mb-1"><i class="ti ti-number me-1"></i> NPI : {{ $louerchambre->user->npi ?? '-' }}</p>
+                                         <p class="mb-1"><i class="ti ti-calendar me-1"></i> Chambre : {{ $louerchambre->chambre->libelle ?? '-' }}</p>
+                                        <p class="mb-1"><i class="ti ti-calendar me-1"></i> Date d'entrée : {{ $louerchambre->debutOccupation ?? '-' }}</p>
+                                        <p class="mb-1"><i class="ti ti-number me-1"></i> NPI(Numéro d'Identification Personnel) : {{ $louerchambre->user->npi ?? '-' }}</p>
                                         <div class="text-muted">
                                             <p class="mb-1"><strong>Prix du Loyer:</strong> {{ $louerchambre->loyer ?? '-' }} FCFA</p>
                                             <p class="mb-1"><strong>Caution Loyer:</strong> {{ $louerchambre->cautionLoyer ?? '-' }} FCFA</p>
@@ -120,13 +121,13 @@
                                         @endrole
 
                                         @role('gerant')
-                                        @if(!in_array($louerchambre->statut, ['CONFIRMER', 'En attente']))
+                                        @if(in_array($louerchambre->statut, ['CONFIRMER', 'EN ATTENTE']))
                                                 <button class="btn btn-sm btn-secondary" onclick="submitStatutForm('ARCHIVER', {{ $louerchambre->id }})">
                                                     <i class="ti ti-circle-check me-1"></i> Archiver
                                                 </button>
                                             @endif
                                         @endrole
-                                        
+
 
                                         @role('locataire')
                                             @if($louerchambre->statut == 'EN ATTENTE')

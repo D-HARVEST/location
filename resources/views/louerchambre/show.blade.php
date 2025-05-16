@@ -12,13 +12,11 @@
 
 @section('content')
 <section>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-md-12">
             <div class="card shadow-sm border-0">
                 <div class="card-body">
-                    <div class="text-end mb-3">
-                        <a href="{{ route('chambres.show', $louerchambre->chambre_id) }}" class="btn btn-sm btn-primary">Retour</a>
-                    </div>
+
 
                     <div class="row g-4">
                         @php
@@ -77,7 +75,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
 
     <div class="row">
@@ -89,6 +87,9 @@
 
 
                         <div class="card-body">
+                             <div class="text-end mb-3">
+                        <a href="{{ route('chambres.show', $louerchambre->chambre_id) }}" class="btn btn-sm btn-primary">Retour</a>
+                    </div>
                           @if ($message = Session::get('success'))
                                 <div class="alert alert-success">
                                     <p>{{ $message }}</p>
@@ -208,10 +209,13 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-body">
-                        <h4 class="card-title">Paiement en espèce(s)</h4>
-                        <div class="text-end">
-                            <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="btn btn-sm btn-primary rounded-05"> Nouveau paiement</a>
+                        {{-- <h4 class="card-title">Paiement en espèce(s)</h4> --}}
+                        <div class="btn btn-success w-100 rounded-1">
+                            <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="text-white" >
+                                 <i class="fa fa-credit-card me-2"></i>
+                                    Payer en espèce</a>
                         </div>
+
                         <hr>
 
                         <div class="table-responsive">
@@ -336,7 +340,8 @@
                     </div>
 
                     <div class="card-body">
-                        <p>Après paiement,  veillez ajouter la quittance et le mois de paiement</p>
+                        <p class="badge bg-warning text-dark">Après paiement, veillez ajouter le mois de paiement</p>
+
                         <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                         <hr>
                         <div class="table-responsive">
@@ -361,18 +366,17 @@
                                         <tr>
                                             <td>{{ ++$i }}</td>
                                         <td >{{ $historiquepaiement->datePaiement }}</td>
-                                        <td>
-                                            @if($historiquepaiement->quittanceUrl)
-                                                <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
-                                                    Télecharger la quittance
-                                                </a>
-                                            @else
-                                                <span class="badge bg-danger">
-                                                    Aucune quittance
-                                                </span>
-                                            @endif
-
-                                        </td>
+                                       <td>
+                                  @if($historiquepaiement->quittanceUrl)
+                                      <a href="{{ $historiquepaiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
+                                          Télécharger la quittance
+                                      </a>
+                                  @else
+                                      <span class="badge bg-danger">
+                                          Aucune quittance
+                                      </span>
+                                  @endif
+                              </td>
 
                                         <td >{{ $historiquepaiement->montant }}</td>
                                         <td >{{ $historiquepaiement->modePaiement }}</td>
@@ -402,7 +406,7 @@
                                                         </li>
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
-                                                                <i class="fs-4 ti ti-edit"></i> Quittance et mois de paiement
+                                                                <i class="fs-4 ti ti-edit"></i> Ajouter le mois de paiement
                                                             </a>
                                                         </li>
                                                         {{-- <li>
@@ -449,9 +453,13 @@
     @endrole
 
     @role('gerant')
+    <div class="container">
+
+
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="card">
+
 
 
                     <div class="card-body">
@@ -462,6 +470,8 @@
                                 <thead class="thead">
                                     <tr>
                                         <th>N°</th>
+                                     <th>Locataire</th>
+
                                     <th >Date de paiement</th>
                                     <th >Quittance</th>
                                     <th >Montant</th>
@@ -479,6 +489,8 @@
                                     @foreach ($paiements as $paiement)
                                         <tr>
                                             <td>{{ ++$i }}</td>
+                                            <td>{{ $paiement->user->name }}</td>
+
                                         <td >{{ $paiement->datePaiement }}</td>
                                         <td>
                                             @if($paiement->quittanceUrl)
@@ -565,7 +577,7 @@
                             </table>
                         </div>
                     </div>
-
+                </div>
                 </div>
             </div>
         </div>

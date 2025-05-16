@@ -12,9 +12,9 @@
             {!! $errors->first('datePaiement', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
-        <div class="col-lg-6 form-group mb-2 mb20">
+        <div class="col-lg-6 form-group mb-2 mb20" style="display: none;">
             <strong> <label for="quittance_url" class="form-label">{{ __('Quittance de paiement') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="file" name="quittanceUrl" class="form-control @error('quittanceUrl') is-invalid @enderror rounded-05" id="quittance_url" required>
+            <input type="file" name="quittanceUrl" class="form-control @error('quittanceUrl') is-invalid @enderror rounded-05" id="quittance_url">
             {!! $errors->first('quittanceUrl', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
@@ -33,7 +33,7 @@
             <input type="text" name="idTransaction" class="form-control @error('idTransaction') is-invalid @enderror rounded-05" value="{{ old('idTransaction', $historiquepaiement?->idTransaction) }}" id="id_transaction" >
             {!! $errors->first('idTransaction', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="col-lg-6 form-group mb-2 mb20" >
+        <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="mois_paiement" class="form-label">{{ __('Mois de paiement') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="month" name="moisPaiement" class="form-control @error('moisPaiement') is-invalid @enderror rounded-05" value="{{ old('mois de Paiement', $historiquepaiement?->moisPaiement) }}" id="mois_paiement" required>
             {!! $errors->first('moisPaiement', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}

@@ -22,7 +22,7 @@
                         @endif
                       @role('locataire')
                         <div class="text-end">
-                            <a href="{{ route('interventions.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
+                            <a href="{{ route('interventions.create') }}" class="btn btn-sm btn-primary rounded-05">+ Ajouter une intervention</a>
                         </div>
                       @endrole
                         <div class="col mb-2">
@@ -118,7 +118,9 @@
                                                             </a>
                                                          </li>
                                                         <li>
-                                                            <form action="{{ route('interventions.destroy',$intervention->id) }}" method="POST">
+                                                            <form action="{{ route('interventions.destroy',$intervention->id) }}" method="POST"
+                                                                 onsubmit="event.preventDefault(); showDeleteAlert(() => this.submit());">
+                                                                  @include('sweetalert')
                                                                 @csrf
                                                                 @method('DELETE')
                                                                 <button type="submit" class="dropdown-item text-danger">

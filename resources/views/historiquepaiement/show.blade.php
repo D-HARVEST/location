@@ -23,6 +23,7 @@
                         <div class="row g-4">
                             @php
                                 $infos = [
+                                    'locataire' => $historiquepaiement->user->name,
                                     'Date de paiement' => $historiquepaiement->datePaiement,
                                     'Montant' => number_format($historiquepaiement->montant, 0, ',', ' ') . ' FCFA',
                                     'Mode de paiement' => $historiquepaiement->modePaiement,
@@ -54,13 +55,15 @@
                             <div class="col-lg-4">
                                 <div class="bg-light p-3 rounded">
                                     <div class="text-muted small">Quittance</div>
-                                    @if ($historiquepaiement->quittanceUrl)
-                                        <a href="{{ asset('storage/' . $historiquepaiement->quittanceUrl) }}" target="_blank" class="text-success fw-semibold text-decoration-none">
-                                            Voir la quittance
-                                        </a>
-                                    @else
-                                        <span class="text-danger fw-semibold">Aucune quittance</span>
-                                    @endif
+                                    @if($historiquepaiement->quittanceUrl)
+                                      <a href="{{ $historiquepaiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
+                                          Télécharger la quittance
+                                      </a>
+                                  @else
+                                      <span class="badge bg-danger">
+                                          Aucune quittance
+                                      </span>
+                                  @endif
                                 </div>
                             </div>
 

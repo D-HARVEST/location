@@ -12,6 +12,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -114,10 +115,17 @@ class ChambreController extends Controller
         $all = $request->validated();
         $chambre->update($all);
 
+        DB::table('louerchambres')
+        ->where('chambre_id', $chambre->id)
+        ->update(['loyer' => $chambre->loyer]);
+
+
 
         return Redirect::route('maison.show', ['id' => $request->maison_id])
             ->with('success', 'Chambre a été mis(e) à jour avec succes !');
     }
+
+
 
     public function destroy($id): RedirectResponse
     {

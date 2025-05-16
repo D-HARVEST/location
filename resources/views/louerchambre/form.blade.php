@@ -68,8 +68,8 @@
         </div>
        @endrole
 
-         @role('gerant')
-        <div class="col-lg-6 form-group mt-4">
+
+        <div class="col-lg-6 form-group mt-4" style="display: none">
             <strong>
                <label class="form-label d-block">{{ __('Veillez confirmer que vous avez loué cette chambre') }}</label>
 
@@ -94,9 +94,6 @@
 
            {!! $errors->first('statut', '<div class="invalid-feedback d-block" role="alert"><strong>:message</strong></div>') !!}
        </div>
-        @endrole
-
-
 
 
     </div>

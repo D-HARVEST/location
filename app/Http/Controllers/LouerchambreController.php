@@ -131,12 +131,12 @@ class LouerchambreController extends Controller
                 ->where('moisPaiement', $moisFormat)
                 ->exists();
 
-            // ✅ Si un paiement a été effectué, on supprime l'éventuel paiement en attente
+            // Si le paiement existe, on le supprime
             if ($paiementExiste) {
                 Paiementenattente::where('louerchambre_id', $louerchambre->id)
                     ->whereDate('dateLimite', $dateLimite)
                     ->delete();
-                continue; // passe au mois suivant
+                continue;
             }
 
             // Si aucun paiement et que la date est dépassée, on vérifie ou crée un en attente
@@ -149,7 +149,7 @@ class LouerchambreController extends Controller
                     Paiementenattente::create([
                         'louerchambre_id' => $louerchambre->id,
                         'dateLimite' => $dateLimite,
-                        'montant' => $montantLoyer, // assure-toi que cette variable est bien définie
+                        'montant' => $montantLoyer,
                         'etat' => 'en attente',
                     ]);
                 }
@@ -166,8 +166,6 @@ class LouerchambreController extends Controller
 
     public function enregistrerPaiement(string $transaction_id)
     {
-
-
         $louerchambre = Louerchambre::where('user_id', auth()->id())
             ->latest()
             ->first();
@@ -177,15 +175,11 @@ class LouerchambreController extends Controller
             return view("layouts.echec", ["message" => "Aucune chambre louée trouvée pour cet utilisateur."]);
         }
 
-
         // Vérifier si le statut est bien "CONFIRMER"
         if ($louerchambre->statut !== 'CONFIRMER') {
             return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
                 ->with('error', 'statut non confirmer');
         }
-
-
-
         $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
             ->accept('application/json')
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
@@ -195,6 +189,8 @@ class LouerchambreController extends Controller
 
 
         $transaction = $response->json();
+
+      
 
         if (
             isset($transaction['v1/transaction']['status'])
@@ -208,10 +204,10 @@ class LouerchambreController extends Controller
                 'louerchambre_id' => $louerchambre->id,
                 'datePaiement' => now(),
                 'montant' => $transaction['v1/transaction']['amount'],
-                'modePaiement' =>  'MTN',
+                'modePaiement' =>  $transaction['v1/transaction']['mode'],
                 'idTransaction' => $transaction_id,
                 'user_id' => auth()->id(),
-                'quittanceUrl' => null,
+                'quittanceUrl' => $transaction['v1/transaction']['receipt_url'],
             ]);
 
             return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
@@ -269,18 +265,53 @@ class LouerchambreController extends Controller
             }
             $path = $file->store('contrats', 'public');
             $data['copieContrat'] = $path;
-
-
-            // $file = $request->file('copieContrat');
-            // $filename = Str::uuid() . '.' . $file->getClientOriginalExtension();
-            // $path = $file->storeAs('contrats', $filename, 'public');
-
-            // Enregistrer le nouveau chemin relatif
-            // $data['copie_contrat'] = $path;
         }
 
 
-        $louerchambre->update($data);
+        // Comparaison des dates normalisées
+        $debutOccupationAvant = optional($louerchambre->debutOccupation)->format('Y-m-d');
+        $debutOccupationApres = isset($data['debutOccupation']) ? Carbon::parse($data['debutOccupation'])->format('Y-m-d') : $debutOccupationAvant;
+
+        $louerchambre->update($data); // Mettre à jour les données avant recalcul
+
+        if ($debutOccupationAvant !== $debutOccupationApres) {
+            // Suppression des anciens paiements en attente
+            Paiementenattente::where('louerchambre_id', $louerchambre->id)->delete();
+
+            // Recalcul des paiements en attente
+            $jourPaiement = $louerchambre->jourPaiementLoyer;
+            $montantLoyer = $louerchambre->loyer;
+
+            $debut = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+            $fin = Carbon::today()->startOfMonth();
+
+            $moisPeriode = CarbonPeriod::create($debut, '1 month', $fin);
+
+            foreach ($moisPeriode as $mois) {
+                $moisFormat = $mois->format('Y-m');
+                $dateLimite = Carbon::create($mois->year, $mois->month, $jourPaiement);
+
+                $paiementExiste = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)
+                    ->where('moisPaiement', $moisFormat)
+                    ->exists();
+
+                if ($paiementExiste) {
+                    continue;
+                }
+
+                if ($dateLimite->lessThanOrEqualTo(Carbon::today())) {
+                    Paiementenattente::create([
+                        'louerchambre_id' => $louerchambre->id,
+                        'dateLimite' => $dateLimite,
+                        'montant' => $montantLoyer,
+                        'etat' => 'en attente',
+                    ]);
+                }
+            }
+        }
+
+        // === FIN GESTION PAIEMENTS EN ATTENTE ===
+
 
 
         return Redirect::route('chambres.show', ['chambre' => $request->chambre_id])
