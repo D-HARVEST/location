@@ -26,7 +26,7 @@ class HistoriquepaiementRequest extends FormRequest
 			'datePaiement' => 'required',
 			'quittanceUrl' => 'nullable|mimes:jpeg,png,jpg,gif,svg,pdf',
 			'montant' => 'required',
-			'modePaiement' => 'nullable|string',
+			'modePaiement' => 'required|string',
 			'idTransaction' => 'nullable|string',
 			'moisPaiement' => 'nullable',
 			'user_id' => 'required',

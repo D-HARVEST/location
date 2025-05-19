@@ -164,7 +164,7 @@ class LouerchambreController extends Controller
     }
 
 
-    public function enregistrerPaiement(string $transaction_id)
+    public function enregistrerPaiement(Request $request, string $transaction_id)
     {
         $louerchambre = Louerchambre::where('user_id', auth()->id())
             ->latest()
@@ -180,6 +180,12 @@ class LouerchambreController extends Controller
             return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
                 ->with('error', 'statut non confirmer');
         }
+
+         // Vérifier que la date de paiement est bien fournie
+        $request->validate([
+        'modePaiement' => 'required|string',
+        ]);
+
         $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
             ->accept('application/json')
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
@@ -190,7 +196,7 @@ class LouerchambreController extends Controller
 
         $transaction = $response->json();
 
-      
+
 
         if (
             isset($transaction['v1/transaction']['status'])
@@ -202,7 +208,7 @@ class LouerchambreController extends Controller
 
             Historiquepaiement::create([
                 'louerchambre_id' => $louerchambre->id,
-                'datePaiement' => now(),
+               'datePaiement' => $request->input('modePaiement'),
                 'montant' => $transaction['v1/transaction']['amount'],
                 'modePaiement' =>  $transaction['v1/transaction']['mode'],
                 'idTransaction' => $transaction_id,
