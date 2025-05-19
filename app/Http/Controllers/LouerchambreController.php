@@ -180,7 +180,17 @@ class LouerchambreController extends Controller
             return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
                 ->with('error', 'statut non confirmer');
         }
-        $response = Http::withToken('sk_sandbox_EsXh2eiF51m-nZRoLDJYVAOo')
+
+
+        $maison = $louerchambre->chambre->maison;
+
+        $moyenPaiement = $maison->moyenPaiement;
+
+        if (!$moyenPaiement || $moyenPaiement->isActive != 1) {
+            return back()->with('error', "Le moyen de paiement n'est pas actif. Veuillez contacter votre propriétaire pour résoudre ce problème.");
+        }
+        $cle_privee = $moyenPaiement->Cle_privee;
+        $response = Http::withToken($cle_privee)
             ->accept('application/json')
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
                 'include' => 'customer.phone_number,currency,payment_method',
@@ -190,7 +200,7 @@ class LouerchambreController extends Controller
 
         $transaction = $response->json();
 
-      
+
 
         if (
             isset($transaction['v1/transaction']['status'])

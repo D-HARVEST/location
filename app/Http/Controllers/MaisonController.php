@@ -2,17 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ChambreRequest;
-use App\Http\Requests\MaisonRequest;
-use App\Models\Category;
-use App\Models\Chambre;
-use App\Models\Maison;
 use App\Models\Type;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Models\Maison;
+use App\Models\Chambre;
+use App\Models\Category;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use App\Models\MoyenPaiement;
+use App\Http\Requests\MaisonRequest;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\ChambreRequest;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 
 class MaisonController extends Controller
 {
@@ -22,7 +23,7 @@ class MaisonController extends Controller
     public function index(Request $request): View
     {
 
-        
+
         $maisons = Maison::where('user_id', Auth::id())->paginate();
 
         return view('maison.index', compact('maisons'))
@@ -36,7 +37,8 @@ class MaisonController extends Controller
     {
         $maison = new Maison();
         $categories = Category::pluck('libelle', 'id');
-        return view('maison.create', compact('maison', 'categories'));
+        $moyenPaiements = MoyenPaiement::pluck('Designation', 'id');
+        return view('maison.create', compact('maison', 'categories', 'moyenPaiements'));
     }
 
     /**

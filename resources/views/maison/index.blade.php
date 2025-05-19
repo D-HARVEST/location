@@ -34,6 +34,7 @@
                         <p class="mb-1"><strong>Quartier :</strong> {{ $maison->quartier }}</p>
                         <p class="mb-1"><strong>Adresse :</strong> {{ $maison->adresse }}</p>
                         <p class="mb-1"><strong>Gérant :</strong> {{ $maison->user->name }}</p>
+                        <p class="mb-1"><strong>Moyen de paiement :</strong> {{ $maison->moyenPaiement->Designation }}</p>
                         {{-- <p class="mb-3"><strong>Jour de paiement :</strong> {{ $maison->jourPaiementLoyer }}</p> --}}
                     </div>
                     <div class="card-footer bg-white border-0">

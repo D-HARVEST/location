@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MaisonRequest extends FormRequest
+class MoyenPaiementRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,13 +22,10 @@ class MaisonRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'libelle' => 'required|string',
-			'Pays' => 'required|string',
-			'ville' => 'required|string',
-			'quartier' => 'required|string',
-			'adresse' => 'required|string',
-			'jourPaiementLoyer' => 'required',
-            'moyenPaiement_id' => 'required|exists:moyen_paiements,id',
+			'Designation' => 'required|string',
+			'Cle_privee' => 'required|string',
+			'Cle_public' => 'required|string',
+			'isActive' => 'required',
         ];
     }
 }
