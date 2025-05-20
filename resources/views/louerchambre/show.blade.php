@@ -136,7 +136,11 @@
 
                                             <td >{{ $paiementenattente->montant }}</td>
                                             <td>
-                                                <span class="badge bg-warning text-dark">en attente</span>
+                                                @if($paiementenattente->statut == 'EN ATTENTE')
+                                                    <span class="badge bg-warning">EN ATTENTE</span>
+                                                @elseif ($paiementenattente->statut == 'EN RETARD')
+                                                     <span class="badge bg-danger"> EN RETARD</span>
+                                                @endif
                                             </td>
 
 
@@ -358,7 +362,7 @@
                     </div>
 
                     <div class="card-body">
-                        <p class="badge bg-warning text-dark">Après paiement, veillez ajouter le mois de paiement</p>
+
 
                         <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                         <hr>
@@ -668,6 +672,18 @@ function payer(btn) {
         return;
     }
 
+        // Vérification côté client (optionnelle mais utile pour UX)
+    var debutOccupation = "{{ \Carbon\Carbon::parse($louerchambre->debutOccupation)->format('Y-m') }}";
+    if (moisPaiement < debutOccupation) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Mois invalide',
+            text: 'Le mois choisi ne peut pas être avant le début de votre occupation.'
+        });
+        return;
+    }
+
+
     fetch("{{ route('paiement.initialiser') }}", {
         method: "POST",
         headers: {
@@ -680,40 +696,57 @@ function payer(btn) {
         })
     })
     .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            // Ensuite, ouvrir FedaPay
-            let widget = FedaPay.init({
-                public_key: '{{ config("services.fedapay.public_key") }}',
-                sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
-                transaction: {
-                    amount: montant,
-                    description: 'Paiement de loyer',
-                },
-                onComplete: (response) => {
-                    if (response.reason === 'CHECKOUT COMPLETE') {
-                        window.location.href = '/paiement/' + response.transaction.id;
-                    }
-                },
-                onError: (error) => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur lors du paiement. Veuillez réessayer.'
+   .then(data => {
+    if (data.success) {
+        let paiementId = data.paiement_id;
+
+        let widget = FedaPay.init({
+            public_key: '{{ config("services.fedapay.public_key") }}',
+            sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
+            transaction: {
+                amount: montant,
+                description: 'Paiement de loyer',
+            },
+            onComplete: (response) => {
+                if (response.reason === 'CHECKOUT COMPLETE') {
+                    window.location.href = '/paiement/' + response.transaction.id;
+                } else {
+                    // 🔁 Paiement non complété => supprimer l'entrée
+                    fetch(`/paiement/annuler/${paiementId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
                     });
                 }
-            });
+            },
+            onError: (error) => {
+                // 🔁 Paiement échoué => supprimer aussi
+                fetch(`/paiement/annuler/${paiementId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                });
 
-            widget.open({
-                amount: montant,
-                description: 'Paiement de loyer'
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.message || 'Erreur lors de l’enregistrement initial.'
-            });
-        }
-    });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur lors du paiement. Veuillez réessayer.'
+                });
+            }
+        });
+
+        widget.open({
+            amount: montant,
+            description: 'Paiement de loyer'
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: data.message || 'Erreur lors de l’enregistrement initial.'
+        });
+    }
+});
 }
 </script>
 @endsection

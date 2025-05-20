@@ -50,8 +50,6 @@ class LouerchambreController extends Controller
     }
 
 
-
-
     /**
      * Store a newly created resource in storage.
      */
@@ -92,9 +90,6 @@ class LouerchambreController extends Controller
         return Redirect::route('chambres.show',  ['chambre' => $request->chambre_id])
             ->with('success', 'Louerchambre et utilisateur créés avec succès !');
     }
-
-
-
 
 
     /**
@@ -151,7 +146,6 @@ class LouerchambreController extends Controller
                         'louerchambre_id' => $louerchambre->id,
                         'dateLimite' => $dateLimite,
                         'montant' => $montantLoyer,
-                        'etat' => 'en attente',
                     ]);
                 }
             }
@@ -159,6 +153,13 @@ class LouerchambreController extends Controller
 
         // Récupérer tous les paiements en attente
         $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
+        // Mise à jour des statuts "en attente" à "en retard"
+        foreach ($paiementenattentes as $paiement) {
+            if ($paiement->statut === 'EN ATTENTE' && Carbon::parse($paiement->dateLimite)->lt(Carbon::today())) {
+                $paiement->update(['statut' => 'EN RETARD']);
+            }
+        }
+
 
         $paiementespeces = Paiementespece::where('louerchambre_id', $louerchambre->id)->get();
         return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer', 'paiements', 'paiementenattentes', 'paiementespeces'));
@@ -175,6 +176,17 @@ class LouerchambreController extends Controller
             return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée pour cet utilisateur.'], 404);
         }
 
+
+        $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+        $moisPaiement = \Carbon\Carbon::parse($request->moisPaiement)->startOfMonth();
+
+        if ($moisPaiement->lt($debutOccupation)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Le mois de paiement ne peut pas être antérieur à la date de début d’occupation.'
+            ]);
+        }
+
         if ($louerchambre->statut !== 'CONFIRMER') {
             return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
         }
@@ -188,17 +200,17 @@ class LouerchambreController extends Controller
             return response()->json(['success' => false, 'message' => 'Vous avez déjà payé pour ce mois.']);
         }
 
-        try { {
-                // Création d'un nouveau paiement
-                Historiquepaiement::create([
-                    'idTransaction' => 'EN_ATTENTE',
-                    'louerchambre_id' => $louerchambre->id,
-                    'montant' => $request->montant,
-                    'modePaiement' => 'EN_ATTENTE',
-                    'moisPaiement' => $request->moisPaiement,
-                    'user_id' => auth()->id(),
-                ]);
-            }
+        try {
+            // Création d'un nouveau paiement
+            $paiement = Historiquepaiement::create([
+                'idTransaction' => 'EN_ATTENTE',
+                'louerchambre_id' => $louerchambre->id,
+                'montant' => $request->montant,
+                'modePaiement' => 'EN_ATTENTE',
+                'moisPaiement' => $request->moisPaiement,
+                'user_id' => auth()->id(),
+            ]);
+            return response()->json(['success' => true, 'paiement_id' => $paiement->id]);
         } catch (\Exception $e) {
             Log::error('Erreur lors de la création/mise à jour du paiement : ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
@@ -206,8 +218,6 @@ class LouerchambreController extends Controller
 
         return response()->json(['success' => true]);
     }
-
-
 
 
 
@@ -274,20 +284,21 @@ class LouerchambreController extends Controller
             ->with('error', 'Aucun historique de paiement trouvé. Veuillez initier un nouveau paiement.');
     }
 
-   public function apresPaiement()
-{
-    $paiementsASupprimer = Historiquepaiement::whereNull('datePaiement')->get();
 
-    foreach ($paiementsASupprimer as $paiement) {
-        $paiement->delete();
+    public function annulerPaiement($id)
+    {
+        $paiement = Historiquepaiement::where('id', $id)
+            ->where('modePaiement', 'EN_ATTENTE')
+            ->where('user_id', auth()->id())
+            ->first();
+
+        if ($paiement) {
+            $paiement->delete();
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Aucun paiement en attente trouvé.'], 404);
     }
-
-    return response()->json([
-        'success' => true,
-        'message' => count($paiementsASupprimer) . ' paiement(s) en attente supprimé(s).'
-    ]);
-}
-
 
     /**
      * Show the form for editing the specified resource.
@@ -373,15 +384,11 @@ class LouerchambreController extends Controller
                         'louerchambre_id' => $louerchambre->id,
                         'dateLimite' => $dateLimite,
                         'montant' => $montantLoyer,
-                        'etat' => 'en attente',
+                        // 'statut' => 'EN ATTENTE'
                     ]);
                 }
             }
         }
-
-        // === FIN GESTION PAIEMENTS EN ATTENTE ===
-
-
 
         return Redirect::route('chambres.show', ['chambre' => $request->chambre_id])
             ->with('success', 'Louerchambre et utilisateur ont été mis à jour avec succès !');

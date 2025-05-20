@@ -25,6 +25,7 @@ class PaiementenattenteRequest extends FormRequest
 			'louerchambre_id' => 'required',
 			'dateLimite' => 'required',
 			'montant' => 'required',
+            
         ];
     }
 }

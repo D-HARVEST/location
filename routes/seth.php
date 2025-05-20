@@ -45,5 +45,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('/interventions/{id}/rejeter', [InterventionController::class, 'rejeter'])->name('interventions.rejeter');
         Route::post('/paiement/initialiser', [LouerchambreController::class, 'initialiserPaiement'])->name('paiement.initialiser');
         Route::get('/paiements/nettoyage', [LouerchambreController::class, 'apresPaiement'])->name('paiements.nettoyage');
+        Route::delete('/paiement/annuler/{id}', [LouerchambreController::class, 'annulerPaiement'])->name('paiement.annuler');
+
     });
 });

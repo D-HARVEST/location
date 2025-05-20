@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Paiementenattente extends Model
 {
-    
+
     protected $perPage = 20;
 
     /**
@@ -28,7 +28,7 @@ class Paiementenattente extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['louerchambre_id', 'dateLimite', 'montant'];
+    protected $fillable = ['louerchambre_id', 'dateLimite', 'montant', 'statut'];
 
 
     /**
@@ -38,5 +38,5 @@ class Paiementenattente extends Model
     {
         return $this->belongsTo(\App\Models\Louerchambre::class, 'louerchambre_id', 'id');
     }
-    
+
 }

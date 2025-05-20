@@ -61,7 +61,6 @@ Route::resource('historiquepaiements', HistoriquepaiementController::class);
 Route::get('/paiement/{transaction_id}', [LouerchambreController::class, 'enregistrerPaiement'])->name('paiement');
 
 
-
 Route::get('/landing', function () {
     return view('landing');
 })->name('landing');
