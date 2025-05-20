@@ -422,11 +422,11 @@
                                                                 <i class="fs-4 ti ti-eye"></i> Détails
                                                             </a>
                                                         </li>
-                                                        <li>
+                                                        {{-- <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
                                                                 <i class="fs-4 ti ti-edit"></i> Ajouter le mois de paiement
                                                             </a>
-                                                        </li>
+                                                        </li> --}}
                                                         {{-- <li>
                                                             <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
                                                                 @csrf
@@ -654,6 +654,9 @@
         });
     }
 </script> --}}
+<script>
+    let fedapayKey = "{{ $clePublic ?? '' }}"; // récupéré automatiquement
+</script>
 
 <script>
 function payer(btn) {
@@ -664,6 +667,15 @@ function payer(btn) {
         Swal.fire({
             icon: 'warning',
             title: 'Veuillez sélectionner un mois de paiement.'
+        });
+        return;
+    }
+
+    if (!fedapayKey || fedapayKey.trim() === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Moyen de paiement indisponible',
+            text: "Le moyen de paiement n'est pas encore actif. Veuillez contacter votre propriétaire."
         });
         return;
     }
@@ -682,9 +694,8 @@ function payer(btn) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
-            // Ensuite, ouvrir FedaPay
             let widget = FedaPay.init({
-                public_key: '{{ $clePublic ?? '' }}',
+                public_key: fedapayKey,
                 sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
                 transaction: {
                     amount: montant,
