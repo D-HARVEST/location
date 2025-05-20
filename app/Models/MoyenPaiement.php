@@ -5,25 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 
 /**
- * Class Maison
+ * Class MoyenPaiement
  *
  * @property $id
- * @property $libelle
- * @property $Pays
- * @property $ville
- * @property $quartier
- * @property $adresse
+ * @property $Designation
+ * @property $Cle_privee
+ * @property $Cle_public
+ * @property $isActif
  * @property $user_id
- * @property $jourPaiementLoyer
  * @property $created_at
  * @property $updated_at
  *
  * @property User $user
- * @property Chambre[] $chambres
+ * @property Maison[] $maisons
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Maison extends Model
+class MoyenPaiement extends Model
 {
 
     protected $perPage = 20;
@@ -33,7 +31,7 @@ class Maison extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['libelle', 'Pays', 'ville', 'quartier', 'adresse', 'user_id', 'jourPaiementLoyer', 'moyenPaiement_id'];
+    protected $fillable = ['Designation', 'Cle_privee', 'Cle_public', 'isActive', 'user_id'];
 
 
     /**
@@ -47,14 +45,9 @@ class Maison extends Model
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function chambres()
+    public function maisons()
     {
-        return $this->hasMany(\App\Models\Chambre::class,'maison_id', 'id');
-    }
-
-    public function moyenPaiement()
-    {
-        return $this->belongsTo(\App\Models\MoyenPaiement::class, 'moyenPaiement_id', 'id');
+        return $this->hasMany(\App\Models\Maison::class, 'id', 'moyenPaiement_id');
     }
 
 }

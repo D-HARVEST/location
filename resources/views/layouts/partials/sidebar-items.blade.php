@@ -92,7 +92,14 @@
     </li>
 @endrole
 
-
+@role('Super-admin|gerant')
+    <li class="sidebar-item">
+        <a class="sidebar-link primary-hover-bg" href="{{ route('moyen-paiements.index') }}" aria-expanded="false">
+            <iconify-icon icon="mdi:credit-card-outline" class="fs-6 aside-icon"></iconify-icon>
+            <span class="hide-menu ps-1">Moyen de paiement</span>
+        </a>
+    </li>
+@endrole
 
 
 @role('Super-admin|gerant')
@@ -122,9 +129,6 @@
         </ul> --}}
     </li>
 @endrole
-
-
-
 
 
 

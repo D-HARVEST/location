@@ -325,20 +325,20 @@
                                 @if ($louerchambre->statut === 'CONFIRMER')
 
                                 <form id="formPayer">
-    @csrf
-    <div class="mb-3">
-        <label for="moisPaiement">Mois de paiement</label>
-        <input type="month" class="form-control" name="moisPaiement" id="moisPaiement" required>
-    </div>
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label for="moisPaiement">Mois de paiement</label>
+                                        <input type="month" class="form-control" name="moisPaiement" id="moisPaiement" required>
+                                    </div>
 
-    <button type="button"
-            class="btn btn-success w-100 rounded-1"
-            onclick="payer(this);"
-            data-montant="{{ $montantLoyer }}">
-        <i class="fa fa-credit-card me-2"></i>
-        Payer le loyer pour ({{ $montantLoyer }} F CFA)
-    </button>
-</form>
+                                    <button type="button"
+                                            class="btn btn-success w-100 rounded-1"
+                                            onclick="payer(this);"
+                                            data-montant="{{ $montantLoyer }}">
+                                        <i class="fa fa-credit-card me-2"></i>
+                                        Payer le loyer pour ({{ $montantLoyer }} F CFA)
+                                    </button>
+                                </form>
 
 
                                 {{-- <button type="button" class="btn btn-success w-100 rounded-1"
@@ -607,10 +607,9 @@
 
 @section('script')
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
-<script>
+{{-- <script>
     function payer(btn) {
         var montant = btn.getAttribute('data-montant');
-        var moisPaiement = document.getElementById('moisPaiement').value;
 
         const Toast = Swal.mixin({
             toast: true,
@@ -654,5 +653,67 @@
             description: 'Paiement de loyer'
         });
     }
+</script> --}}
+
+<script>
+function payer(btn) {
+    var montant = btn.getAttribute('data-montant');
+    var moisPaiement = document.getElementById('moisPaiement').value;
+
+    if (!moisPaiement) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Veuillez sélectionner un mois de paiement.'
+        });
+        return;
+    }
+
+    fetch("{{ route('paiement.initialiser') }}", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        },
+        body: JSON.stringify({
+            montant: montant,
+            moisPaiement: moisPaiement
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            // Ensuite, ouvrir FedaPay
+            let widget = FedaPay.init({
+                public_key: '{{ config("services.fedapay.public_key") }}',
+                sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
+                transaction: {
+                    amount: montant,
+                    description: 'Paiement de loyer',
+                },
+                onComplete: (response) => {
+                    if (response.reason === 'CHECKOUT COMPLETE') {
+                        window.location.href = '/paiement/' + response.transaction.id;
+                    }
+                },
+                onError: (error) => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Erreur lors du paiement. Veuillez réessayer.'
+                    });
+                }
+            });
+
+            widget.open({
+                amount: montant,
+                description: 'Paiement de loyer'
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: data.message || 'Erreur lors de l’enregistrement initial.'
+            });
+        }
+    });
+}
 </script>
 @endsection
