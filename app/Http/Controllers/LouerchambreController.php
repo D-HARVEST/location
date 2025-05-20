@@ -167,7 +167,6 @@ class LouerchambreController extends Controller
 
     public function initialiserPaiement(Request $request)
     {
-
         $louerchambre = Louerchambre::where('user_id', auth()->id())
             ->latest()
             ->first();
@@ -180,26 +179,34 @@ class LouerchambreController extends Controller
             return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
         }
 
-        try {
-            Historiquepaiement::create([
-                'idTransaction' => 'EN_ATTENTE',
-                'louerchambre_id' => $louerchambre->id,
-                'montant' => $request->montant,
-                'modePaiement' => 'EN_ATTENTE',
-                'moisPaiement' => $request->moisPaiement,
-                'user_id' => auth()->id(),
-                // Ajoutez seulement si les colonnes sont obligatoires
-                // 'datePaiement' => null,
-                // 'idTransaction' => null,
-                // 'quittanceUrl' => null,
-            ]);
+        $paiementExistant = Historiquepaiement::where('moisPaiement', $request->moisPaiement)
+            ->where('user_id', auth()->id())
+            ->first();
+
+        // Paiement existe et n'est pas en attente => déjà payé
+        if ($paiementExistant && $paiementExistant->modePaiement !== 'EN_ATTENTE') {
+            return response()->json(['success' => false, 'message' => 'Vous avez déjà payé pour ce mois.']);
+        }
+
+        try { {
+                // Création d'un nouveau paiement
+                Historiquepaiement::create([
+                    'idTransaction' => 'EN_ATTENTE',
+                    'louerchambre_id' => $louerchambre->id,
+                    'montant' => $request->montant,
+                    'modePaiement' => 'EN_ATTENTE',
+                    'moisPaiement' => $request->moisPaiement,
+                    'user_id' => auth()->id(),
+                ]);
+            }
         } catch (\Exception $e) {
-            Log::error('Erreur lors de la création du paiement : ' . $e->getMessage());
+            Log::error('Erreur lors de la création/mise à jour du paiement : ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
         }
 
         return response()->json(['success' => true]);
     }
+
 
 
 
@@ -210,26 +217,24 @@ class LouerchambreController extends Controller
             ->latest()
             ->first();
 
-        // Vérifie si un louerchambre existe
         if (!$louerchambre) {
             return view("layouts.echec", ["message" => "Aucune chambre louée trouvée pour cet utilisateur."]);
         }
 
-        // Vérifier si le statut est bien "CONFIRMER"
         if ($louerchambre->statut !== 'CONFIRMER') {
             return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
-                ->with('error', 'statut non confirmer');
+                ->with('error', 'Statut non confirmé');
         }
 
-
         $maison = $louerchambre->chambre->maison;
-
         $moyenPaiement = $maison->moyenPaiement;
 
         if (!$moyenPaiement || $moyenPaiement->isActive != 1) {
             return back()->with('error', "Le moyen de paiement n'est pas actif. Veuillez contacter votre propriétaire pour résoudre ce problème.");
         }
+
         $cle_privee = $moyenPaiement->Cle_privee;
+
         $response = Http::withToken($cle_privee)
             ->accept('application/json')
             ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
@@ -237,56 +242,53 @@ class LouerchambreController extends Controller
                 'locale' => 'fr'
             ]);
 
-
         $transaction = $response->json();
 
-
+        $paiement = Historiquepaiement::where('user_id', auth()->id())
+            ->where('louerchambre_id', $louerchambre->id)
+            ->where('modePaiement', 'EN_ATTENTE')
+            ->latest()
+            ->first();
 
         if (
-            isset($transaction['v1/transaction']['status'])
-            && $transaction['v1/transaction']['status'] == 'approved'
-            && isset($transaction['v1/transaction']['amount'])
-            && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
+            $paiement &&
+            isset($transaction['v1/transaction']['status']) &&
+            $transaction['v1/transaction']['status'] === 'approved' &&
+            isset($transaction['v1/transaction']['amount']) &&
+            intval($transaction['v1/transaction']['amount']) === intval($louerchambre->loyer)
         ) {
-
-
-            $paiement = Historiquepaiement::where('user_id', auth()->id())
-                ->where('louerchambre_id', $louerchambre->id)
-                ->where('modePaiement', 'EN_ATTENTE')
-                ->latest()
-                ->first();
-
-            if ($paiement) {
-                if (
-                    isset($transaction['v1/transaction']['status']) &&
-                    $transaction['v1/transaction']['status'] == 'approved' &&
-                    isset($transaction['v1/transaction']['amount']) &&
-                    intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
-                )
-                   {
-           // ✅ Paiement validé, on met à jour l’enregistrement
-           $paiement->update([
-            'datePaiement' => now(),
-            'montant' => $transaction['v1/transaction']['amount'],
-            'modePaiement' => $transaction['v1/transaction']['mode'],
-            'idTransaction' => $transaction_id,
-            'quittanceUrl' => $transaction['v1/transaction']['receipt_url'],
-          ]);
-
-                return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
-                    ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
-            } else {
-            if (is_null($paiement->datePaiement) && $paiement->modePaiement === 'EN_ATTENTE') {
-            $paiement->delete();
-        }
-    }
+            // ✅ Paiement approuvé => mise à jour
+            $paiement->update([
+                'datePaiement' => now(),
+                'montant' => $transaction['v1/transaction']['amount'],
+                'modePaiement' => $transaction['v1/transaction']['mode'],
+                'idTransaction' => $transaction_id,
+                'quittanceUrl' => $transaction['v1/transaction']['receipt_url'],
+            ]);
 
             return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
-                ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
+                ->with('success', 'Paiement effectué avec succès.');
         }
 
-         }
-         }
+        return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+            ->with('error', 'Aucun historique de paiement trouvé. Veuillez initier un nouveau paiement.');
+    }
+
+   public function apresPaiement()
+{
+    $paiementsASupprimer = Historiquepaiement::whereNull('datePaiement')->get();
+
+    foreach ($paiementsASupprimer as $paiement) {
+        $paiement->delete();
+    }
+
+    return response()->json([
+        'success' => true,
+        'message' => count($paiementsASupprimer) . ' paiement(s) en attente supprimé(s).'
+    ]);
+}
+
+
     /**
      * Show the form for editing the specified resource.
      */
