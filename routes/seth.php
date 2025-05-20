@@ -43,5 +43,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::patch('/interventions/{id}/confirmer', [InterventionController::class, 'confirmer'])->name('interventions.confirmer');
         Route::patch('/interventions/{id}/rejeter', [InterventionController::class, 'rejeter'])->name('interventions.rejeter');
+        Route::post('/paiement/initialiser', [LouerchambreController::class, 'initialiserPaiement'])->name('paiement.initialiser');
+
     });
 });

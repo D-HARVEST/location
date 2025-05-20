@@ -34,4 +34,5 @@ return new class extends Migration
     {
         Schema::dropIfExists('louer_chambres');
     }
+    
 };

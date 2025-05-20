@@ -2,24 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use id;
-use App\Models\User;
+use App\Http\Requests\LouerchambreRequest;
 use App\Models\Chambre;
-use Carbon\CarbonPeriod;
-use Illuminate\View\View;
-use Illuminate\Support\Str;
-use App\Models\Louerchambre;
-use Illuminate\Http\Request;
-use App\Models\Paiementespece;
-use Illuminate\Support\Carbon;
-use App\Models\Paiementenattente;
 use App\Models\Historiquepaiement;
+use App\Models\Louerchambre;
+use App\Models\Paiementenattente;
+use App\Models\Paiementespece;
+use App\Models\User;
+use Carbon\CarbonPeriod;
+use id;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
-use App\Http\Requests\LouerchambreRequest;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use Illuminate\View\View;
 
 class LouerchambreController extends Controller
 {
@@ -164,6 +165,55 @@ class LouerchambreController extends Controller
     }
 
 
+public function initialiserPaiement(Request $request)
+{
+
+     $louerchambre = Louerchambre::where('user_id', auth()->id())
+            ->latest()
+            ->first();
+
+     if (!$louerchambre) {
+        return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée pour cet utilisateur.'], 404);
+    }
+
+     if ($louerchambre->statut !== 'CONFIRMER') {
+        return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
+    }
+
+
+    // $request->validate([
+    //     'montant' => 'required|numeric',
+    //     'moisPaiement' => 'required|date_format:Y-m'
+    // ]);
+
+    // $louerchambre = Louerchambre::where('user_id', auth()->id())
+    //     ->latest()
+    //     ->first();
+
+
+    try {
+        Historiquepaiement::create([
+            'louerchambre_id' => $louerchambre->id,
+            'montant' => $request->montant,
+            'modePaiement' => 'EN_ATTENTE',
+            'moisPaiement' => $request->moisPaiement,
+            'user_id' => auth()->id(),
+            // Ajoutez seulement si les colonnes sont obligatoires
+            // 'datePaiement' => null,
+            // 'idTransaction' => null,
+            // 'quittanceUrl' => null,
+        ]);
+    } catch (\Exception $e) {
+        Log::error('Erreur lors de la création du paiement : ' . $e->getMessage());
+        return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
+    }
+
+    return response()->json(['success' => true]);
+}
+
+
+
+
     public function enregistrerPaiement(string $transaction_id)
     {
         $louerchambre = Louerchambre::where('user_id', auth()->id())
@@ -210,13 +260,18 @@ class LouerchambreController extends Controller
         ) {
 
 
-            Historiquepaiement::create([
-                'louerchambre_id' => $louerchambre->id,
+            $paiement = Historiquepaiement::where('user_id', auth()->id())
+            ->where('louerchambre_id', $louerchambre->id)
+            ->where('modePaiement', 'EN_ATTENTE')
+            ->latest()
+            ->first();
+
+        if ($paiement) {
+            $paiement->update([
                 'datePaiement' => now(),
                 'montant' => $transaction['v1/transaction']['amount'],
-                'modePaiement' =>  $transaction['v1/transaction']['mode'],
+                'modePaiement' => $transaction['v1/transaction']['mode'],
                 'idTransaction' => $transaction_id,
-                'user_id' => auth()->id(),
                 'quittanceUrl' => $transaction['v1/transaction']['receipt_url'],
             ]);
 
@@ -227,7 +282,7 @@ class LouerchambreController extends Controller
         return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
             ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
     }
-
+}
 
 
     /**
