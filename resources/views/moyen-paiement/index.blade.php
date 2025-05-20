@@ -52,7 +52,7 @@
 										{{-- <td >{{ $moyenPaiement->Cle_privee }}</td>
 										<td >{{ $moyenPaiement->Cle_public }}</td> --}}
                                         <td>
-                                            @if($moyenPaiement->isActif == 1)
+                                            @if($moyenPaiement->isActive == 1)
                                                 <span class="badge bg-success">Active</span>
                                             @else
                                                 <span class="badge bg-danger">Non Active</span>
