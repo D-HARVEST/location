@@ -422,11 +422,11 @@
                                                                 <i class="fs-4 ti ti-eye"></i> Détails
                                                             </a>
                                                         </li>
-                                                        <li>
+                                                        {{-- <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('historiquepaiements.edit',$historiquepaiement->id) }}">
                                                                 <i class="fs-4 ti ti-edit"></i> Ajouter le mois de paiement
                                                             </a>
-                                                        </li>
+                                                        </li> --}}
                                                         {{-- <li>
                                                             <form action="{{ route('historiquepaiements.destroy',$historiquepaiement->id) }}" method="POST">
                                                                 @csrf
