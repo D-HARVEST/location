@@ -30,7 +30,7 @@ class Paiementespece extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['Motif', 'Montant', 'Date', 'DateReception', 'Mois', 'observation', 'louerchambre_id'];
+    protected $fillable = ['Motif', 'Montant', 'Date', 'Mois', 'observation', 'louerchambre_id', 'Motif_rejet'];
 
 
     /**

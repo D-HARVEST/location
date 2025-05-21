@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('Motif');
             $table->double('Montant');
-            $table->date('DateReception');
+            // $table->date('DateReception');
             $table->date('Date');
             $table->string('Mois');
             $table->string('observation')->nullable();

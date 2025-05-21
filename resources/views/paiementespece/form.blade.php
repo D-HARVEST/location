@@ -25,17 +25,17 @@
             <input type="date" name="Date" class="form-control @error('Date') is-invalid @enderror rounded-05" value="{{ $dateValue }}" id="date">
             {!! $errors->first('Date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="col-lg-6 form-group mb-2 mb20">
+        {{-- <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="dateReception" class="form-label">{{ __('Date de reception') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="date" name="DateReception" class="form-control @error('DateReception') is-invalid @enderror rounded-05" value="{{ old('DateReception', $paiementespece?->DateReception) }}" id="dateReception" >
             {!! $errors->first('DateReception', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+        </div> --}}
         <div class="col-lg-6 form-group mb-2 mb20" >
             <strong> <label for="mois" class="form-label">{{ __('Mois de paiement') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="month" name="Mois" class="form-control @error('Mois') is-invalid @enderror rounded-05" value="{{ old('Mois', $paiementespece?->Mois) }}" id="mois" required>
             {!! $errors->first('Mois', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="col-lg-6 form-group mb-2 mb20">
+        <div class="col-lg-12 form-group mb-2 mb20">
             <strong> <label for="louerchambre_id" class="form-label">{{ __('Locataire') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="hidden" name="louerchambre_id" value="{{ $louerchambre->id }}">
 

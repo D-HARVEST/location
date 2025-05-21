@@ -77,7 +77,8 @@ class MaisonController extends Controller
     {
         $maison = Maison::findOrFail($id);
         $categories = Category::pluck('libelle', 'id');
-        return view('maison.edit', compact('maison', 'categories'));
+        $moyenPaiements = MoyenPaiement::pluck('Designation', 'id');
+        return view('maison.edit', compact('maison', 'categories', 'moyenPaiements'));
     }
 
     /**
