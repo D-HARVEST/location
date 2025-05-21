@@ -151,9 +151,6 @@ class LouerchambreController extends Controller
                 $paiement->update(['statut' => 'EN RETARD']);
             }
         }
-
-
-
         $paiementespeces = Paiementespece::where('louerchambre_id', $louerchambre->id)->get();
         return view('louerchambre.show', compact('louerchambre', 'chambres', 'historiquepaiements', 'user', 'montantLoyer', 'paiements', 'paiementenattentes', 'paiementespeces'));
     }
