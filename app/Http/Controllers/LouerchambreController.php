@@ -107,21 +107,14 @@ class LouerchambreController extends Controller
             ->findOrFail($id);
         $paiements = HistoriquePaiement::where('louerchambre_id', $louer->id)->get();
         $montantLoyer = $louerchambre->loyer;
-
         $jourPaiement = $louerchambre->jourPaiementLoyer;
-
         $debut = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
         $fin = Carbon::today()->startOfMonth();
-
         // Créer une période mensuelle
         $moisPeriode = CarbonPeriod::create($debut, '1 month', $fin);
-
         foreach ($moisPeriode as $mois) {
             $moisFormat = $mois->format('Y-m');
-
-            // Date limite pour ce mois
             $dateLimite = Carbon::create($mois->year, $mois->month, $jourPaiement);
-
             // Vérifier si le paiement pour ce mois existe
             $paiementExiste = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)
                 ->where('moisPaiement', $moisFormat)
@@ -151,14 +144,14 @@ class LouerchambreController extends Controller
             }
         }
 
-        // Récupérer tous les paiements en attente
+
         $paiementenattentes = Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
-        // Mise à jour des statuts "en attente" à "en retard"
         foreach ($paiementenattentes as $paiement) {
             if ($paiement->statut === 'EN ATTENTE' && Carbon::parse($paiement->dateLimite)->lt(Carbon::today())) {
                 $paiement->update(['statut' => 'EN RETARD']);
             }
         }
+
 
 
         $paiementespeces = Paiementespece::where('louerchambre_id', $louerchambre->id)->get();
@@ -327,11 +320,11 @@ class LouerchambreController extends Controller
         if ($data['statut'] === 'CONFIRMER') {
 
             $chambre = $louerchambre->chambre;
-            $chambre->update(['statut' => 'Non disponible']);  // Mettre à jour le statut de la chambre
+            $chambre->update(['statut' => 'Non disponible']);
         } else {
 
             $chambre = $louerchambre->chambre;
-            $chambre->update(['statut' => 'Disponible']);  // Mettre à jour le statut de la chambre
+            $chambre->update(['statut' => 'Disponible']);
         }
 
 
@@ -348,14 +341,12 @@ class LouerchambreController extends Controller
         }
 
 
-        // Comparaison des dates normalisées
         $debutOccupationAvant = optional($louerchambre->debutOccupation)->format('Y-m-d');
         $debutOccupationApres = isset($data['debutOccupation']) ? Carbon::parse($data['debutOccupation'])->format('Y-m-d') : $debutOccupationAvant;
 
-        $louerchambre->update($data); // Mettre à jour les données avant recalcul
+        $louerchambre->update($data);
 
         if ($debutOccupationAvant !== $debutOccupationApres) {
-            // Suppression des anciens paiements en attente
             Paiementenattente::where('louerchambre_id', $louerchambre->id)->delete();
 
             // Recalcul des paiements en attente

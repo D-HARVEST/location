@@ -68,6 +68,7 @@
                                         </h5>
                                          <p class="mb-1"><i class="ti ti-calendar me-1"></i> Chambre : {{ $louerchambre->chambre->libelle ?? '-' }}</p>
                                         <p class="mb-1"><i class="ti ti-calendar me-1"></i> Date d'entrée : {{ $louerchambre->debutOccupation ?? '-' }}</p>
+                                        <p class="mb-1"><i class="ti ti-calendar me-1"></i> Jour de paiement de loyer: {{ $louerchambre->jourPaiementLoyer ?? '-' }}</p>
                                         <p class="mb-1"><i class="ti ti-number me-1"></i> NPI(Numéro d'Identification Personnel) : {{ $louerchambre->user->npi ?? '-' }}</p>
                                         <div class="text-muted">
                                             <p class="mb-1"><strong>Prix du Loyer:</strong> {{ $louerchambre->loyer ?? '-' }} FCFA</p>
