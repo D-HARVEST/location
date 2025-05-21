@@ -12,3 +12,6 @@ Route::resource('suivi_mensuel', SuiviController::class);
 Route::resource('paiementespeces', PaiementespeceController::class);
 
 Route::resource('moyen-paiements', MoyenPaiementController::class);
+
+Route::patch('/paiementespece/{id}/statut', [PaiementespeceController::class, 'changerStatut'])->name('paiementespeces.changerStatut');
+

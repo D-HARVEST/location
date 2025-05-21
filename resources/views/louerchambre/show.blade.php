@@ -10,6 +10,7 @@
     Détails Louerchambre
 @endsection
 
+
 @section('content')
 <section>
     {{-- <div class="row">
@@ -204,7 +205,7 @@
         </div>
     </div>
 
-    @role('locataire')
+    @role('gerant|locataire')
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
@@ -227,10 +228,13 @@
                                         <th >Motif</th>
                                         <th >Montant</th>
                                         <th >Date</th>
-                                        <th >Date de Reception</th>
+                                        {{-- <th >Date de Reception</th> --}}
                                         <th >Mois</th>
+                                        @role('gerant')
                                         <th >Locataire</th>
+                                        @endrole
                                         <th >Observation</th>
+                                        <th >Statut</th>
                                             <th></th>
                                         </tr>
                                     </thead>
@@ -239,64 +243,116 @@
                                             <tr>
                                                 <td>{{ ++$i }}</td>
 
-                                            <td >{{ $paiementespece->Motif }}</td>
-                                            <td >{{ $paiementespece->Montant }}</td>
-                                            <td >{{ $paiementespece->Date }}</td>
-                                            <td >{{ $paiementespece->DateReception }}</td>
-                                            <td >{{ \Carbon\Carbon::parse($paiementespece->Mois)->locale('fr')->translatedFormat('F Y')}}</td>
-                                            <td >{{ $paiementespece->louerchambre->user->name}} / {{ $paiementespece->louerchambre->chambre->libelle }} / {{ $paiementespece->louerchambre->chambre->maison->libelle }}</td>
-                                            <td >{{ $paiementespece->observation }}</td>
+                                                <td >{{ $paiementespece->Motif }}</td>
+                                                <td >{{ $paiementespece->Montant }}</td>
+                                                <td >{{ $paiementespece->Date }}</td>
+                                                {{-- <td >{{ $paiementespece->DateReception }}</td> --}}
+                                                <td >{{ \Carbon\Carbon::parse($paiementespece->Mois)->locale('fr')->translatedFormat('F Y')}}</td>
+                                                @role('gerant')
+                                                <td >{{ $paiementespece->louerchambre->user->name}} / {{ $paiementespece->louerchambre->chambre->libelle }} / {{ $paiementespece->louerchambre->chambre->maison->libelle }}</td>
+                                                @endrole
+                                                <td >{{ $paiementespece->observation ?? '-' }}</td>
                                                 <td>
-                                                    <div class="dropdown dropstart">
-                                                        <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
-                                                            aria-expanded="true">
-                                                            <i class="ti ti-dots-vertical fs-5"></i>
-                                                        </a>
-                                                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
-                                                            style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
-                                                            data-popper-placement="left-start">
-                                                            <li>
-                                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.show',$paiementespece->id) }}">
-                                                                    <i class="fs-4 ti ti-eye"></i> Détails
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
-                                                                    <i class="fs-4 ti ti-edit"></i> Modifier
-                                                                </a>
-                                                            </li>
-                                                            <li>
-                                                                <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="dropdown-item text-danger">
-                                                                    <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
-                                                                    </button>
-                                                                </form>
+                                                    @if ($paiementespece->statut == 'EN ATTENTE')
+                                                    <span class="badge bg-warning text-dark">{{ $paiementespece->statut}}</span>
+                                                    @elseif ($paiementespece->statut == 'CONFIRMER')
+                                                    <span class="badge bg-success text-dark">{{ $paiementespece->statut}}</span>
+                                                    @elseif ($paiementespece->statut == 'REJETER')
+                                                    <span class="badge bg-danger text-dark">{{ $paiementespece->statut}}</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                        <div class="dropdown dropstart">
+                                                            <a href="javascript:void(0)" class="text-muted show" id="dropdownMenuButton" data-bs-toggle="dropdown"
+                                                                aria-expanded="true">
+                                                                <i class="ti ti-dots-vertical fs-5"></i>
+                                                            </a>
+                                                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton"
+                                                                style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-20px, 1.6px, 0px);"
+                                                                data-popper-placement="left-start">
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.show',$paiementespece->id) }}">
+                                                                        <i class="fs-4 ti ti-eye"></i> Détails
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
+                                                                        <i class="fs-4 ti ti-edit"></i> Modifier
+                                                                    </a>
+                                                                </li>
+                                                                <li>
+                                                                    <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="dropdown-item text-danger d-flex align-items-center gap-3">
+                                                                        <i class="fs-4 ti ti-trash"></i> {{ __('Supprimer') }}
+                                                                        </button>
+                                                                    </form>
 
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                    {{--
-                                                        <div class="dropdown">
-                                                            <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                Actions
-                                                            </button>
-                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a class="dropdown-item" href="{{ route('paiementespeces.show',$paiementespece->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
-                                                                <a class="dropdown-item" href="{{ route('paiementespeces.edit',$paiementespece->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
-                                                                <div class="dropdown-divider"></div>
-                                                                <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
-                                                                </form>
+                                                                </li>
+                                                                @role('gerant')
+                                                                    @if($paiementespece->statut == 'EN ATTENTE')
+                                                                        <form action="{{ route('paiementespeces.changerStatut', $paiementespece->id) }}" method="POST" style="display:inline">
+                                                                            @csrf
+                                                                            @method('PATCH')
+                                                                            <input type="hidden" name="statut" value="CONFIRMER">
+                                                                            <button type="submit" class="dropdown-item text-success d-flex align-items-center gap-3" style="border:none; background:none;">
+                                                                                <i class="ti ti-circle-check me-1"></i> Confirmer
+                                                                            </button>
+                                                                        </form>
+
+                                                                        <button type="button" class="dropdown-item text-danger d-flex align-items-center gap-3" data-bs-toggle="modal" data-bs-target="#modalRejet{{ $paiementespece->id }}">
+                                                                            <i class="ti ti-circle-x me-1"></i> Rejeter
+                                                                        </button>
+
+                                                                    @endif
+                                                                @endrole
+                                                            </ul>
+                                                        </div>
+                                                        {{--
+                                                            <div class="dropdown">
+                                                                <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                                    Actions
+                                                                </button>
+                                                                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                                                    <a class="dropdown-item" href="{{ route('paiementespeces.show',$paiementespece->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
+                                                                    <a class="dropdown-item" href="{{ route('paiementespeces.edit',$paiementespece->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
+                                                                    <div class="dropdown-divider"></div>
+                                                                    <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <button type="submit" class="dropdown-item text-danger"><i class="fa fa-fw fa-trash"></i> {{ __('Supprimer') }}</button>
+                                                                    </form>
+                                                                </div>
+                                                            </div>
+                                                        --}}
+                                                </td>
+                                            </tr>
+                                            <div class="modal fade" id="modalRejet{{ $paiementespece->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $paiementespece->id }}" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <form method="POST" action="{{ route('paiementespeces.changerStatut', $paiementespece->id) }}">
+                                                    @csrf
+                                                    @method('PATCH')
+                                                    <input type="hidden" name="statut" value="REJETER">
+
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title" id="modalLabel{{ $paiementespece->id }}">Motif du rejet</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="motif_rejet{{ $paiementespece->id }}" class="form-label">Veuillez indiquer le motif du rejet :</label>
+                                                                <textarea name="motif_rejet" id="motif_rejet{{ $paiementespece->id }}" class="form-control" rows="4" required></textarea>
                                                             </div>
                                                         </div>
-                                                    --}}
-                                                </td>
-
-                                            </tr>
+                                                        <div class="modal-footer">
+                                                            <button type="submit" class="btn btn-sm btn-success">Confirmer le rejet</button>
+                                                        </div>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>

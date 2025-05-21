@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\View\View;
 use App\Models\Louerchambre;
 use Illuminate\Http\Request;
@@ -44,19 +45,23 @@ class PaiementespeceController extends Controller
     public function store(PaiementespeceRequest $request): RedirectResponse
     {
         $all = $request->validated();
+
+        $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+        ->where('moisPaiement', $all['Mois'])
+        ->exists();
+
+        if ($existeDeja) {
+            return Redirect::back()->withInput()->with('error', 'Ce mois a déjà été payé.');
+        }
+
+        $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
+        $debutOccupation = Carbon::parse($louerchambre->debutOccupation);
+        $moisPaiement = Carbon::parse($all['Mois'] . '-01');
+
+        if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
+            return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer un mois antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+        }
         $paiementespece = Paiementespece::create($all);
-
-         $louerchambre = Louerchambre::findOrFail($paiementespece->louerchambre_id);
-
-       Historiquepaiement::create([
-        'louerchambre_id' => $paiementespece->louerchambre_id,
-        'datePaiement'    => $paiementespece->DateReception,
-        'montant'         => $paiementespece->Montant,
-        'modePaiement'    => 'Espece',
-        'idTransaction'   => $paiementespece->id,
-        'moisPaiement'    => $paiementespece->Mois,
-        'user_id'         => $louerchambre->user_id,
-    ]);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])
             ->with('success', 'Paiement en espèce enregistré avec succes !');
@@ -114,4 +119,38 @@ class PaiementespeceController extends Controller
         return Redirect::route('louerchambres.show', ['louerchambre' => $data->louerchambre_id])
             ->with('success', 'Paiement en espèce a été supprimé(e) avec succes !');
     }
+
+    public function changerStatut(Request $request, $id): RedirectResponse
+    {
+        $request->validate([
+            'statut' => 'required|in:CONFIRMER,REJETER',
+            'motif_rejet' => 'required_if:statut,REJETER'
+        ]);
+
+        $paiement = Paiementespece::findOrFail($id);
+        $paiement->statut = $request->statut;
+
+        if ($request->statut === 'REJETER') {
+            $paiement->Motif_rejet = $request->motif_rejet;
+        }
+
+        $paiement->save();
+
+        if ($request->statut == 'CONFIRMER') {
+            $louerchambre = Louerchambre::findOrFail($paiement->louerchambre_id);
+
+            Historiquepaiement::create([
+                'louerchambre_id' => $paiement->louerchambre_id,
+                'datePaiement'    => $paiement->Date,
+                'montant'         => $paiement->Montant,
+                'modePaiement'    => 'Espece',
+                'idTransaction'   => $paiement->id,
+                'moisPaiement'    => $paiement->Mois,
+                'user_id'         => $louerchambre->user_id,
+            ]);
+        }
+
+        return back()->with('success', 'Le statut du paiement a été mis à jour avec succès.');
+    }
+
 }
