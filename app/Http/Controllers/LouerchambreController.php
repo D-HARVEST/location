@@ -9,6 +9,7 @@ use App\Models\Louerchambre;
 use App\Models\Paiementenattente;
 use App\Models\Paiementespece;
 use App\Models\User;
+use App\Notifications\RappelPaiementLoyer;
 use Carbon\CarbonPeriod;
 use id;
 use Illuminate\Http\RedirectResponse;
@@ -94,7 +95,10 @@ class LouerchambreController extends Controller
         $data = $request->validated();
 
         // Rechercher l'utilisateur par email ou NPI
-        $user = User::where('npi', $data['npi'])->first();
+        $user = User::where('email', $data['email'])
+            ->where('npi', $data['npi'])
+            ->first();
+
 
         if ($user) {
             // Mise à jour des informations de l'utilisateur
@@ -191,14 +195,24 @@ class LouerchambreController extends Controller
         }
 
 
-
-
-
         // ⚠️ Mise à jour des statuts individuellement
         $paiementenattentes = \App\Models\Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
 
         foreach ($paiementenattentes as $paiement) {
-            if ($aujourdhui > \Carbon\Carbon::parse($paiement->dateLimite)) {
+            $dateLimite = \Carbon\Carbon::parse($paiement->dateLimite);
+
+            // Notification de rappel 3 jours avant
+            if ($aujourdhui->equalTo($dateLimite->copy()->subDays(3))) {
+                $louerchambre->user->notify(new RappelPaiementLoyer($dateLimite, 'RAPPEL'));
+            }
+
+            // Notification de retard
+            if ($aujourdhui->equalTo($dateLimite)) {
+                $louerchambre->user->notify(new RappelPaiementLoyer($dateLimite, 'EN RETARD'));
+            }
+
+            // Mise à jour du statut
+            if ($aujourdhui->gt($dateLimite)) {
                 if ($paiement->statut !== 'EN RETARD') {
                     $paiement->statut = 'EN RETARD';
                     $paiement->save();

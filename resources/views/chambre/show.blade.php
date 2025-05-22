@@ -1,12 +1,12 @@
 @php
-    $pagetitle = 'Ma Chambre';
-    $breadcrumbs = ['Liste des Chambre' => route('chambres.index'), 'Ma  chambre' => ''];
+    $pagetitle = 'Me(s) Chambre(s)';
+    $breadcrumbs = ['Liste de(s) Chambre(s)' => route('chambres.index'), 'Me(s)  chambre(s)' => ''];
 @endphp
 
 @extends('layouts.app')
 
 @section('template_title')
-    Mes Chambres
+    Me(s) Chambre(s)
 @endsection
 
 @section('content')

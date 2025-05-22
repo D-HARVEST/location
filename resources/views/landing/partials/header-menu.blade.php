@@ -1,10 +1,8 @@
-<header class="header position-relative ">
-
-
+<header class="header position-fixed bg-transparent px-0">
     <nav class="navbar navbar-expand-lg p-0 ">
-        <div class="container-fluid px-0 ">
+        <div class="container px-0 ">
             <a class="navbar-brand m-0 p-0 " href="/">
-                <img src="{{ asset('logo-optishop-onlight.png') }}" width="150" alt="img-fluid" />
+                <img src="{{ asset('logo-dh.svg') }}" width="50" alt="img-fluid" />
             </a>
             <button class="navbar-toggler border-0 p-0 shadow-none" type="button" data-bs-toggle="offcanvas"
                 data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">

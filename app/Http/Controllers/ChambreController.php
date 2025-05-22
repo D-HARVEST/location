@@ -122,9 +122,6 @@ class ChambreController extends Controller
             ->where('chambre_id', $chambre->id)
             ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer]);
 
-        // DB::table('paiementenattentes')
-        // ->where('chambre_id', $chambre->id)
-        // ->\Carbon\Carbon::update(['dateLimite' =>$aujourdhui->year, $aujourdhui->month, $chambre->jourPaiementLoyer]);
 
         return Redirect::route('maison.show', ['id' => $request->maison_id])
             ->with('success', 'Chambre a été mis(e) à jour avec succes !');
