@@ -14,6 +14,7 @@ use App\Models\Louerchambre;
 
 
 
+
 /**
  * Class User
  *
@@ -62,16 +63,19 @@ class User extends Authenticatable
     // User.php
     public function louerchambres()
     {
-        return $this->hasMany(Louerchambre::class);
+        return $this->hasMany(\App\Models\Louerchambre::class, 'user_id', 'id');
     }
+
 
     public function chambre()
     {
         return $this->belongsTo(Chambre::class, 'chambre_id');
     }
 
-    public function louerchambre()
-    {
-        return $this->hasOne(Louerchambre::class)->latestOfMany();
-    }
+    // public function louerchambre()
+    // {
+    //     return $this->hasOne(Louerchambre::class)->latestOfMany();
+    // }
+
+
 }

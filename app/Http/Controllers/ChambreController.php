@@ -15,7 +15,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use Carbon\Carbon;
 
 
 class ChambreController extends Controller
@@ -116,27 +115,16 @@ class ChambreController extends Controller
         $all = $request->validated();
         $chambre->update($all);
 
-
+        // Recharger le modèle pour s'assurer d'avoir la dernière valeur du loyer
         $chambre->refresh();
         // Mettre à jour le loyer dans la table louerchambres
         DB::table('louerchambres')
             ->where('chambre_id', $chambre->id)
             ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer]);
 
-
-        // $dateLimite = now()->setDay($chambre->jourPaiementLoyer)->format('Y-m-d');
-
-
-        // if (!checkdate(now()->month, $chambre->jourPaiementLoyer, now()->year)) {
-        //     $dateLimite = now()->endOfMonth()->format('Y-m-d');
-        // }
-
-        // DB::table('paiementenattentes')
-        //     ->where('louerchambre_id', $chambre->id)
-        //     ->update(['dateLimite' => $dateLimite]);
-
-
-
+        DB::table('paiementenattentes')
+        ->where('chambre_id', $chambre->id)
+        ->\Carbon\Carbon::update(['dateLimite' =>$aujourdhui->year, $aujourdhui->month, $chambre->jourPaiementLoyer]);
 
         return Redirect::route('maison.show', ['id' => $request->maison_id])
             ->with('success', 'Chambre a été mis(e) à jour avec succes !');

@@ -6,7 +6,7 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Ma Chambre
+    Mes Chambres
 @endsection
 
 @section('content')
