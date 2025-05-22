@@ -36,9 +36,9 @@
      padding-top: 20px;
 
    }
-.tilt-card:hover {
+/* .tilt-card:hover {
   transform: rotate(-3deg);
-}
+} */
 
 .tilt-card {
   transform: rotate(3deg);
