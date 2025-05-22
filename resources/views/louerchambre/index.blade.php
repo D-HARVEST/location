@@ -51,10 +51,9 @@
 
 
 
-
-                       <div class="row mt-4">
-                @forelse ($louerchambres as $louerchambre)
-                    <div class="col-md-6 mb-4">
+                   <div class="row mt-4 justify-content-center">
+                       @forelse ($louerchambres as $louerchambre)
+                       <div class="col-md-6 col-lg-5 mb-4">
                         <div class="card shadow-sm h-100" style="border-left: 5px solid
                             @if($louerchambre->statut == 'CONFIRMER') #28a745
                             @elseif($louerchambre->statut == 'EN ATTENTE') #ffc107
@@ -63,19 +62,24 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between align-items-start">
                                     <div>
+
+                                            <h4 class="mb-2  fw-bold text-success">
+                                                 {{ number_format($louerchambre->loyer, 0, ',', ' ') }} FCFA / mois
+                                            </h4>
+
                                         <h5 class="mb-1 text-primary">
                                             <i class="ti ti-user me-1"></i> {{ $louerchambre->user->name ?? 'Locataire inconnu' }}
                                         </h5>
-                                         <p class="mb-1"><i class="ti ti-calendar me-1"></i> Chambre : {{ $louerchambre->chambre->libelle ?? '-' }}</p>
+                                         {{-- <p class="mb-1"><i class="ti ti-calendar me-1"></i> Chambre : {{ $louerchambre->chambre->libelle ?? '-' }}</p> --}}
                                         <p class="mb-1"><i class="ti ti-calendar me-1"></i> Date d'entrée : {{ $louerchambre->debutOccupation ?? '-' }}</p>
                                         <p class="mb-1"><i class="ti ti-calendar me-1"></i> Jour de paiement de loyer: {{ $louerchambre->jourPaiementLoyer ?? '-' }}</p>
-                                        <p class="mb-1"><i class="ti ti-number me-1"></i> NPI(Numéro d'Identification Personnel) : {{ $louerchambre->user->npi ?? '-' }}</p>
-                                        <div class="text-muted">
-                                            <p class="mb-1"><strong>Prix du Loyer:</strong> {{ $louerchambre->loyer ?? '-' }} FCFA</p>
-                                            <p class="mb-1"><strong>Caution Loyer:</strong> {{ $louerchambre->cautionLoyer ?? '-' }} FCFA</p>
+                                        <p class="mb-1"><i class="ti ti-number me-1"></i> NPI : {{ $louerchambre->user->npi ?? '-' }}</p>
+                                        {{-- <div class="text-muted">
+                                            <p class="mb-1">{{ $louerchambre->loyer ?? '-' }} FCFA</p>
+                                            {{-- <p class="mb-1"><strong>Caution Loyer:</strong> {{ $louerchambre->cautionLoyer ?? '-' }} FCFA</p>
                                             <p class="mb-1"><strong>Caution Électricité:</strong> {{ $louerchambre->cautionElectricite ?? '-' }} FCFA</p>
                                             <p class="mb-1"><strong>Caution Eau:</strong> {{ $louerchambre->cautionEau ?? '-' }} FCFA</p>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                     <div class="text-end">
                                         @if($louerchambre->statut == 'EN ATTENTE')
@@ -98,7 +102,7 @@
                                             <i class="ti ti-download me-1"></i> Télécharger contrat
                                         </a>
                                     @else
-                                        <span class="badge bg-secondary">Aucun contrat disponible, Ajoutez votre contrat s'il vous plaît</span>
+                                        <span class="badge bg-secondary">Aucun contrat disponible</span>
                                     @endif
                                 </div>
 

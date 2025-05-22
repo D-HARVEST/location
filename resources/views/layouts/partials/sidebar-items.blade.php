@@ -133,25 +133,27 @@
 
 
 @role('locataire')
-    @if(Auth::user()->louerchambre)
+    @if(Auth::user()->louerchambres && Auth::user()->louerchambres->count())
         <li class="sidebar-item">
-            <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
+            <a class="sidebar-link has-arrow primary-hover-bg" href="javascript:void(0)" aria-expanded="false">
                 <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
-                <span class="hide-menu ps-1">Ma chambre</span>
+                <span class="hide-menu ps-1">Me(s) chambre(s)</span>
             </a>
-            {{-- <ul aria-expanded="false" class="collapse first-level">
-                @if(Auth::user()->louerchambre)
+            <ul aria-expanded="false" class="collapse first-level">
+                @foreach(Auth::user()->louerchambres as $louer)
                     <li class="sidebar-item">
-                        <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
-                            <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
-                            <span class="hide-menu ps-1">Ma chambre</span>
+                        <a class="sidebar-link" href="{{ route('chambres.show', ['chambre' => $louer->chambre_id]) }}">
+                            <span class="hide-menu">
+                                {{ $louer->chambre->libelle ?? 'Chambre inconnue' }}
+                            </span>
                         </a>
                     </li>
-                @endif
-            </ul> --}}
+                @endforeach
+            </ul>
         </li>
     @endif
 @endrole
+
 
 
 @role('locataire|gerant|Super-admin')

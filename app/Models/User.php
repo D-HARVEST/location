@@ -72,10 +72,8 @@ class User extends Authenticatable
         return $this->belongsTo(Chambre::class, 'chambre_id');
     }
 
-    // public function louerchambre()
-    // {
-    //     return $this->hasOne(Louerchambre::class)->latestOfMany();
-    // }
-
-
+    public function louerchambre()
+    {
+        return $this->hasOne(Louerchambre::class)->latestOfMany();
+    }
 }

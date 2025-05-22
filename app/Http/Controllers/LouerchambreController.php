@@ -36,6 +36,7 @@ class LouerchambreController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * $louerchambres->perPage());
     }
 
+
     /**
      * Show the form for creating a new resource.
      */
@@ -93,7 +94,7 @@ class LouerchambreController extends Controller
         $data = $request->validated();
 
         // Rechercher l'utilisateur par email ou NPI
-       $user = User::where('npi', $data['npi'])->first();
+        $user = User::where('npi', $data['npi'])->first();
 
         if ($user) {
             // Mise à jour des informations de l'utilisateur
