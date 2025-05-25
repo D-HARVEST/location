@@ -95,7 +95,7 @@ class LouerchambreController extends Controller
         $data = $request->validated();
 
         // Rechercher l'utilisateur par email ou NPI
-        $user = User::where('email', $data['email'])
+       $user = User::where('email', $data['email'])
             ->where('npi', $data['npi'])
             ->first();
 
@@ -142,7 +142,7 @@ class LouerchambreController extends Controller
         $chambres = Chambre::pluck('libelle', 'id');
         $louerchambre = Louerchambre::with(['chambre', 'user', 'historiquesPaiements'])
             ->findOrFail($id);
-        $historiquepaiements = Historiquepaiement::where('user_id', $user->id)->get();
+        $historiquepaiements = $user->historiquesPaiements()->where('louerchambre_id', $id)->get();
         $louer = Louerchambre::with(['chambre.maison', 'user'])
             ->findOrFail($id);
         $paiements = HistoriquePaiement::where('louerchambre_id', $louer->id)->get();

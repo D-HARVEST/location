@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use App\Http\Requests\PaiementespeceRequest;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class PaiementespeceController extends Controller
 {
@@ -34,7 +35,7 @@ class PaiementespeceController extends Controller
         $paiementespece = new Paiementespece();
 
         $louerchambre = Louerchambre::with('user', 'chambre.maison')
-        ->findOrFail($request->louerchambre_id);
+            ->findOrFail($request->louerchambre_id);
 
         return view('paiementespece.create', compact('paiementespece', 'louerchambre'));
     }
@@ -47,8 +48,8 @@ class PaiementespeceController extends Controller
         $all = $request->validated();
 
         $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-        ->where('moisPaiement', $all['Mois'])
-        ->exists();
+            ->where('moisPaiement', $all['Mois'])
+            ->exists();
 
         if ($existeDeja) {
             return Redirect::back()->withInput()->with('error', 'Ce mois a déjà été payé.');
@@ -75,7 +76,7 @@ class PaiementespeceController extends Controller
         $paiementespece = Paiementespece::findOrFail($id);
 
         $louerchambre = Louerchambre::with('user', 'chambre.maison')
-        ->findOrFail($paiementespece->louerchambre_id);
+            ->findOrFail($paiementespece->louerchambre_id);
 
         return view('paiementespece.show', compact('paiementespece', 'louerchambre'));
     }
@@ -87,7 +88,7 @@ class PaiementespeceController extends Controller
     {
         $paiementespece = Paiementespece::findOrFail($id);
         $louerchambre = Louerchambre::with('user', 'chambre.maison')
-        ->findOrFail($paiementespece->louerchambre_id);
+            ->findOrFail($paiementespece->louerchambre_id);
 
         return view('paiementespece.edit', compact('paiementespece', 'louerchambre'));
     }
@@ -97,7 +98,25 @@ class PaiementespeceController extends Controller
      */
     public function update(PaiementespeceRequest $request, Paiementespece $paiementespece): RedirectResponse
     {
-        $all=$request->validated();
+        $all = $request->validated();
+
+
+        $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+            ->where('moisPaiement', $all['Mois'])
+            ->exists();
+
+        if ($existeDeja) {
+            return Redirect::back()->withInput()->with('error', 'Ce mois a déjà été payé.');
+        }
+
+        $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
+        $debutOccupation = Carbon::parse($louerchambre->debutOccupation);
+        $moisPaiement = Carbon::parse($all['Mois'] . '-01');
+
+        if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
+            return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer un mois antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+        }
+        $all['statut'] = 'EN ATTENTE';
         $paiementespece->update($all);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])
@@ -153,4 +172,23 @@ class PaiementespeceController extends Controller
         return back()->with('success', 'Le statut du paiement a été mis à jour avec succès.');
     }
 
+    public function telechargerFacture($id)
+    {
+        $paiement = Paiementespece::findOrFail($id);
+        $louerchambre = Louerchambre::with('user', 'chambre.maison')
+            ->findOrFail($paiement->louerchambre_id);
+
+        $data = [
+            'paiement' => $paiement,
+            'louerchambre' => $louerchambre,
+            'locataire' => $louerchambre->user,
+            'chambre' => $louerchambre->chambre,
+            'maison' => $louerchambre->chambre->maison,
+        ];
+
+        // Génère le PDF depuis la vue facture
+        $pdf = Pdf::loadView('factures.paiement', $data);
+
+        return $pdf->download('facture_' . $paiement->id . '.pdf');
+    }
 }

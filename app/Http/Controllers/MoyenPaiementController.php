@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MoyenPaiementRequest;
 use App\Models\MoyenPaiement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use App\Http\Requests\MoyenPaiementRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -16,7 +17,8 @@ class MoyenPaiementController extends Controller
      */
     public function index(Request $request): View
     {
-        $moyenPaiements = MoyenPaiement::paginate();
+        $user = Auth::user();
+        $moyenPaiements = $user->moyenpaiements()->with('user')->latest()->paginate(10);
 
         return view('moyen-paiement.index', compact('moyenPaiements'))
             ->with('i', ($request->input('page', 1) - 1) * $moyenPaiements->perPage());
@@ -39,6 +41,7 @@ class MoyenPaiementController extends Controller
     {
         $all = $request->validated();
         $all['user_id'] = auth()->user()->id;
+
         MoyenPaiement::create($all);
 
         return Redirect::route('moyen-paiements.index')
@@ -50,6 +53,7 @@ class MoyenPaiementController extends Controller
      */
     public function show($id): View
     {
+        $user = Auth::user();
         $moyenPaiement = MoyenPaiement::findOrFail($id);
 
         return view('moyen-paiement.show', compact('moyenPaiement'));

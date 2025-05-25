@@ -25,6 +25,7 @@ class PaiementespeceRequest extends FormRequest
 			'Motif' => 'required|string',
 			'Montant' => 'required',
 			'Date' => 'required',
+            'statut' => 'in:EN ATTENTE,CONFIRMER,REJETER',
             // 'DateReception' => 'required',
             'Mois' => 'required',
 			'observation' => 'nullable|string',

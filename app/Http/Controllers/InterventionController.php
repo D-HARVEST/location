@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\InterventionRequest;
 use App\Models\Intervention;
 use App\Models\Louerchambre;
+use App\Notifications\InterventionSoumise;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,13 +23,11 @@ class InterventionController extends Controller
 
         // Si l'utilisateur est un "locataire"
         if ($user->hasRole('locataire')) {
-            $louerchambre = Louerchambre::where('user_id', $user->id)->first();
+            $louerchambre = Auth::user()->louerChambres;
 
-            if (!$louerchambre) {
-                return view('intervention.index', ['interventions' => []])
-                    ->with('message', 'Aucune chambre associée à cet utilisateur.');
-            }
-            $interventions = Intervention::where('louerchambre_id', $louerchambre->id)->paginate();
+
+
+            $interventions = $user->interventions()->paginate(10); // Récupère les interventions de l'utilisateur Intervention:
         } else if ($user->hasRole('gerant')) {
             // Récupère les ID des chambres des maisons gérées par le gérant
             $chambreIds = \App\Models\Chambre::whereHas('maison', function ($query) use ($user) {
@@ -47,14 +46,20 @@ class InterventionController extends Controller
         return view('intervention.index', compact('interventions'))
             ->with('i', ($request->input('page', 1) - 1) * $interventions->perPage());
     }
+
+
+
     /**
      * Show the form for creating a new resource.
      */
     public function create(): View
     {
+        $user = Auth::user();
         $intervention = new Intervention();
+        $louerchambres = Auth::user()->louerChambres;
 
-        return view('intervention.create', compact('intervention'));
+
+        return view('intervention.create', compact('intervention', 'louerchambres'));
     }
 
     /**
@@ -62,20 +67,18 @@ class InterventionController extends Controller
      */
     public function store(InterventionRequest $request): RedirectResponse
     {
-        // Récupérer l'ID de la chambre louée par l'utilisateur connecté
-        $userId = Auth::id();
-        $louerchambre = Louerchambre::where('user_id', $userId)->first();
 
-        if (!$louerchambre) {
-            return redirect()->route('interventions.index')
-                ->withErrors(['Vous n\'avez pas de chambre louée associée.']);
-        }
-
-        // Valider et créer l'intervention
         $all = $request->validated();
-        $all['louerchambre_id'] = $louerchambre->id;
+        $intervention = Intervention::create($all);
 
-        Intervention::create($all);
+        $louerchambre = $intervention->louerchambre;
+        $chambre = $louerchambre->chambre ?? null;
+        $maison = $chambre->maison ?? null;
+        $gerant = $maison?->user;
+
+        if ($gerant && $gerant->hasRole('gerant')) {
+            $gerant->notify(new InterventionSoumise($intervention));
+        }
 
         return Redirect::route('interventions.index')
             ->with('success', 'Intervention créée avec succès !');
@@ -87,6 +90,7 @@ class InterventionController extends Controller
      */
     public function show($id): View
     {
+
         $intervention = Intervention::findOrFail($id);
 
         return view('intervention.show', compact('intervention'));
@@ -97,9 +101,11 @@ class InterventionController extends Controller
      */
     public function edit($id): View
     {
+        $user = Auth::user();
+        $louerchambres = Auth::user()->louerChambres;
         $intervention = Intervention::findOrFail($id);
 
-        return view('intervention.edit', compact('intervention'));
+        return view('intervention.edit', compact('intervention', 'louerchambres'));
     }
 
     /**
@@ -107,22 +113,9 @@ class InterventionController extends Controller
      */
     public function update(InterventionRequest $request, Intervention $intervention): RedirectResponse
     {
-        // Vérifier si l'intervention appartient à l'utilisateur connecté
-        $userId = Auth::id();
-        $louerchambre = Louerchambre::where('user_id', $userId)->first();
 
-        if (!$louerchambre) {
-            return redirect()->route('interventions.index')
-                ->withErrors(['Vous n\'avez pas de chambre louée associée.']);
-        }
 
-        // Vérifier si l'intervention appartient bien à cette chambre louée
-        if ($intervention->louerchambre_id != $louerchambre->id) {
-            return redirect()->route('interventions.index')
-                ->withErrors(['Vous ne pouvez pas modifier cette intervention.']);
-        }
 
-        // Valider et mettre à jour l'intervention
         $all = $request->validated();
         $intervention->update($all);
 

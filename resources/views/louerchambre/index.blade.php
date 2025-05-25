@@ -48,10 +48,7 @@
 
 
 
-
-
-
-                   <div class="row mt-4 justify-content-center">
+                   <div class="row mt-4">
                        @forelse ($louerchambres as $louerchambre)
                        <div class="col-md-6 col-lg-5 mb-4">
                         <div class="card shadow-sm h-100" style="border-left: 5px solid

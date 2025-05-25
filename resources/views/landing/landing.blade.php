@@ -326,7 +326,7 @@
 </section>
 
 
-<section class="hiro mt-5">
+<section class="hiro mt-5" style="padding-top: 50px">
     <h2 class="text-center">Ce que disent nos utilisateurs</h2>
 
 

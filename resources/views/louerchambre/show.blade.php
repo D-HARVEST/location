@@ -213,14 +213,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body border-1">
                         {{-- <h4 class="card-title">Paiement en espèce(s)</h4> --}}
+                        @role('locataire')
+                        <div class="card border">
                         <div class="btn btn-success w-100 rounded-1">
                             <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="text-white" >
                                  <i class="fa fa-credit-card me-2"></i>
                                     Payer en espèce</a>
                         </div>
+                        </div>
+                        @endrole
 
+                        <div class="card-title text-dark fw-bolder mt-4">Paiements en espèces</div>
                         <hr>
 
                         <div class="table-responsive">
@@ -243,7 +248,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+
+
+
                                         @foreach ($paiementespeces as $paiementespece)
+                                          @if ($paiementespece->statut != 'CONFIRMER')
+
                                             <tr>
                                                 <td>{{ ++$i }}</td>
 
@@ -279,11 +289,13 @@
                                                                         <i class="fs-4 ti ti-eye"></i> Détails
                                                                     </a>
                                                                 </li>
+
                                                                 <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
                                                                         <i class="fs-4 ti ti-edit"></i> Modifier
                                                                     </a>
                                                                 </li>
+                                                                @role('locataire')
                                                                 <li>
                                                                     <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
                                                                         @csrf
@@ -294,6 +306,7 @@
                                                                     </form>
 
                                                                 </li>
+                                                                @endrole
                                                                 @role('gerant')
                                                                     @if($paiementespece->statut == 'EN ATTENTE')
                                                                         <form action="{{ route('paiementespeces.changerStatut', $paiementespece->id) }}" method="POST" style="display:inline">
@@ -357,6 +370,7 @@
                                                 </form>
                                             </div>
                                             </div>
+                                         @endif
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -449,12 +463,18 @@
                                       <a href="{{ $historiquepaiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
                                           Télécharger la quittance
                                       </a>
+                                  @elseif($historiquepaiement->modePaiement == 'Espece')
+                                       <a href="{{ route('paiementespeces.facture', $historiquepaiement->idTransaction) }}"
+                                        target="_blank" download class="btn btn-sm btn-success">
+                                         Télécharger la facture PDF
+                                       </a>
+
                                   @else
                                       <span class="badge bg-danger">
                                           Aucune quittance
                                       </span>
-                                  @endif
-                              </td>
+                                     @endif
+                                 </td>
 
                                         <td >{{ $historiquepaiement->montant }}</td>
                                         <td >{{ $historiquepaiement->modePaiement }}</td>
@@ -533,7 +553,6 @@
     @role('gerant')
         <div class="container">
 
-
             <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="card">
@@ -575,6 +594,11 @@
                                                     <a href="{{ asset('storage/' . $paiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
                                                         Télecharger la quittance
                                                     </a>
+                                                  @elseif($paiement->modePaiement == 'Espece')
+                                                      <a href="{{ route('paiementespeces.facture', $paiement->idTransaction) }}"
+                                                        target="_blank" download class="btn btn-sm btn-success">
+                                                         Télécharger la facture PDF
+                                                       </a>
                                                 @else
                                                     <span class="badge bg-danger">
                                                         Aucune quittance

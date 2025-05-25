@@ -13,25 +13,25 @@ class RappelPaiementLoyer extends Notification
     {
         $this->dateLimite = $dateLimite;
         $this->statut = $statut;
+
     }
 
     public function via($notifiable)
     {
-        return ['mail']; // ou ['database', 'mail'] si vous avez les notifications en base
+        return ['mail'];
     }
 
-    public function toMail($notifiable)
-    {
-        $message = new MailMessage();
-        $message->subject('Rappel de paiement de loyer');
+   public function toMail($notifiable)
+{
+    return (new MailMessage)
+        ->subject('Rappel de paiement de loyer')
+        ->greeting('Bonjour,')
+        ->line($this->statut === 'RAPPEL'
+            ? "Votre loyer arrive à échéance le " . $this->dateLimite->format('d/m/Y') . "."
+            : "Votre loyer est en retard depuis le " . $this->dateLimite->format('d/m/Y') . ".")
+        ->line('Merci de régulariser votre situation.')
+        ->action('Payer maintenant', url('/payer-loyer'))
+        ->salutation('Cordialement, L’équipe D-Harvest');
+}
 
-        if ($this->statut === 'RAPPEL') {
-            $message->line("Votre loyer arrive à échéance le " . $this->dateLimite->format('d/m/Y') . ".");
-        } elseif ($this->statut === 'EN RETARD') {
-            $message->line("Votre loyer est en retard depuis le " . $this->dateLimite->format('d/m/Y') . ".");
-        }
-
-        return $message->line('Merci de régulariser votre situation.')
-                       ->action('Payer maintenant', url('/payer-loyer'));
-    }
 }

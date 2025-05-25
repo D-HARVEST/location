@@ -26,7 +26,7 @@
             <div class="col-md-6 col-lg-4">
                 <div class="card border-0 shadow-lg rounded-4 h-100">
                     <div class="position-relative">
-                        <img src="{{ asset('assets/entreprise2.png') }}" class="card-img-top rounded-top-4" style="height: 250px; cover;">
+                        <img src="{{ asset('assets/home.png') }}" class="card-img-top rounded-top-4" style="height: 250px; cover;">
                         <div class="position-absolute top-0 end-0 m-2 dropdown">
                             <button class="btn btn-sm btn-light rounded-circle shadow-sm" data-bs-toggle="dropdown">
                                 <i class="ti ti-dots-vertical"></i>
