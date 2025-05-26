@@ -77,40 +77,9 @@
 .hero li{
     font-size: 1rem;
 }
-  </style>
 
-  <style>
-  .testimonial-card {
-    background-color: #F5FAFF;
-    border-radius: 20px;
-    padding: 20px;
-    height: 100%;
-  }
 
-  .testimonial-quote {
-    font-size: 50px;
-    color: #A2E4D9;
-    line-height: 0.5;
-    margin-right: 10px;
-  }
 
-  .testimonial-text {
-    color: #2C3E50;
-    font-size: 1rem;
-  }
-
-  .testimonial-role {
-    color: #7F8C8D;
-    font-size: 0.9rem;
-  }
-
-  .testimonial-img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-right: 10px;
-  }
 </style>
 
 </head>
@@ -144,7 +113,7 @@
         </p>
         <div class="d-flex gap-3 mb-4" >
           <a href="{{ route('register') }}" class="btn text-white px-4 rounded-1" style="font-size: 1.2rem; background-color: #54b435">Commencer</a>
-          <a href="#" class="btn btn-outline-secondary px-4 rounded-1 bg-white" style="font-size: 1.2rem;">Nous contacter</a>
+          <a href="#contact" class="btn btn-outline-secondary px-4 rounded-1 bg-white text-secondary" style="font-size: 1.2rem;">Nous contacter</a>
         </div>
         <!-- Features -->
     <div class="Feature">
@@ -184,6 +153,10 @@
   </div>
 
 </section>
+
+
+
+
 
 
 
@@ -328,17 +301,14 @@
 
 <section class="hiro mt-5" style="padding-top: 50px">
     <h2 class="text-center">Ce que disent nos utilisateurs</h2>
-
-
-
-<div class="container py-5">
-  <div class="row g-4">
+   <div class="container py-5">
+   <div class="row g-4">
     <!-- Marie L. -->
-    <div class="col-md-6">
-      <div class="testimonial-card d-flex flex-column h-100">
+    <div class="col-md-6 rounded-2"  >
+      <div class="testimonial-card d-flex flex-column h-100" style="background-color: #eff5fe;">
         <div class="d-flex align-items-center mb-2">
-          <img src="https://randomuser.me/api/portraits/women/16.jpg" alt="Marie L." class="testimonial-img">
-          <div>
+          <img src="https://randomuser.me/api/portraits/women/16.jpg" alt="Marie L." class="testimonial-img rounded-circle" style="height: 60px;">
+          <div class="ms-3">
             <strong>Marie L.</strong><br>
             <span class="testimonial-role">Propriétaire</span>
           </div>
@@ -354,11 +324,11 @@
     </div>
 
     <!-- Thomas B. -->
-    <div class="col-md-6">
-      <div class="testimonial-card d-flex flex-column h-100">
+    <div class="col-md-6 rounded-2"  >
+      <div class="testimonial-card d-flex flex-column h-100" style="background-color: #eff5fe;">
         <div class="d-flex align-items-center mb-2">
-          <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Thomas B." class="testimonial-img">
-          <div>
+          <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Thomas B." class="testimonial-img rounded-circle" style="height: 60px;">
+          <div class="ms-3">
             <strong>Thomas B.</strong><br>
             <span class="testimonial-role">Locataire</span>
           </div>
@@ -374,11 +344,11 @@
     </div>
 
     <!-- Sophie M. -->
-    <div class="col-md-6">
-      <div class="testimonial-card d-flex flex-column h-100">
+    <div class="col-md-6 rounded-2" >
+      <div class="testimonial-card d-flex flex-column h-100"  style="background-color: #eff5fe;">
         <div class="d-flex align-items-center mb-2">
-          <img src="https://randomuser.me/api/portraits/women/36.jpg" alt="Sophie M." class="testimonial-img">
-          <div>
+          <img src="https://randomuser.me/api/portraits/women/36.jpg" alt="Sophie M." class="testimonial-img rounded-circle" style="height: 60px;">
+          <div class="ms-3">
             <strong>Sophie M.</strong><br>
             <span class="testimonial-role">Gestionnaire immobilier</span>
           </div>
@@ -394,11 +364,11 @@
     </div>
 
     <!-- Lucas D. -->
-    <div class="col-md-6">
-      <div class="testimonial-card d-flex flex-column h-100">
+    <div class="col-md-6 rounded-2 "  >
+      <div class="testimonial-card d-flex flex-column h-100" style="background-color: #eff5fe;">
         <div class="d-flex align-items-center mb-2">
-          <img src="https://randomuser.me/api/portraits/men/70.jpg" alt="Lucas D." class="testimonial-img">
-          <div>
+          <img src="https://randomuser.me/api/portraits/men/70.jpg" alt="Lucas D." class="testimonial-img rounded-circle" style="height: 60px;">
+          <div class="ms-3">
             <strong>Lucas D.</strong><br>
             <span class="testimonial-role">Locataire</span>
           </div>
@@ -414,12 +384,122 @@
     </div>
   </div>
 </div>
+</section>
 
 
+<section>
+    <div class="container hero">
+        <h2 class="text-center">Générer votre contrat gratuitement</h2>
+        <p class="text-center mb-4" style="font-size: 1.1rem;">
+            Remplissez quelques informations et obtenez automatiquement un contrat de location personnalisé, prêt à être signé.
+        </p>
+        <div class="text-center">
+            <a href="{{ route('contrat') }}" class="btn text-white px-4 rounded-1" style="font-size: 1.2rem; background-color: #54b435">Commencer</a>
+        </div>
+    </div>
 </section>
 
 
 
+    <section id="contact" class="hiro">
+        <h2 class="text-center mb-5"> Contactez-nous</h2>
+        <div class="">
+            <div class="row d-flex align-items-stretch ">
+                <div class="col-lg-4 col-sm-6 ">
+                    <div class="card w-100 border shadow-none p-3 border-radius-xl shadow">
+                        <div class="row d-flex align-items-stretch ">
+                            <div class="col-3">
+                                <div
+                                    class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center h-100">
+
+                                    <img src="https://ornestaste.com/spike/socialmedia_tech_09.png" class="img-fluid"
+                                        alt="">
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <h4>Messagerie</h4>
+
+                                <div class="">
+                                    <a href="https://wa.me/0167404081" target="_blank" style="text-decoration: none; color: #25D366;">
+                                        <i class="bi bi-whatsapp" style="font-size: 1rem;"></i> Discuter sur WhatsApp
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div class="d-flex">
+
+                                <div class="ms-2">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 ">
+                    <div class="card w-100 border shadow-none p-3 border-radius-xl shadow">
+                        <div class="row d-flex align-items-stretch ">
+                            <div class="col-3">
+                                <div class=" d-flex justify-content-center align-items-center h-100">
+
+                                    <img src="https://ornestaste.com/ccc.png" class="img-fluid" alt="">
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <h4>Email</h4>
+
+                                <a href="mailto:freedie@benis.online"
+                                    class="card-subtitle mt-2 mb-0 fw-normal text-muted">
+                                    contact@d-harvest.com
+                                </a>
+
+                            </div>
+                            <div class="d-flex">
+
+                                <div class="ms-2">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6 ">
+                    <div class="card w-100 border shadow-none p-3 border-radius-xl shadow">
+                        <div class="row d-flex align-items-stretch ">
+                            <div class="col-3">
+                                <div class=" d-flex justify-content-center align-items-center h-100">
+
+                                    <img src="https://ornestaste.com/eee.png" class="img-fluid" alt="">
+                                </div>
+                            </div>
+                            <div class="col-9">
+                                <h4>Téléphone</h4>
+
+                                <a class="card-subtitle mt-2 mb-0 fw-normal fw-semibold text-muted ">
+                                    (+229) 01 61 30 62 94
+
+                                </a>
+
+                            </div>
+                            <div class="d-flex">
+
+                                <div class="ms-2">
+
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </section>
 
 
 
@@ -468,6 +548,8 @@
                 });
             });
         </script>
+
+
     </body>
 
     </html>

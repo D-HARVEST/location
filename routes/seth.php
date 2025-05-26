@@ -49,5 +49,12 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/paiements/nettoyage', [LouerchambreController::class, 'apresPaiement'])->name('paiements.nettoyage');
         Route::delete('/paiement/annuler/{id}', [LouerchambreController::class, 'annulerPaiement'])->name('paiement.annuler');
         Route::get('/paiementespeces/{id}/facture', [PaiementespeceController::class, 'telechargerFacture'])->name('paiementespeces.facture');
+
     });
 });
+
+
+   Route::get('/contrat', function () {
+    return view('landing.partials.contrat');
+  })->name('contrat');
+    

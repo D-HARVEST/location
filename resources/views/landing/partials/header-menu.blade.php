@@ -1,4 +1,4 @@
-<header class="header  position-fixed bg-transparent px-0">
+<header class="header  fixed-top bg-transparent px-0">
     <nav class="navbar navbar-expand-lg p-0 ">
         <div class="container px-0 ">
             <a class="navbar-brand m-0 p-0 " href="/">

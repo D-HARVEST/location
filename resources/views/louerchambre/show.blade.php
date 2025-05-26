@@ -397,12 +397,11 @@
                         <div class="card border">
                             <div class="card-body">
                                 @if ($louerchambre->statut === 'CONFIRMER')
-
                                 <form id="formPayer">
                                     @csrf
                                     <div class="mb-3">
                                         <label for="moisPaiement">Mois de paiement</label>
-                                        <input type="month" class="form-control" name="moisPaiement" id="moisPaiement" required>
+                                        <input type="month" class="form-control"  name="moisPaiement" id="moisPaiement" required>
                                     </div>
 
                                     <button type="button"
@@ -413,15 +412,6 @@
                                         Payer le loyer pour ({{ $montantLoyer }} F CFA)
                                     </button>
                                 </form>
-
-
-                                {{-- <button type="button" class="btn btn-success w-100 rounded-1"
-                                        onclick="payer(this);"
-                                        title="Payer la location"
-                                        data-montant="{{ $montantLoyer }}">
-                                    <i class="fa fa-credit-card me-2"></i>
-                                    Payer le loyer pour ({{ $montantLoyer }} F CFA)
-                                </button> --}}
                                 @else
                                 <div class="alert alert-warning mb-0 text-center">
                                     Paiement indisponible tant que le statut n’est pas confirmé.
