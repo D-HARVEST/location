@@ -95,7 +95,7 @@ class LouerchambreController extends Controller
         $data = $request->validated();
 
         // Rechercher l'utilisateur par email ou NPI
-       $user = User::where('email', $data['email'])
+        $user = User::where('email', $data['email'])
             ->where('npi', $data['npi'])
             ->first();
 
@@ -160,15 +160,23 @@ class LouerchambreController extends Controller
         $moisPeriode = CarbonPeriod::create($debut, '1 month', $fin);
 
         foreach ($moisPeriode as $mois) {
+
+            if (!$mois instanceof \Carbon\Carbon) {
+                $mois = \Carbon\Carbon::parse($mois . '-01'); // Ajouter un jour pour créer une date valide
+            }
+
             $moisFormat = $mois->format('Y-m');
 
             // Date limite pour ce mois (même jour que prévu pour le paiement)
             $dateLimite = Carbon::create($mois->year, $mois->month, $jourPaiement)->startOfDay();
 
             // Vérifie si le paiement a été effectué
-            $paiementEffectue = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)
-                ->where('moisPaiement', $moisFormat)
-                ->exists();
+            $paiementsExistants = HistoriquePaiement::where('louerchambre_id', $louerchambre->id)->get();
+
+            $paiementEffectue = $paiementsExistants->contains(function ($paiement) use ($moisFormat) {
+                $moisPayes = json_decode($paiement->moisPaiement, true);
+                return is_array($moisPayes) && in_array($moisFormat, $moisPayes);
+            });
 
             if ($paiementEffectue) {
                 // Supprimer un éventuel doublon dans paiement en attente
@@ -243,9 +251,6 @@ class LouerchambreController extends Controller
 
 
 
-
-
-
     public function initialiserPaiement(Request $request)
     {
         $louerchambre = Louerchambre::where('user_id', auth()->id())
@@ -253,50 +258,66 @@ class LouerchambreController extends Controller
             ->first();
 
         if (!$louerchambre) {
-            return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée pour cet utilisateur.'], 404);
-        }
-
-
-        $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
-        $moisPaiement = \Carbon\Carbon::parse($request->moisPaiement)->startOfMonth();
-
-        if ($moisPaiement->lt($debutOccupation)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Le mois de paiement ne peut pas être antérieur à la date de début d’occupation.'
-            ]);
+            return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée.'], 404);
         }
 
         if ($louerchambre->statut !== 'CONFIRMER') {
             return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
         }
 
-        $paiementExistant = Historiquepaiement::where('moisPaiement', $request->moisPaiement)
-            ->where('user_id', auth()->id())
-            ->first();
+        $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+        $moisPaiement = $request->moisPaiement;
 
-        // Paiement existe et n'est pas en attente => déjà payé
-        if ($paiementExistant && $paiementExistant->modePaiement !== 'EN_ATTENTE') {
-            return response()->json(['success' => false, 'message' => 'Vous avez déjà payé pour ce mois.']);
+        if (!is_array($moisPaiement) || count($moisPaiement) === 0) {
+            return response()->json(['success' => false, 'message' => 'Aucun mois de paiement sélectionné.']);
         }
 
+        // Vérification des mois
+        foreach ($moisPaiement as $mois) {
+            $moisDate = \Carbon\Carbon::parse($mois)->startOfMonth();
+
+            if ($moisDate->lt($debutOccupation)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Le mois ' . $moisDate->format('F Y') . ' est antérieur à votre début d’occupation.'
+                ]);
+            }
+
+            $paiementExistant = Historiquepaiement::where('moisPaiement', 'like', "%$mois%")
+                ->where('user_id', auth()->id())
+                ->where('modePaiement', '!=', 'EN_ATTENTE')
+                ->first();
+
+            if ($paiementExistant) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vous avez déjà payé pour le mois de ' . $moisDate->translatedFormat('F Y') . '.'
+                ]);
+            }
+        }
+
+        $montantTotal = count($moisPaiement) * $louerchambre->loyer;
+
         try {
-            // Création d'un nouveau paiement
             $paiement = Historiquepaiement::create([
                 'idTransaction' => 'EN_ATTENTE',
                 'louerchambre_id' => $louerchambre->id,
-                'montant' => $request->montant,
+                'montant' => $montantTotal,
                 'modePaiement' => 'EN_ATTENTE',
-                'moisPaiement' => $request->moisPaiement,
+                'moisPaiement' => json_encode($moisPaiement), // ou implode(',', $moisPaiement)
+                'nb_mois' => count($moisPaiement),
                 'user_id' => auth()->id(),
             ]);
-            return response()->json(['success' => true, 'paiement_id' => $paiement->id]);
+
+            return response()->json([
+                'success' => true,
+                'paiement_id' => $paiement->id,
+                'montant_total' => $montantTotal
+            ]);
         } catch (\Exception $e) {
-            Log::error('Erreur lors de la création/mise à jour du paiement : ' . $e->getMessage());
+            Log::error('Erreur paiement groupé : ' . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
         }
-
-        return response()->json(['success' => true]);
     }
 
 
@@ -389,6 +410,7 @@ class LouerchambreController extends Controller
         if (!$moyenPaiement || $moyenPaiement->isActive != 1) {
             return back()->with('error', "Le moyen de paiement n'est pas actif. Veuillez contacter votre propriétaire pour résoudre ce problème.");
         }
+
         $cle_privee = $moyenPaiement->Cle_privee;
         $response = Http::withToken($cle_privee)
             ->accept('application/json')
@@ -405,8 +427,6 @@ class LouerchambreController extends Controller
         if (
             isset($transaction['v1/transaction']['status'])
             && $transaction['v1/transaction']['status'] == 'approved'
-            && isset($transaction['v1/transaction']['amount'])
-            && intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
         ) {
 
 
@@ -416,13 +436,16 @@ class LouerchambreController extends Controller
                 ->latest()
                 ->first();
 
+            $nombreMois = $paiement->nb_mois;
+            $montantAttendu = intval($louerchambre->loyer) * $nombreMois;
+
             if ($paiement) {
 
                 if (
                     isset($transaction['v1/transaction']['status']) &&
                     $transaction['v1/transaction']['status'] == 'approved' &&
                     isset($transaction['v1/transaction']['amount']) &&
-                    intval($transaction['v1/transaction']['amount']) == intval($louerchambre->loyer)
+                    intval($transaction['v1/transaction']['amount']) == $montantAttendu
                 ) {
                     // ✅ Paiement validé, on met à jour l’enregistrement
                     $paiement->update([
@@ -445,6 +468,11 @@ class LouerchambreController extends Controller
                     ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
             }
         }
+        Log::error("Paiement échoué ou transaction introuvable pour l'utilisateur ID: " . auth()->id() . " avec la transaction ID: " . $transaction_id);
+
+        // return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+        // ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
+
     }
 
 

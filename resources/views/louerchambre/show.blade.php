@@ -391,9 +391,7 @@
         <div class="row mt-4">
             <div class="col-md-12">
                 <div class="card">
-
                     <div class="my-3 mx-3">
-
                         <div class="card border">
                             <div class="card-body">
                                 @if ($louerchambre->statut === 'CONFIRMER')
@@ -401,16 +399,27 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label for="moisPaiement">Mois de paiement</label>
-                                        <input type="month" class="form-control"  name="moisPaiement" id="moisPaiement" required>
+                                       <select class="select2 form-control" name="moisPaiement[]" id="moisPaiement" multiple required>
+                                         @php
+                                             $start = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+                                             $now = \Carbon\Carbon::now()->startOfMonth();
+                                         @endphp
+                                         @while($start <= $now->copy()->addMonths(12))
+                                             <option value="{{ $start->format('Y-m') }}">{{ $start->locale('fr')->translatedFormat('F Y') }}</option>
+                                          @php $start->addMonth(); @endphp
+                                         @endwhile
+                                       </select>
                                     </div>
 
-                                    <button type="button"
-                                            class="btn btn-success w-100 rounded-1"
-                                            onclick="payer(this);"
-                                            data-montant="{{ $montantLoyer }}">
-                                        <i class="fa fa-credit-card me-2"></i>
-                                        Payer le loyer pour ({{ $montantLoyer }} F CFA)
-                                    </button>
+                                   <button type="button"
+                                       class="btn btn-success w-100 rounded-1"
+                                       onclick="payer(this);"
+                                       data-montant="{{ $montantLoyer }}"
+                                       id="payerBtn">
+                                   <i class="fa fa-credit-card me-2"></i>
+                                   Payer le loyer
+                                  </button>
+
                                 </form>
                                 @else
                                 <div class="alert alert-warning mb-0 text-center">
@@ -469,13 +478,23 @@
                                         <td >{{ $historiquepaiement->montant }}</td>
                                         <td >{{ $historiquepaiement->modePaiement }}</td>
 
-                                        <td>
-                                            @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
-                                                {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
+                                       <td>
+                                @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
+                                    @php
+                                        $moisArray = json_decode($historiquepaiement->moisPaiement, true);
+                                    @endphp
+                                    @if(is_array($moisArray))
+                                        @foreach($moisArray as $mois)
+                                            {{ \Carbon\Carbon::parse($mois)->locale('fr')->translatedFormat('F Y') }}<br>
+                                        @endforeach
+                                    @else
+                                        {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                    @endif
+                                @else
+                                     -
+                              @endif
+                             </td>
+
                                     {{-- <td>{{ \Carbon\Carbon::create()->month($historiquepaiement->moisPaiement)->locale('fr')->monthName }}</td> --}}
 
                                             <td>
@@ -686,17 +705,46 @@
 </script>
 
 <script>
-function payer(btn) {
-    var montant = btn.getAttribute('data-montant');
-    var moisPaiement = document.getElementById('moisPaiement').value;
+    document.addEventListener('DOMContentLoaded', function () {
+        const selectMois = document.getElementById('moisPaiement');
+        const payerBtn = document.getElementById('payerBtn');
 
-    if (!moisPaiement) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Veuillez sélectionner un mois de paiement.'
-        });
-        return;
-    }
+        if (!selectMois || !payerBtn) return;
+
+        const montantUnitaire = parseInt(payerBtn.getAttribute('data-montant')) || 0;
+
+        function updateBoutonPaiement() {
+            const moisSelectionnes = Array.from(selectMois.selectedOptions);
+            const total = montantUnitaire * moisSelectionnes.length;
+            payerBtn.innerHTML = `<i class="fa fa-credit-card me-2"></i> Payer le loyer pour (${total.toLocaleString()} F CFA)`;
+        }
+
+        // Pour Select2, on attend l'initialisation et on utilise l'événement jQuery
+        if ($(selectMois).hasClass('select2')) {
+            $(selectMois).on('change', updateBoutonPaiement);
+        } else {
+            selectMois.addEventListener('change', updateBoutonPaiement);
+        }
+    });
+</script>
+
+
+
+<script>
+function payer(btn) {
+    //  var montantUnitaire = btn.getAttribute('data-montant');
+     var moisPaiement = Array.from(document.getElementById('moisPaiement').selectedOptions).map(option => option.value);
+     var montantUnitaire = parseInt(btn.getAttribute('data-montant'));
+     var montant = montantUnitaire * moisPaiement.length;
+
+   if (moisPaiement.length === 0) {
+    Swal.fire({
+        icon: 'warning',
+        title: 'Veuillez sélectionner au moins un mois de paiement.'
+    });
+    return;
+}
+
 
      if (!fedapayKey || fedapayKey.trim() === "") {
         Swal.fire({
@@ -705,16 +753,16 @@ function payer(btn) {
             text: "Le moyen de paiement n'est pas encore actif. Veuillez contacter votre propriétaire."
         });
         return;
-    }
-    var debutOccupation = "{{ \Carbon\Carbon::parse($louerchambre->debutOccupation)->format('Y-m') }}";
-    if (moisPaiement < debutOccupation) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Mois invalide',
-            text: 'Le mois choisi ne peut pas être avant le début de votre occupation.'
-        });
-        return;
-    }
+         }
+         var debutOccupation = "{{ \Carbon\Carbon::parse($louerchambre->debutOccupation)->format('Y-m') }}";
+         if (moisPaiement.some(mois => mois < debutOccupation)) {
+          Swal.fire({
+              icon: 'error',
+              title: 'Mois invalide',
+              text: 'Un des mois choisis est avant le début de votre occupation.'
+          });
+          return;
+         }
 
 
     fetch("{{ route('paiement.initialiser') }}", {
@@ -725,11 +773,11 @@ function payer(btn) {
         },
         body: JSON.stringify({
             montant: montant,
-            moisPaiement: moisPaiement
+            moisPaiement: Array.from(moisPaiement)
         })
     })
     .then(res => res.json())
-   .then(data => {
+    .then(data => {
     if (data.success) {
         let paiementId = data.paiement_id;
         let widget = FedaPay.init({

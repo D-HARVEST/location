@@ -34,7 +34,7 @@ class Historiquepaiement extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['louerchambre_id', 'datePaiement', 'quittanceUrl', 'montant', 'modePaiement', 'idTransaction', 'moisPaiement', 'user_id'];
+    protected $fillable = ['louerchambre_id', 'datePaiement', 'quittanceUrl', 'montant', 'modePaiement', 'idTransaction', 'moisPaiement', 'nb_mois', 'user_id'];
 
 
     /**
