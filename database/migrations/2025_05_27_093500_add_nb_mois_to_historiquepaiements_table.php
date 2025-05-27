@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('historiquepaiements', function (Blueprint $table) {
-             $table->unsignedInteger('nb_mois')->default(1);
+             $table->unsignedInteger('nb_mois')->nullable();
         });
     }
 
