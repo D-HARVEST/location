@@ -142,6 +142,7 @@ class PaiementespeceController extends Controller
             Historiquepaiement::create([
                 'louerchambre_id' => $paiement->louerchambre_id,
                 'datePaiement'    => $paiement->Date,
+                'quittanceUrl'    => $paiement,
                 'montant'         => $paiement->Montant,
                 'modePaiement'    => 'Espece',
                 'idTransaction'   => $paiement->id,
