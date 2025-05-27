@@ -37,9 +37,9 @@
                         </div> --}}
 
                    <div class="row mt-4">
-    @foreach ($chambres as $chambre)
+        @foreach ($chambres as $chambre)
         <div class="col-md-4 mb-4">
-            <div class="card border-0 shadow-lg rounded-4 overflow-hidden h-100">
+            <div class="card border-0 shadow rounded-4 overflow-hidden h-100">
                 <div class="card-body position-relative">
                     {{-- Bouton menu (3 points) --}}
                     <div class="dropdown position-absolute top-0 end-0 m-2">

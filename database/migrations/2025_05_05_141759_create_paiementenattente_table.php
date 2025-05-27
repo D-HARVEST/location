@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('louerchambre_id')->constrained("louerchambres")->cascadeOnDelete()->cascadeOnUpdate();
             $table->date('dateLimite');
             $table->double('montant');
+            $table->enum('statut', ['EN ATTENTE', 'EN RETARD'])->default('EN ATTENTE');
             $table->timestamps();
         });
     }

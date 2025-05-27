@@ -22,6 +22,7 @@ class InterventionRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'louerchambre_id' => 'required',
 			'libelle' => 'required|string',
 			'description' => 'required|string',
 			'statut' => 'nullable|in:EN ATTENTE,CONFIRMER,REJETER',

@@ -14,6 +14,7 @@ use App\Models\Louerchambre;
 
 
 
+
 /**
  * Class User
  *
@@ -62,8 +63,9 @@ class User extends Authenticatable
     // User.php
     public function louerchambres()
     {
-        return $this->hasMany(Louerchambre::class);
+        return $this->hasMany(\App\Models\Louerchambre::class, 'user_id', 'id');
     }
+
 
     public function chambre()
     {
@@ -74,4 +76,36 @@ class User extends Authenticatable
     {
         return $this->hasOne(Louerchambre::class)->latestOfMany();
     }
+
+    // app/Models/User.php
+
+    public function moyenpaiements()
+    {
+        return $this->hasMany(Moyenpaiement::class);
+    }
+
+    public function interventions()
+{
+    return $this->hasManyThrough(
+        \App\Models\Intervention::class,    // Le modèle final
+        \App\Models\Louerchambre::class,    // Le modèle intermédiaire
+        'user_id',                          // Clé étrangère sur le modèle Louerchambre
+        'louerchambre_id',                  // Clé étrangère sur le modèle Intervention
+        'id',                               // Clé locale sur le modèle User
+        'id'                                // Clé locale sur le modèle Louerchambre
+    );
+}
+
+public function historiquesPaiements(){
+
+    return $this->hasManyThrough(
+        \App\Models\Historiquepaiement::class,    // Le modèle final
+        \App\Models\Louerchambre::class,    // Le modèle intermédiaire
+        'user_id',                          // Clé étrangère sur le modèle Louerchambre
+        'louerchambre_id',                  // Clé étrangère sur le modèle Historiquepaiement
+        'id',                               // Clé locale sur le modèle User
+        'id'                                // Clé locale sur le modèle Louerchambre
+    );
+}
+
 }

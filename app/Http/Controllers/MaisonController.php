@@ -35,9 +35,10 @@ class MaisonController extends Controller
      */
     public function create(): View
     {
+        $user = Auth::user();
         $maison = new Maison();
         $categories = Category::pluck('libelle', 'id');
-        $moyenPaiements = MoyenPaiement::pluck('Designation', 'id');
+        $moyenPaiements = $user->moyenpaiements()->pluck('Designation', 'id');
         return view('maison.create', compact('maison', 'categories', 'moyenPaiements'));
     }
 
@@ -75,9 +76,10 @@ class MaisonController extends Controller
      */
     public function edit($id): View
     {
+        $user = Auth::user();
         $maison = Maison::findOrFail($id);
         $categories = Category::pluck('libelle', 'id');
-        $moyenPaiements = MoyenPaiement::pluck('Designation', 'id');
+        $moyenPaiements = $user->moyenpaiements()->pluck('Designation', 'id');
         return view('maison.edit', compact('maison', 'categories', 'moyenPaiements'));
     }
 

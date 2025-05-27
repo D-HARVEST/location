@@ -137,7 +137,11 @@
 
                                             <td >{{ $paiementenattente->montant }}</td>
                                             <td>
-                                                <span class="badge bg-warning text-dark">en attente</span>
+                                                @if($paiementenattente->statut == 'EN ATTENTE')
+                                                    <span class="badge bg-warning">EN ATTENTE</span>
+                                                @elseif ($paiementenattente->statut == 'EN RETARD')
+                                                     <span class="badge bg-danger"> EN RETARD</span>
+                                                @endif
                                             </td>
 
 
@@ -209,14 +213,19 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body border-1">
                         {{-- <h4 class="card-title">Paiement en espèce(s)</h4> --}}
+                        @role('locataire')
+                        <div class="card border">
                         <div class="btn btn-success w-100 rounded-1">
                             <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="text-white" >
                                  <i class="fa fa-credit-card me-2"></i>
                                     Payer en espèce</a>
                         </div>
+                        </div>
+                        @endrole
 
+                        <div class="card-title text-dark fw-bolder mt-4">Paiements en espèces</div>
                         <hr>
 
                         <div class="table-responsive">
@@ -239,7 +248,12 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+
+
+
                                         @foreach ($paiementespeces as $paiementespece)
+                                          @if ($paiementespece->statut != 'CONFIRMER')
+
                                             <tr>
                                                 <td>{{ ++$i }}</td>
 
@@ -275,11 +289,13 @@
                                                                         <i class="fs-4 ti ti-eye"></i> Détails
                                                                     </a>
                                                                 </li>
+
                                                                 <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
                                                                         <i class="fs-4 ti ti-edit"></i> Modifier
                                                                     </a>
                                                                 </li>
+                                                                @role('locataire')
                                                                 <li>
                                                                     <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
                                                                         @csrf
@@ -290,6 +306,7 @@
                                                                     </form>
 
                                                                 </li>
+                                                                @endrole
                                                                 @role('gerant')
                                                                     @if($paiementespece->statut == 'EN ATTENTE')
                                                                         <form action="{{ route('paiementespeces.changerStatut', $paiementespece->id) }}" method="POST" style="display:inline">
@@ -353,6 +370,7 @@
                                                 </form>
                                             </div>
                                             </div>
+                                         @endif
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -379,12 +397,11 @@
                         <div class="card border">
                             <div class="card-body">
                                 @if ($louerchambre->statut === 'CONFIRMER')
-
                                 <form id="formPayer">
                                     @csrf
                                     <div class="mb-3">
                                         <label for="moisPaiement">Mois de paiement</label>
-                                        <input type="month" class="form-control" name="moisPaiement" id="moisPaiement" required>
+                                        <input type="month" class="form-control"  name="moisPaiement" id="moisPaiement" required>
                                     </div>
 
                                     <button type="button"
@@ -395,15 +412,6 @@
                                         Payer le loyer pour ({{ $montantLoyer }} F CFA)
                                     </button>
                                 </form>
-
-
-                                {{-- <button type="button" class="btn btn-success w-100 rounded-1"
-                                        onclick="payer(this);"
-                                        title="Payer la location"
-                                        data-montant="{{ $montantLoyer }}">
-                                    <i class="fa fa-credit-card me-2"></i>
-                                    Payer le loyer pour ({{ $montantLoyer }} F CFA)
-                                </button> --}}
                                 @else
                                 <div class="alert alert-warning mb-0 text-center">
                                     Paiement indisponible tant que le statut n’est pas confirmé.
@@ -414,7 +422,7 @@
                     </div>
 
                     <div class="card-body">
-                        <p class="badge bg-warning text-dark">Après paiement, veillez ajouter le mois de paiement</p>
+
 
                         <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                         <hr>
@@ -445,12 +453,18 @@
                                       <a href="{{ $historiquepaiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
                                           Télécharger la quittance
                                       </a>
+                                  @elseif($historiquepaiement->modePaiement == 'Espece')
+                                       <a href="{{ route('paiementespeces.facture', $historiquepaiement->idTransaction) }}"
+                                        target="_blank" download class="btn btn-sm btn-success">
+                                         Télécharger la facture PDF
+                                       </a>
+
                                   @else
                                       <span class="badge bg-danger">
                                           Aucune quittance
                                       </span>
-                                  @endif
-                              </td>
+                                     @endif
+                                 </td>
 
                                         <td >{{ $historiquepaiement->montant }}</td>
                                         <td >{{ $historiquepaiement->modePaiement }}</td>
@@ -529,7 +543,6 @@
     @role('gerant')
         <div class="container">
 
-
             <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="card">
@@ -571,6 +584,11 @@
                                                     <a href="{{ asset('storage/' . $paiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
                                                         Télecharger la quittance
                                                     </a>
+                                                  @elseif($paiement->modePaiement == 'Espece')
+                                                      <a href="{{ route('paiementespeces.facture', $paiement->idTransaction) }}"
+                                                        target="_blank" download class="btn btn-sm btn-success">
+                                                         Télécharger la facture PDF
+                                                       </a>
                                                 @else
                                                     <span class="badge bg-danger">
                                                         Aucune quittance
@@ -663,53 +681,6 @@
 
 @section('script')
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
-{{-- <script>
-    function payer(btn) {
-        var montant = btn.getAttribute('data-montant');
-
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-                toast.addEventListener('mouseenter', Swal.stopTimer);
-                toast.addEventListener('mouseleave', Swal.resumeTimer);
-            }
-        });
-
-        Toast.fire({
-            icon: 'info',
-            title: 'Redirection vers la plateforme de paiement...'
-        });
-
-        let widget = FedaPay.init({
-            public_key: '{{ config("services.fedapay.public_key") }}',
-            sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
-            transaction: {
-                amount: montant,
-                description: 'Paiement de loyer',
-            },
-            onComplete: (response) => {
-                if (response.reason === 'CHECKOUT COMPLETE') {
-                    window.location.href = '/paiement/' + response.transaction.id;
-                }
-            },
-            onError: (error) => {
-                Toast.fire({
-                    icon: 'error',
-                    title: 'Erreur lors du paiement. Veuillez réessayer.'
-                });
-            }
-        });
-
-        widget.open({
-            amount: montant,
-            description: 'Paiement de loyer'
-        });
-    }
-</script> --}}
 <script>
     let fedapayKey = "{{ $clePublic ?? '' }}"; // récupéré automatiquement
 </script>
@@ -727,7 +698,7 @@ function payer(btn) {
         return;
     }
 
-    if (!fedapayKey || fedapayKey.trim() === "") {
+     if (!fedapayKey || fedapayKey.trim() === "") {
         Swal.fire({
             icon: 'error',
             title: 'Moyen de paiement indisponible',
@@ -735,6 +706,16 @@ function payer(btn) {
         });
         return;
     }
+    var debutOccupation = "{{ \Carbon\Carbon::parse($louerchambre->debutOccupation)->format('Y-m') }}";
+    if (moisPaiement < debutOccupation) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Mois invalide',
+            text: 'Le mois choisi ne peut pas être avant le début de votre occupation.'
+        });
+        return;
+    }
+
 
     fetch("{{ route('paiement.initialiser') }}", {
         method: "POST",
@@ -748,39 +729,56 @@ function payer(btn) {
         })
     })
     .then(res => res.json())
-    .then(data => {
-        if (data.success) {
-            let widget = FedaPay.init({
-                public_key: fedapayKey,
-                sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
-                transaction: {
-                    amount: montant,
-                    description: 'Paiement de loyer',
-                },
-                onComplete: (response) => {
-                    if (response.reason === 'CHECKOUT COMPLETE') {
-                        window.location.href = '/paiement/' + response.transaction.id;
-                    }
-                },
-                onError: (error) => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Erreur lors du paiement. Veuillez réessayer.'
+   .then(data => {
+    if (data.success) {
+        let paiementId = data.paiement_id;
+        let widget = FedaPay.init({
+            public_key: fedapayKey,
+            sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
+            transaction: {
+                amount: montant,
+                description: 'Paiement de loyer',
+            },
+            onComplete: (response) => {
+                if (response.reason === 'CHECKOUT COMPLETE') {
+                    window.location.href = '/paiement/' + response.transaction.id;
+                } else {
+                    // 🔁 Paiement non complété => supprimer l'entrée
+                    fetch(`/paiement/annuler/${paiementId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
                     });
                 }
-            });
+            },
+            onError: (error) => {
+                // 🔁 Paiement échoué => supprimer aussi
+                fetch(`/paiement/annuler/${paiementId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                });
 
-            widget.open({
-                amount: montant,
-                description: 'Paiement de loyer'
-            });
-        } else {
-            Swal.fire({
-                icon: 'error',
-                title: data.message || 'Erreur lors de l’enregistrement initial.'
-            });
-        }
-    });
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur lors du paiement. Veuillez réessayer.'
+                });
+            }
+        });
+
+        widget.open({
+            amount: montant,
+            description: 'Paiement de loyer'
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: data.message || 'Erreur lors de l’enregistrement initial.'
+        });
+    }
+});
 }
 </script>
 @endsection

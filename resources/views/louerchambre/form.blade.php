@@ -61,7 +61,7 @@
         </div>
 
 
-        <div class="col-lg-6 form-group mb-2 mb20" style="display: none">
+        <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="jour_paiement_loyer" class="form-label">{{ __('Jour paiement loyer') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="text" name="jourPaiementLoyer" pattern="^(?:[1-9]|1[0-9]|2[0-8])$" title="Veuillez entrer un nombre entre 1 et 28" placeholder="Entrez le jour de paiement du loyer entre 1 et 28"  class="form-control @error('jourPaiementLoyer') is-invalid @enderror rounded-05" value="{{ old('jourPaiementLoyer', $louerchambre?->jourPaiementLoyer) }}" id="jour_paiement_loyer"  required readonly>
             {!! $errors->first('jourPaiementLoyer', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}

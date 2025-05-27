@@ -72,6 +72,7 @@
                                                                 <i class="fs-4 ti ti-eye"></i> Détails
                                                             </a>
                                                         </li>
+                                                       
                                                         <li>
                                                             <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
                                                                 <i class="fs-4 ti ti-edit"></i> Modifier

@@ -2,12 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Chambre;
 use App\Models\Louerchambre;
+use App\Observers\ChambreObserver;
 use Illuminate\Support\Facades\App;
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -17,30 +19,30 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         View::composer('*', function ($view) {
-        $clePublic = null;
+            $clePublic = null;
 
-        if (Auth::check()) {
-            $louer = Louerchambre::where('user_id', Auth::id())
-                ->with('chambre.maison.moyenPaiement')
-                ->latest()
-                ->first();
+            if (Auth::check()) {
+                $louer = Louerchambre::where('user_id', Auth::id())
+                    ->with('chambre.maison.moyenPaiement')
+                    ->latest()
+                    ->first();
 
-            if ($louer && $louer->chambre && $louer->chambre->maison) {
-                $moyen = $louer->chambre->maison->moyenPaiement;
+                if ($louer && $louer->chambre && $louer->chambre->maison) {
+                    $moyen = $louer->chambre->maison->moyenPaiement;
 
-                if ($moyen && $moyen->isActive == 1) {
-                    $clePublic = $moyen->Cle_public;
+                    if ($moyen && $moyen->isActive == 1) {
+                        $clePublic = $moyen->Cle_public;
+                    } else {
+                        // Clé absente ou inactive => message d'erreur
+                        Session::flash('errorCle', "Le moyen de paiement du propriétaire n'est pas actif. Veuillez le contacter.");
+                    }
                 } else {
-                    // Clé absente ou inactive => message d'erreur
-                    Session::flash('errorCle', "Le moyen de paiement du propriétaire n'est pas actif. Veuillez le contacter.");
+                    Session::flash('errorCle', "Impossible de récupérer les informations de paiement. Contactez votre propriétaire.");
                 }
-            } else {
-                Session::flash('errorCle', "Impossible de récupérer les informations de paiement. Contactez votre propriétaire.");
             }
-        }
 
-        $view->with('clePublic', $clePublic);
-    });
+            $view->with('clePublic', $clePublic);
+        });
     }
 
     /**
@@ -48,7 +50,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
-        // App::setLocale('fr');
+        Chambre::observe(ChambreObserver::class);
     }
 }

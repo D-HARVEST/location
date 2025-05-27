@@ -115,15 +115,18 @@ class ChambreController extends Controller
         $all = $request->validated();
         $chambre->update($all);
 
+        // Recharger le modèle pour s'assurer d'avoir la dernière valeur du loyer
+        $chambre->refresh();
+        // Mettre à jour le loyer dans la table louerchambres
         DB::table('louerchambres')
-        ->where('chambre_id', $chambre->id)
-        ->update(['loyer' => $chambre->loyer]);
-
+            ->where('chambre_id', $chambre->id)
+            ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer]);
 
 
         return Redirect::route('maison.show', ['id' => $request->maison_id])
             ->with('success', 'Chambre a été mis(e) à jour avec succes !');
     }
+
 
 
 
