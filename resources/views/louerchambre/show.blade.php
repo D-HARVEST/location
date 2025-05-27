@@ -404,7 +404,7 @@
                                              $start = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
                                              $now = \Carbon\Carbon::now()->startOfMonth();
                                          @endphp
-                                         @while($start <= $now->copy()->addMonths(12))
+                                         @while($start <= $now->copy()->addMonths(24))
                                              <option value="{{ $start->format('Y-m') }}">{{ $start->locale('fr')->translatedFormat('F Y') }}</option>
                                           @php $start->addMonth(); @endphp
                                          @endwhile
@@ -565,9 +565,6 @@
             <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="card">
-
-
-
                         <div class="card-body">
                             <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                             <hr>
@@ -599,32 +596,45 @@
 
                                             <td >{{ $paiement->datePaiement }}</td>
                                             <td>
-                                                @if($paiement->quittanceUrl)
-                                                    <a href="{{ asset('storage/' . $paiement->quittanceUrl) }}" target="_blank" download class="badge bg-success text-white" style="text-decoration: none;">
-                                                        Télecharger la quittance
-                                                    </a>
-                                                  @elseif($paiement->modePaiement == 'Espece')
-                                                      <a href="{{ route('paiementespeces.facture', $paiement->idTransaction) }}"
-                                                        target="_blank" download class="btn btn-sm btn-success">
-                                                         Télécharger la facture PDF
-                                                       </a>
-                                                @else
-                                                    <span class="badge bg-danger">
-                                                        Aucune quittance
-                                                    </span>
-                                                @endif
-                                            </td>
+                                  @if($paiement->quittanceUrl)
+                                      <a href="{{ $paiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
+                                          Télécharger la quittance
+                                      </a>
+                                  @elseif($paiement->modePaiement == 'Espece')
+                                       <a href="{{ route('paiementespeces.facture', $paiement->idTransaction) }}"
+                                        target="_blank" download class="btn btn-sm btn-success">
+                                         Télécharger la facture PDF
+                                       </a>
+
+                                  @else
+                                      <span class="badge bg-danger">
+                                          Aucune quittance
+                                      </span>
+                                     @endif
+                                 </td>
+
 
                                             <td >{{ $paiement->montant }}</td>
                                             <td >{{ $paiement->modePaiement }}</td>
 
-                                            <td>
-                                                @if(!empty($paiement) && !empty($paiement->moisPaiement))
-                                                    {{ \Carbon\Carbon::parse($paiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
+
+
+                                             <td>
+                                @if(!empty($paiement) && !empty($paiement->moisPaiement))
+                                    @php
+                                        $moisArray = json_decode($paiement->moisPaiement, true);
+                                    @endphp
+                                    @if(is_array($moisArray))
+                                        @foreach($moisArray as $mois)
+                                            {{ \Carbon\Carbon::parse($mois)->locale('fr')->translatedFormat('F Y') }}<br>
+                                        @endforeach
+                                    @else
+                                        {{ \Carbon\Carbon::parse($paiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                    @endif
+                                @else
+                                     -
+                              @endif
+                             </td>
 
 
 
