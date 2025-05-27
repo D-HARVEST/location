@@ -261,7 +261,21 @@
                                                 <td >{{ $paiementespece->Montant }}</td>
                                                 <td >{{ $paiementespece->Date }}</td>
                                                 {{-- <td >{{ $paiementespece->DateReception }}</td> --}}
-                                                <td >{{ \Carbon\Carbon::parse($paiementespece->Mois)->locale('fr')->translatedFormat('F Y')}}</td>
+                                                <td >
+                                                    @php
+                                                        \Carbon\Carbon::setLocale('fr');
+
+                                                        $moisArray = is_array($paiementespece->moisPayes)
+                                                            ? $paiementespece->moisPayes
+                                                            : json_decode($paiementespece->moisPayes, true);
+
+                                                        if ($moisArray) {
+                                                            foreach ($moisArray as $mois) {
+                                                                echo ucfirst(\Carbon\Carbon::parse($mois)->translatedFormat('F Y')) . '<br>';
+                                                            }
+                                                        }
+                                                    @endphp
+                                                </td>
                                                 @role('gerant')
                                                 <td >{{ $paiementespece->louerchambre->user->name}} / {{ $paiementespece->louerchambre->chambre->libelle }} / {{ $paiementespece->louerchambre->chambre->maison->libelle }}</td>
                                                 @endrole
@@ -470,12 +484,24 @@
                                         <td >{{ $historiquepaiement->modePaiement }}</td>
 
                                         <td>
-                                            @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
-                                                {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                                            @else
-                                                -
-                                            @endif
-                                        </td>
+                                                @if(!empty($historiquepaiement) && !empty($historiquepaiement->moisPaiement))
+                                                    @php
+                                                        \Carbon\Carbon::setLocale('fr');
+                                                        $moisArray = json_decode($historiquepaiement->moisPaiement, true);
+                                                    @endphp
+
+                                                    @if(is_array($moisArray))
+                                                        @foreach($moisArray as $mois)
+                                                            {{ ucfirst(\Carbon\Carbon::parse($mois)->translatedFormat('F Y')) }}<br>
+                                                        @endforeach
+                                                    @else
+                                                        -
+                                                    @endif
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+
                                     {{-- <td>{{ \Carbon\Carbon::create()->month($historiquepaiement->moisPaiement)->locale('fr')->monthName }}</td> --}}
 
                                             <td>
@@ -601,11 +627,23 @@
 
                                             <td>
                                                 @if(!empty($paiement) && !empty($paiement->moisPaiement))
-                                                    {{ \Carbon\Carbon::parse($paiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
+                                                    @php
+                                                        \Carbon\Carbon::setLocale('fr');
+                                                        $moisArray = json_decode($paiement->moisPaiement, true);
+                                                    @endphp
+
+                                                    @if(is_array($moisArray))
+                                                        @foreach($moisArray as $mois)
+                                                            {{ ucfirst(\Carbon\Carbon::parse($mois)->translatedFormat('F Y')) }}<br>
+                                                        @endforeach
+                                                    @else
+                                                        -
+                                                    @endif
                                                 @else
                                                     -
                                                 @endif
                                             </td>
+
 
 
 

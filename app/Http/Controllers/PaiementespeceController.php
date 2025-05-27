@@ -47,25 +47,38 @@ class PaiementespeceController extends Controller
     {
         $all = $request->validated();
 
-        $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-            ->where('moisPaiement', $all['Mois'])
-            ->exists();
-
-        if ($existeDeja) {
-            return Redirect::back()->withInput()->with('error', 'Ce mois a déjà été payé.');
-        }
-
         $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
-        $debutOccupation = Carbon::parse($louerchambre->debutOccupation);
-        $moisPaiement = Carbon::parse($all['Mois'] . '-01');
+        $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
-        if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
-            return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer un mois antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+        $moisAEnregistrer = [];
+
+        foreach ($all['moisPayes'] as $mois) {
+            $moisDate = Carbon::parse($mois . '-01')->startOfMonth();
+
+            // Vérifie si le mois est antérieur à l’entrée
+            if ($moisDate->lt($debutOccupation)) {
+                return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
+            }
+
+            // Vérifie si le mois a déjà été payé
+            $existe = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+                ->where('moisPaiement', $mois)
+                ->exists();
+
+            if ($existe) {
+                return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
+            }
+
+            $moisAEnregistrer[] = $mois;
         }
-        $paiementespece = Paiementespece::create($all);
 
-        return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])
-            ->with('success', 'Paiement en espèce enregistré avec succes !');
+        // Enregistre les mois en JSON
+        $all['moisPayes'] = json_encode($moisAEnregistrer);
+
+        $paiement = Paiementespece::create($all);
+
+        return Redirect::route('louerchambres.show', ['louerchambre' => $paiement->louerchambre_id])
+            ->with('success', 'Paiement en espèce enregistré avec succès pour les mois sélectionnés.');
     }
 
     /**
@@ -161,11 +174,10 @@ class PaiementespeceController extends Controller
             Historiquepaiement::create([
                 'louerchambre_id' => $paiement->louerchambre_id,
                 'datePaiement'    => $paiement->Date,
-                'quittanceUrl'    => $paiement,
                 'montant'         => $paiement->Montant,
                 'modePaiement'    => 'Espece',
                 'idTransaction'   => $paiement->id,
-                'moisPaiement'    => $paiement->Mois,
+                'moisPaiement'    => $paiement->moisPayes,
                 'user_id'         => $louerchambre->user_id,
             ]);
         }

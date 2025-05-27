@@ -27,7 +27,8 @@ class PaiementespeceRequest extends FormRequest
 			'Date' => 'required',
             'statut' => 'in:EN ATTENTE,CONFIRMER,REJETER',
             // 'DateReception' => 'required',
-            'Mois' => 'required',
+            'moisPayes' => 'required|array', // tableau de mois
+            'moisPayes.*' => 'date_format:Y-m', // chaque mois doit respecter ce format
 			'observation' => 'nullable|string',
 			'louerchambre_id' => 'required',
         ];

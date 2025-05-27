@@ -24,13 +24,16 @@ class Paiementespece extends Model
 {
 
     protected $perPage = 20;
+    protected $casts = [
+    'moisPayes' => 'array',
+    ];
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
      */
-    protected $fillable = ['Motif', 'Montant', 'Date', 'Mois', 'observation', 'louerchambre_id', 'statut', 'Motif_rejet'];
+    protected $fillable = ['Motif', 'Montant', 'Date', 'Mois', 'observation', 'louerchambre_id', 'statut', 'Motif_rejet', 'moisPayes'];
 
 
     /**
