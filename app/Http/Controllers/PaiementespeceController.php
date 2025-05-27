@@ -62,8 +62,8 @@ class PaiementespeceController extends Controller
 
             // Vérifie si le mois a déjà été payé
             $existe = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-                ->where('moisPaiement', $mois)
-                ->exists();
+            ->whereJsonContains('moisPaiement', $mois)
+            ->exists();
 
             if ($existe) {
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
