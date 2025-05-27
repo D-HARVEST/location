@@ -101,8 +101,8 @@
                                 <a href="{{ route('paiementenattentes.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
                             </div> --}}
                             <div class="col mb-2">
-                                <h5 class="card-title text-dark fw-bolder mb-0">Paiementenattente(s)</h5>
-                                <span>Liste des Paiementenattente(s)</span>
+                                <h5 class="card-title text-dark fw-bolder mb-0">Paiement en attente(s)</h5>
+                                <span>Liste des Paiement en attente(s)</span>
                                 <hr>
                             </div>
                             <div class="table-responsive">
