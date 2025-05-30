@@ -57,4 +57,5 @@ class Maison extends Model
         return $this->belongsTo(\App\Models\MoyenPaiement::class, 'moyenPaiement_id', 'id');
     }
 
+  
 }

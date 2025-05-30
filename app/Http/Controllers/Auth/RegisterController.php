@@ -41,12 +41,18 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255'],
-            'npi' => ['nullable', 'string', 'max:50'],
+            'npi' => ['required', 'string', 'max:50'],
+            'phone' => ['required', 'string', 'max:50'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'string', 'exists:roles,name'],
         ], [
             'name.required' => 'Le nom est obligatoire',
             'email.required' => 'L\'email est obligatoire',
+            'email.unique' => 'L\'email est deja utilisé',
+            'phone.required' => 'Le numéro de tелефone est obligatoire',
+            'phone.unique' => 'Le numéro de tелефone est deja utilisé',
+            'npi.required' => 'Le NPI est obligatoire',
+            'npi.unique' => 'Le NPI est deja utilisé',
             'email.email' => 'L\'email doit être valide',
             'password.required' => 'Le mot de passe est obligatoire',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
@@ -67,64 +73,19 @@ class RegisterController extends Controller
 
         $data = $request->all();
 
-        $user = User::where('email', $data['email'])->first();
-
-        if ($user && $user->npi !== null && $user->npi !== $data['npi']) {
-            return back()->withErrors([
-                'npi' => 'NPI incorrect. Veuillez contacter votre propriétaire.',
-            ])->withInput();
-        }
 
 
-        // Vérifie si le NPI est déjà utilisé par un autre utilisateur
-        if (isset($data['npi'])) {
-            $existingNpiUser = User::where('npi', $data['npi'])
-                ->where('email', '!=', $data['email'])
-                ->first();
-
-            if ($existingNpiUser) {
-                return back()->withErrors([
-                    'npi' => 'Ce NPI est déjà utilisé par un autre compte.',
-                ])->withInput();
-            }
-        }
-
-        if ($user && $user->hasRole('locataire') && $data['role'] !== 'locataire') {
-            return back()->withErrors([
-                'role' => 'Cet utilisateur est déjà inscrit en tant que locataire. Veuillez choisir le rôle "locataire".',
-            ])->withInput();
-        }
-
-
-        if (!$user && $data['role'] === 'locataire') {
-            return back()->withErrors([
-                'role' => 'Vous ne pouvez pas vous inscrire comme locataire. Veuillez contacter votre propriétaire.',
-            ])->withInput();
-        }
-
-        if ($user) {
-            // Mise à jour
-            $user->update([
-                'name' => $data['name'],
-                // 'npi' => $data['npi'] ?? null,
-                // 'email' => $data['email'],
-                'password' => Hash::make($data['password']),
-            ]);
-
-            // Mise à jour du rôle
-            $user->syncRoles([$data['role']]);
-        } else {
-            // Création
             $user = User::create([
                 'name' => $data['name'],
                 'email' => $data['email'],
+                'phone' => $data['phone'],
                 'npi' => $data['npi'] ?? null,
                 'password' => Hash::make($data['password']),
             ]);
 
             // Attribution du rôle
             $user->assignRole($data['role']);
-        }
+
 
         Auth::login($user);
 

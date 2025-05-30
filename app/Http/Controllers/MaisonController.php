@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Type;
-use App\Models\Maison;
-use App\Models\Chambre;
-use App\Models\Category;
-use Illuminate\View\View;
-use Illuminate\Http\Request;
-use App\Models\MoyenPaiement;
-use App\Http\Requests\MaisonRequest;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ChambreRequest;
+use App\Http\Requests\MaisonRequest;
+use App\Models\Category;
+use App\Models\Chambre;
+use App\Models\Louerchambre;
+use App\Models\Maison;
+use App\Models\MoyenPaiement;
+use App\Models\Type;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\View\View;
 
 class MaisonController extends Controller
 {
@@ -24,9 +25,25 @@ class MaisonController extends Controller
     {
 
 
-        $maisons = Maison::where('user_id', Auth::id())->paginate();
+        $maisons = Maison::with('chambres')->where('user_id', Auth::id())->paginate(10);
+        $categories = Category::pluck('libelle', 'id');
+        $types = Type::pluck('libelle', 'id');
 
-        return view('maison.index', compact('maisons'))
+        $louerChambres = LouerChambre::whereHas('chambre.maison', function ($query) {
+            $query->where('user_id', Auth::id());
+        })->with(['chambre.maison']) // Eager loading des relations
+            ->latest()
+            ->paginate(10);
+
+
+        return view('maison.index', [
+            'maisons' => $maisons,
+            'categories' => $categories,
+            'types' => $types,
+            'maison' => null,
+            'louerChambres' => $louerChambres,
+            //  'chambre' => null,
+        ])
             ->with('i', ($request->input('page', 1) - 1) * $maisons->perPage());
     }
 
@@ -88,7 +105,7 @@ class MaisonController extends Controller
      */
     public function update(MaisonRequest $request, Maison $maison): RedirectResponse
     {
-        $all=$request->validated();
+        $all = $request->validated();
         $maison->update($all);
 
         return Redirect::route('maisons.index')

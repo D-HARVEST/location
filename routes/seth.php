@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
 
         // Route POST pour mettre à jour (comme tu as déjà)
         Route::post('updatee/{louerchambre}', [LouerchambreController::class, 'updatee'])->name('louerchambre.modiflocation');
-        Route::get('/maison/{id}', [MaisonController::class, 'show'])->name('maison.show');
+        Route::get('/maison', [MaisonController::class, 'index'])->name('maison.index');
         Route::resource('paiementenattentes', PaiementenattenteController::class);
         Route::resource('interventions', InterventionController::class);
 
@@ -57,4 +57,4 @@ Route::middleware(['auth'])->group(function () {
    Route::get('/contrat', function () {
     return view('landing.partials.contrat');
   })->name('contrat');
-    
+

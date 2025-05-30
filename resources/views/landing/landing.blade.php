@@ -230,7 +230,7 @@
 <section class="hero">
     <h2 class="text-center">Fonctionnalités principales</h2>
 
-    <div class="container my-5">
+<div class="container my-5">
   <div class="row g-4">
     <!-- Carte Propriétaires -->
     <div class="col-md-4">
@@ -296,7 +296,20 @@
     </div>
   </div>
 </div>
+
+<div class="container mt-5">
+    <h2 class="text-center">
+    Une tarification simple et transparente
+ </h2>
+ <p class="text-center">
+    Notre modèle de frais est basé sur un pourcentage fixe du loyer mensuel, ce qui nous permet d'aligner nos intérêts avec les vôtres.
+ </p>
+
+
+</div>
 </section>
+
+
 
 
 <section class="hiro mt-5" style="padding-top: 50px">

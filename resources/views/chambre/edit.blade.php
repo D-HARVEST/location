@@ -30,7 +30,7 @@
                             {{ method_field('PATCH') }}
                             @csrf
 
-                            @include('chambre.form')
+                            @include('chambre.forc')
 
                         </form>
                     </div>

@@ -57,6 +57,17 @@
             @enderror
         </div>
 
+        <div class="mb-3">
+            <label for="phone" class="form-label">Numéro personnel d'identifiaction(NPI)</label>
+            <input id="phone" type="text" class="form-control  @error('phone') is-invalid @enderror"
+                id="phone" required autocomplete="phone" autofocus name="phone" value="{{ old('phone') }}">
+            @error('phone')
+                <span class="invalid-feedback" role="alert">
+                    <strong>{{ $message }}</strong>
+                </span>
+            @enderror
+        </div>
+
 
         <div class="mb-3">
             <label class="form-label">Choisissez votre rôle <strong class="text-danger">*</strong></label>

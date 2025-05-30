@@ -90,46 +90,38 @@ class LouerchambreController extends Controller
     // }
 
 
-    public function store(LouerchambreRequest $request): RedirectResponse
+    public function store(Request $request)
     {
-        $data = $request->validated();
+        $request->validate([
+            'chambre_id' => 'required|exists:chambres,id',
+            'debutOccupation' => 'required|date',
+            'loyer' => 'required|numeric',
+            'jourPaiementLoyer' => 'required|integer|min:1|max:31',
+            'cautionLoyer' => 'nullable|numeric',
+            'cautionElectricite' => 'nullable|numeric',
+            'cautionEau' => 'nullable|numeric',
+        ]);
 
-        // Rechercher l'utilisateur par email ou NPI
-        $user = User::where('email', $data['email'])
-            ->where('npi', $data['npi'])
-            ->first();
+        LouerChambre::create([
+            'chambre_id' => $request->chambre_id,
+            'user_id' => null, // on laisse volontairement null
+            'debutOccupation' => $request->debutOccupation,
+            'loyer' => $request->loyer,
+            'jourPaiementLoyer' => $request->jourPaiementLoyer,
+            'cautionLoyer' => $request->cautionLoyer,
+            'cautionElectricite' => $request->cautionElectricite,
+            'cautionEau' => $request->cautionEau,
+            'statut' => 'EN ATTENTE',
+        ]);
 
-
-        if ($user) {
-            // Mise à jour des informations de l'utilisateur
-            $user->update([
-                // 'name' => $data['name'],
-                // 'email' => $data['email'],
-                'npi' => $data['npi'],
-            ]);
-
-            // Assigner le rôle "locataire" s'il ne l'a pas encore
-            if (!$user->hasRole('locataire')) {
-                $user->assignRole('locataire');
-            }
-        } else {
-            // Création d'un nouvel utilisateur
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'npi' => $data['npi'],
-            ]);
-
-            $user->assignRole('locataire');
-        }
-
-        // Associer l'utilisateur à la chambre
-        $data['user_id'] = $user->id;
-        Louerchambre::create($data);
-
-        return Redirect::route('chambres.show', ['chambre' => $request->chambre_id])
-            ->with('success', 'Utilisateur associé à la chambre avec succès !');
+         $chambre = Chambre::find($request->chambre_id);
+         if ($chambre) {
+        $chambre->statut = 'En attente';
+        $chambre->save();
     }
+        return redirect()->back()->with('success', 'Chambre assignée avec succès (en attente de locataire).');
+    }
+
 
 
     /**
@@ -251,154 +243,74 @@ class LouerchambreController extends Controller
 
 
 
-    // public function initialiserPaiement(Request $request)
-    // {
-    //     $louerchambre = Louerchambre::where('user_id', auth()->id())
-    //         ->latest()
-    //         ->first();
-
-    //     if (!$louerchambre) {
-    //         return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée.'], 404);
-    //     }
-
-    //     if ($louerchambre->statut !== 'CONFIRMER') {
-    //         return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
-    //     }
-
-    //     $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
-    //     $moisPaiement = $request->moisPaiement;
-
-    //     if (!is_array($moisPaiement) || count($moisPaiement) === 0) {
-    //         return response()->json(['success' => false, 'message' => 'Aucun mois de paiement sélectionné.']);
-    //     }
-
-    //     // Vérification des mois
-    //     foreach ($moisPaiement as $mois) {
-    //         $moisDate = \Carbon\Carbon::parse($mois)->startOfMonth();
-
-    //         if ($moisDate->lt($debutOccupation)) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Le mois ' . $moisDate->translatedFormat('F Y') . ' est antérieur à votre début d’occupation.'
-    //             ]);
-    //         }
-
-    //         $paiementExistant = Historiquepaiement::where('moisPaiement', 'like', "%$mois%")
-    //             ->where('user_id', auth()->id())
-    //             ->where('modePaiement', '!=', 'EN_ATTENTE')
-    //             ->first();
-
-    //         if ($paiementExistant) {
-    //             return response()->json([
-    //                 'success' => false,
-    //                 'message' => 'Vous avez déjà payé pour le mois de ' . $moisDate->translatedFormat('F Y') . '.'
-    //             ]);
-    //         }
-    //     }
-
-    //     $montantTotal = count($moisPaiement) * $louerchambre->loyer;
-
-    //     try {
-    //         $paiement = Historiquepaiement::create([
-    //             'idTransaction' => 'EN_ATTENTE',
-    //             'louerchambre_id' => $louerchambre->id,
-    //             'montant' => $montantTotal,
-    //             'modePaiement' => 'EN_ATTENTE',
-    //             'moisPaiement' => json_encode($moisPaiement), // ou implode(',', $moisPaiement)
-    //             'nb_mois' => count($moisPaiement),
-    //             'user_id' => auth()->id(),
-    //         ]);
-
-    //         return response()->json([
-    //             'success' => true,
-    //             'paiement_id' => $paiement->id,
-    //             'montant_total' => $montantTotal
-    //         ]);
-    //     } catch (\Exception $e) {
-    //         Log::error('Erreur paiement groupé : ' . $e->getMessage());
-    //         return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
-    //     }
-    // }
-
     public function initialiserPaiement(Request $request)
-{
-    $louerchambre = Louerchambre::where('user_id', auth()->id())
-        ->latest()
-        ->first();
+    {
+        $louerchambre = Louerchambre::where('user_id', auth()->id())
+            ->latest()
+            ->first();
 
-    if (!$louerchambre) {
-        return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée.'], 404);
-    }
+        if (!$louerchambre) {
+            return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée.'], 404);
+        }
 
-    if ($louerchambre->statut !== 'CONFIRMER') {
-        return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
-    }
+        if ($louerchambre->statut !== 'CONFIRMER') {
+            return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
+        }
 
-    $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
-    $moisPaiement = $request->moisPaiement;
+        $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+        $moisPaiement = $request->moisPaiement;
 
-    if (!is_array($moisPaiement) || count($moisPaiement) === 0) {
-        return response()->json(['success' => false, 'message' => 'Aucun mois de paiement sélectionné.']);
-    }
+        if (!is_array($moisPaiement) || count($moisPaiement) === 0) {
+            return response()->json(['success' => false, 'message' => 'Aucun mois de paiement sélectionné.']);
+        }
 
-    $moisPayes = [];
-    foreach ($moisPaiement as $mois) {
-        $moisDate = \Carbon\Carbon::parse($mois)->startOfMonth();
+        // Vérification des mois
+        foreach ($moisPaiement as $mois) {
+            $moisDate = \Carbon\Carbon::parse($mois)->startOfMonth();
 
-        if ($moisDate->lt($debutOccupation)) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Le mois ' . $moisDate->translatedFormat('F Y') . ' est antérieur à votre début d’occupation.'
+            if ($moisDate->lt($debutOccupation)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Le mois ' . $moisDate->translatedFormat('F Y') . ' est antérieur à votre début d’occupation.'
+                ]);
+            }
+
+            $paiementExistant = Historiquepaiement::where('moisPaiement', 'like', "%$mois%")
+                ->where('user_id', auth()->id())
+                ->where('modePaiement', '!=', 'EN_ATTENTE')
+                ->first();
+
+            if ($paiementExistant) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Vous avez déjà payé pour le mois de ' . $moisDate->translatedFormat('F Y') . '.'
+                ]);
+            }
+        }
+
+        $montantTotal = count($moisPaiement) * $louerchambre->loyer;
+
+        try {
+            $paiement = Historiquepaiement::create([
+                'idTransaction' => 'EN_ATTENTE',
+                'louerchambre_id' => $louerchambre->id,
+                'montant' => $montantTotal,
+                'modePaiement' => 'EN_ATTENTE',
+                'moisPaiement' => json_encode($moisPaiement), // ou implode(',', $moisPaiement)
+                'nb_mois' => count($moisPaiement),
+                'user_id' => auth()->id(),
             ]);
-        }
 
-        // On récupère tous les paiements confirmés de l’utilisateur
-        $paiementsExistants = Historiquepaiement::where('user_id', auth()->id())
-            ->where('louerchambre_id', $louerchambre->id)
-            ->where('modePaiement', '!=', 'EN_ATTENTE')
-            ->get();
-
-        // On vérifie si le mois est déjà payé
-        $dejaPaye = $paiementsExistants->contains(function ($paiement) use ($mois) {
-            $moisDejaPayes = json_decode($paiement->moisPaiement, true);
-            return is_array($moisDejaPayes) && in_array($mois, $moisDejaPayes);
-        });
-
-        if ($dejaPaye) {
-            $moisPayes[] = $moisDate->translatedFormat('F Y');
+            return response()->json([
+                'success' => true,
+                'paiement_id' => $paiement->id,
+                'montant_total' => $montantTotal
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Erreur paiement groupé : ' . $e->getMessage());
+            return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
         }
     }
-
-    if (!empty($moisPayes)) {
-        return response()->json([
-            'success' => false,
-            'message' => 'Vous avez déjà payé pour le(s) moi(s) de : ' . implode(', ', $moisPayes) . '.'
-        ]);
-    }
-
-    $montantTotal = count($moisPaiement) * $louerchambre->loyer;
-
-    try {
-        $paiement = Historiquepaiement::create([
-            'idTransaction' => 'EN_ATTENTE',
-            'louerchambre_id' => $louerchambre->id,
-            'montant' => $montantTotal,
-            'modePaiement' => 'EN_ATTENTE',
-            'moisPaiement' => json_encode($moisPaiement),
-            'nb_mois' => count($moisPaiement),
-            'user_id' => auth()->id(),
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'paiement_id' => $paiement->id,
-            'montant_total' => $montantTotal
-        ]);
-    } catch (\Exception $e) {
-        Log::error('Erreur paiement groupé : ' . $e->getMessage());
-        return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
-    }
-}
 
 
 

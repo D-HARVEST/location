@@ -33,14 +33,16 @@ class ChambreController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create(): View
+    public function create(Request $request): View
     {
         $chambre = new Chambre();
         $categories = Category::pluck('libelle', 'id');
         $maisons = Maison::pluck('libelle', 'id');
         $types = Type::pluck('libelle', 'id');
+        $maisonId = $request->query('maison_id');
+        $maison = Maison::find($maisonId);
 
-        return view('chambre.create', compact('chambre', 'categories', 'maisons', 'types'));
+        return view('chambre.create', compact('chambre', 'categories', 'maisons', 'types', 'maison'));
     }
 
     /**
@@ -51,8 +53,7 @@ class ChambreController extends Controller
         $all = $request->validated();
         Chambre::create($all);
 
-
-        return Redirect::route('maison.show', ['id' => $request->maison_id])
+        return Redirect::route('maison.index')
             ->with('success', 'Chambre a été créé(e) avec succes !');
     }
 
@@ -104,6 +105,7 @@ class ChambreController extends Controller
         $categories = Category::pluck('libelle', 'id');
         $maisons = Maison::pluck('libelle', 'id');
         $types = Type::pluck('libelle', 'id');
+
         return view('chambre.edit', compact('chambre', 'categories', 'maisons', 'types'));
     }
 
@@ -123,7 +125,7 @@ class ChambreController extends Controller
             ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer]);
 
 
-        return Redirect::route('maison.show', ['id' => $request->maison_id])
+        return Redirect::route('maison.index')
             ->with('success', 'Chambre a été mis(e) à jour avec succes !');
     }
 
@@ -142,7 +144,7 @@ class ChambreController extends Controller
                 ->withErrors(["Une erreur s'est produite lors de la suppression du Chambre !" . $th->getMessage()]);
         }
 
-        return Redirect::route('maison.show', ['id' => $maisonId])
+        return Redirect::route('maison.index')
             ->with('success', 'Chambre a été supprimé(e) avec succes !');
     }
 

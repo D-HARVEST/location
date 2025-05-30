@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('chambres', function (Blueprint $table) {
             $table->id();
             $table->string('libelle');
-            $table->enum('statut', ['Disponible', 'Non disponible'])->default('Disponible');
+            $table->string('ref', 12)->unique();
+            $table->enum('statut', ['Disponible', 'En attente', 'Non disponible'])->default('Disponible');
             $table->unsignedTinyInteger('jourPaiementLoyer');
             $table->double('loyer');
             $table->foreignId('categorie_id')->constrained("categories")->cascadeOnDelete()->cascadeOnUpdate();

@@ -50,14 +50,9 @@
 
 
 
-            <input type="hidden"
-                   class="form-control rounded-05"
-                   value="{{ $maison->libelle }}">
-           <input type="hidden" name="maison_id" value="{{ $maison->id }}">
 
-           
-
-
+          <input type="hidden" class="form-control rounded-05" value="{{ $chambre?->maison?->libelle }}" readonly>
+          <input type="hidden" name="maison_id" value="{{ $chambre?->maison_id  }}">
 
     </div>
     <div class="box-footer mt-3">

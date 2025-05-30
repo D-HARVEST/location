@@ -24,7 +24,10 @@
 
 
                         <div class="d-flex justify-content-end gap-2 mb-3">
-                            <button type="button" class="btn btn-sm btn-success" data-bs-toggle="modal" data-bs-target="#createChambreModal">
+                            <button type="button" class="btn btn-sm btn-success"
+                            data-bs-toggle="modal"
+                            data-bs-target="#createChambreModal"
+                            >
                                 + Ajouter Chambre
                             </button>
                             <a href="{{ route('maisons.index', $maison->chambre_id) }}" class="btn btn-sm btn-primary">
@@ -36,7 +39,7 @@
                             <a href="{{ route('maisons.show', $chambre->maison_id) }}" class="btn btn-sm btn-primary">Retour</a>
                         </div> --}}
 
-                   <div class="row mt-4">
+    <div class="row mt-4">
         @foreach ($chambres as $chambre)
         <div class="col-md-4 mb-4">
             <div class="card border-0 shadow rounded-4 overflow-hidden h-100">
@@ -97,8 +100,8 @@
                 </div>
             </div>
         </div>
-    @endforeach
-</div>
+          @endforeach
+   </div>
 
 
                     </div>

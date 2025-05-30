@@ -1,12 +1,13 @@
 <?php
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Category;
-use App\Models\Maison;
-use App\Models\Type;
 use App\Models\LouerChambre;
+use App\Models\Maison;
 use App\Models\Photo;
+use App\Models\Type;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 /**
  * Class Chambre
@@ -34,7 +35,7 @@ class Chambre extends Model
 {
     protected $perPage = 20;
 
-    protected $fillable = ['libelle', 'statut', 'jourPaiementLoyer', 'loyer', 'categorie_id', 'type_id', 'maison_id', 'user_id'];
+    protected $fillable = ['ref', 'libelle', 'statut', 'jourPaiementLoyer', 'loyer', 'categorie_id', 'type_id', 'maison_id', 'user_id'];
 
     public function category()
     {
@@ -71,5 +72,22 @@ class Chambre extends Model
             'id',                    // Local key sur `chambres`
             'id'                     // Local key sur `louer_chambres`
         );
+    }
+
+    protected static function booted()
+    {
+        static::creating(function ($chambre) {
+            $chambre->ref = self::generateUniqueRef();
+        });
+    }
+
+    private static function generateUniqueRef()
+    {
+        do {
+            // Génère une chaîne de 12 lettres majuscules
+          $ref = substr(str_shuffle(str_repeat('ABCDEFGHIJKLMNOPQRSTUVWXYZ', 12)), 0, 12);
+        } while (self::where('ref', $ref)->exists());
+
+        return $ref;
     }
 }

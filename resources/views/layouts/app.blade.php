@@ -167,6 +167,17 @@
             });
         });
     </script>
+
+
+<script>
+    function setChambreId(chambreId) {
+    console.log('setChambreId called with', chambreId);
+    document.getElementById('modalChambreId').value = chambreId;
+    document.getElementById('debugChambreId').innerText = 'chambre_id = ' + chambreId;
+}
+
+</script>
+
     {{-- <script src="//code.tidio.co/z1ovskion66qma3j4mgf8nrxkdhbuav0.js" async></script> --}}
     @include('auth.show-hide-password')
     <script src="https://cdn.kkiapay.me/k.js"></script>

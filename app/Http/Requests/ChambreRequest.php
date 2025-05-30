@@ -27,7 +27,7 @@ class ChambreRequest extends FormRequest
 			'loyer' => 'required',
 			'categorie_id' => 'required',
 			'type_id' => 'required',
-			'maison_id' => 'required',
+			'maison_id' => ['required', 'exists:maisons,id'],
         ];
     }
 }

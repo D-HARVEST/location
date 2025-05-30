@@ -58,7 +58,7 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name', 'email', 'password', 'npi', 'google_id', 'image', 'last_login_at'];
+    protected $fillable = ['name', 'email', 'password', 'npi', 'google_id', 'phone', 'image', 'last_login_at'];
 
     // User.php
     public function louerchambres()
