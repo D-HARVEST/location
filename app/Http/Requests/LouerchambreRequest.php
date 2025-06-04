@@ -26,7 +26,7 @@ class LouerchambreRequest extends FormRequest
             'chambre_id' => 'required',
             'debutOccupation' => 'nullable',
             'statut' => ['nullable', 'string', 'in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER'],
-            'loyer' => 'required',
+            'loyer' => 'nullable',
             'cautionLoyer' => 'nullable',
             'cautionElectricite' => 'nullable',
             'cautionEau' => 'nullable',

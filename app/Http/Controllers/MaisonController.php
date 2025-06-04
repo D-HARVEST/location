@@ -36,7 +36,7 @@ class MaisonController extends Controller
             ->paginate(10);
 
 
-        return view('maison.index', [
+        return view('dashboard', [
             'maisons' => $maisons,
             'categories' => $categories,
             'types' => $types,
@@ -68,7 +68,7 @@ class MaisonController extends Controller
         $all['user_id'] = Auth::id();
         Maison::create($all);
 
-        return Redirect::route('maisons.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Maison a été créé(e) avec succes !');
     }
 

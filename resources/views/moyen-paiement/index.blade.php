@@ -1,4 +1,4 @@
-@php
+{{-- @php
     $pagetitle = 'Liste des Moyen Paiement(s)';
     $breadcrumbs = ['Liste des Moyen Paiement(s)' => route('moyen-paiements.index')];
 @endphp
@@ -6,7 +6,7 @@
 @extends('layouts.app')
 
 
-@section('content')
+@section('content') --}}
     <div class="">
         <div class="row">
             <div class="col-sm-12">
@@ -30,7 +30,7 @@
                             <hr>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover datatable">
+                            <table class="table table-striped table-hover datatable w-100">
                                 <thead class="thead">
                                     <tr>
                                         <th>N°</th>
@@ -120,4 +120,4 @@
             </div>
         </div>
     </div>
-@endsection
+{{-- @endsection --}}

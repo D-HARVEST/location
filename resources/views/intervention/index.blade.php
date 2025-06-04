@@ -1,25 +1,9 @@
-@php
-    $pagetitle = 'Liste des Intervention(s)';
-    $breadcrumbs = ['Liste des Intervention(s)' => route('interventions.index')];
-@endphp
 
-@extends('layouts.app')
-
-
-@section('content')
-    <div class="">
         <div class="row">
-            <div class="col-sm-12">
+            <div class="col-md-12">
                 <div class="card">
-
-
-
                     <div class="card-body">
-                      @if ($message = Session::get('success'))
-                            <div class="alert alert-success">
-                                <p>{{ $message }}</p>
-                            </div>
-                        @endif
+
                       @role('locataire')
                         <div class="text-end">
                             <a href="{{ route('interventions.create') }}" class="btn btn-sm btn-primary rounded-05">+ Ajouter une intervention</a>
@@ -30,12 +14,12 @@
                             <span>Liste des Intervention(s)</span>
                             <hr>
                         </div>
+
                         <div class="table-responsive">
-                            <table class="table table-striped table-hover datatable">
+                            <table class="table table-striped table-hover datatable w-100">
                                 <thead class="thead">
                                     <tr>
-                                        <th>N°</th>
-
+                                    <th>N°</th>
                                     <th>locataire</th>
                                     <th>Maison</th>
                                     <th>chambre</th>
@@ -48,7 +32,11 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($interventions as $intervention)
+                                   @php
+                                       $i = 0;
+                                   @endphp
+
+                                    @forelse ($interventions as $intervention)
                                         <tr>
                                             <td>{{ ++$i }}</td>
 
@@ -153,14 +141,19 @@
                                             </td>
 
                                         </tr>
-                                    @endforeach
+                                        @empty
+                                        <tr><td colspan="8" class="text-center">Aucune intervention trouvée</td></tr>
+                                    @endforelse
+
+
+
                                 </tbody>
                             </table>
                         </div>
+
                     </div>
                 </div>
-                {!! $interventions->withQueryString()->links() !!}
+
             </div>
         </div>
-    </div>
-@endsection
+

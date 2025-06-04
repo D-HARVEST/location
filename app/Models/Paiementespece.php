@@ -43,5 +43,6 @@ class Paiementespece extends Model
     {
         return $this->belongsTo(\App\Models\Louerchambre::class, 'louerchambre_id', 'id');
     }
+    
 
 }

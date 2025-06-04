@@ -38,6 +38,43 @@ class LouerchambreController extends Controller
     }
 
 
+    public function valider(Request $request)
+    {
+        $request->validate([
+            'ref' => 'required|string',
+        ]);
+
+        // Récupération de la chambre
+        $chambre = Chambre::where('ref', $request->ref)->first();
+
+        if (!$chambre) {
+            return back()->with('error', 'Référence invalide. Contactez votre propriétaire.');
+        }
+
+        // Vérifie s'il existe une réservation de cette chambre sans utilisateur
+        $louer = Louerchambre::where('chambre_id', $chambre->id)
+            ->whereNull('user_id')
+            ->where('statut', 'EN ATTENTE')
+            ->first();
+
+        if (!$louer) {
+            return back()->with('error', 'Cette chambre n\'est pas disponible à la location.');
+        }
+
+        // Mise à jour avec l'utilisateur connecté
+        $louer->update([
+            'user_id' => Auth::id(),
+            'statut' => 'CONFIRMER'
+        ]);
+
+        $chambre->update([
+            'statut' => 'Non disponible'
+        ]);
+
+        return redirect()->route('dashboard')->with('success', 'Chambre louée avec succès !');
+    }
+
+
     /**
      * Show the form for creating a new resource.
      */
@@ -114,11 +151,11 @@ class LouerchambreController extends Controller
             'statut' => 'EN ATTENTE',
         ]);
 
-         $chambre = Chambre::find($request->chambre_id);
-         if ($chambre) {
-        $chambre->statut = 'En attente';
-        $chambre->save();
-    }
+        $chambre = Chambre::find($request->chambre_id);
+        if ($chambre) {
+            $chambre->statut = 'En attente';
+            $chambre->save();
+        }
         return redirect()->back()->with('success', 'Chambre assignée avec succès (en attente de locataire).');
     }
 
@@ -395,7 +432,7 @@ class LouerchambreController extends Controller
                     }
                 }
 
-                return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
+                return Redirect::route('dashboard', ['louerchambre' => $louerchambre->id])
                     ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
             }
         }
@@ -443,7 +480,6 @@ class LouerchambreController extends Controller
     {
         $data = $request->validated();
         $user = $louerchambre->user;
-
 
 
         if ($data['statut'] === 'CONFIRMER') {
@@ -522,7 +558,7 @@ class LouerchambreController extends Controller
 
 
         $paiementenattentes = \App\Models\Paiementenattente::where('louerchambre_id', $louerchambre->id)->get();
-
+        $aujourdhui = Carbon::today();
         foreach ($paiementenattentes as $paiement) {
             if ($aujourdhui > \Carbon\Carbon::parse($paiement->dateLimite)) {
                 if ($paiement->statut !== 'EN RETARD') {
@@ -537,7 +573,7 @@ class LouerchambreController extends Controller
             }
         }
 
-        return Redirect::route('chambres.show', ['chambre' => $request->chambre_id])
+        return Redirect::route('dashboard', ['chambre' => $request->chambre_id])
             ->with('success', 'Louerchambre et utilisateur ont été mis à jour avec succès !');
     }
 

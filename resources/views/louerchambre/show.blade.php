@@ -89,8 +89,8 @@
 
                         <div class="card-body">
                              <div class="text-end mb-3">
-                        <a href="{{ route('chambres.show', $louerchambre->chambre_id) }}" class="btn btn-sm btn-primary">Retour</a>
-                    </div>
+                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary">Retour</a>
+                          </div>
                           @if ($message = Session::get('success'))
                                 <div class="alert alert-success">
                                     <p>{{ $message }}</p>
@@ -402,7 +402,8 @@
 
     <!-- Paiement + Historique -->
     @role('locataire')
-        <div class="row mt-4">
+    <div class="container">
+        <div class="row">
             <div class="col-md-12">
                 <div class="card">
                     <div class="my-3 mx-3">
@@ -447,7 +448,7 @@
                     <div class="card-body">
 
 
-                        <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
+                    <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                         <hr>
                         <div class="table-responsive">
 
@@ -570,11 +571,11 @@
                 </div>
             </div>
         </div>
+    </div>
     @endrole
 
     @role('gerant')
         <div class="container">
-
             <div class="row mt-4">
                 <div class="col-md-12">
                     <div class="card">

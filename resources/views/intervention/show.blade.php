@@ -16,7 +16,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <div class="text-end mb-3">
-                            <a href="{{ route('interventions.index') }}" class="btn btn-sm btn-primary">Retour</a>
+                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary">Retour</a>
                         </div>
 
                         <div class="row g-4">

@@ -44,9 +44,9 @@
             <input type="file" name="copieContrat" class="form-control @error('copieContrat') is-invalid @enderror rounded-05" id="copie_contrat" >
             {!! $errors->first('copieContrat', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
         @endrole
-        @role('locataire|gerant')
+
+        @role('gerant')
 
         <div class="col-lg-6 form-group mb-2 mb20" style="display: none">
             <strong> <label for="loyer" class="form-label">{{ __('Prix du loyer') }}</label></strong>
@@ -56,14 +56,14 @@
                    value="{{ old('loyer', $louerchambre?->loyer ?? $chambre?->loyer) }}"
                    id="loyer"
                    required
-                   readonly>
+                    @role('gerant') required @endrole>
             {!! $errors->first('loyer', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
 
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="jour_paiement_loyer" class="form-label">{{ __('Jour paiement loyer') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="jourPaiementLoyer" pattern="^(?:[1-9]|1[0-9]|2[0-8])$" title="Veuillez entrer un nombre entre 1 et 28" placeholder="Entrez le jour de paiement du loyer entre 1 et 28"  class="form-control @error('jourPaiementLoyer') is-invalid @enderror rounded-05" value="{{ old('jourPaiementLoyer', $louerchambre?->jourPaiementLoyer) }}" id="jour_paiement_loyer"  required readonly>
+            <input type="text" name="jourPaiementLoyer" pattern="^(?:[1-9]|1[0-9]|2[0-8])$" title="Veuillez entrer un nombre entre 1 et 28" placeholder="Entrez le jour de paiement du loyer entre 1 et 28"  class="form-control @error('jourPaiementLoyer') is-invalid @enderror rounded-05" value="{{ old('jourPaiementLoyer', $louerchambre?->jourPaiementLoyer) }}" id="jour_paiement_loyer"  required>
             {!! $errors->first('jourPaiementLoyer', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
        @endrole

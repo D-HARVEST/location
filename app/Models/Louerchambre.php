@@ -55,6 +55,12 @@ class Louerchambre extends Model
         return $this->hasMany(Historiquepaiement::class, 'louerchambre_id');
     }
 
+    public function paiements()
+    {
+        return $this->hasMany(Paiementespece::class, 'louerchambre_id');
+    }
+
+
 
 
     /**

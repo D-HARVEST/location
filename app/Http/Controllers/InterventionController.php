@@ -17,36 +17,38 @@ class InterventionController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $user = Auth::user();
 
         // Si l'utilisateur est un "locataire"
         if ($user->hasRole('locataire')) {
-            $louerchambre = Auth::user()->louerChambres;
-
-
-
-            $interventions = $user->interventions()->paginate(10); // Récupère les interventions de l'utilisateur Intervention:
-        } else if ($user->hasRole('gerant')) {
+            $louerchambre = $user->louerChambres;
+            $interventions = $user->interventions()->paginate(10);
+        }
+        // Si l'utilisateur est un "gérant"
+        else if ($user->hasRole('gerant')) {
             // Récupère les ID des chambres des maisons gérées par le gérant
-            $chambreIds = \App\Models\Chambre::whereHas('maison', function ($query) use ($user) {
+            $chambreIds = Chambre::whereHas('maison', function ($query) use ($user) {
                 $query->where('user_id', $user->id);
             })->pluck('id');
 
-            // Récupère les ID des locations associées à ces chambres
-            $louerchambreIds = \App\Models\Louerchambre::whereIn('chambre_id', $chambreIds)->pluck('id');
+            // Récupère les ID des louerchambres associées à ces chambres
+            $louerchambreIds = Louerchambre::whereIn('chambre_id', $chambreIds)->pluck('id');
 
             // Récupère les interventions associées à ces louerchambres
-            $interventions = Intervention::whereIn('louerchambre_id', $louerchambreIds)->latest()->paginate(10);
-        } else if ($user->hasRole('Super-Admin')) {
+            $interventions = Intervention::whereIn('louerchambre_id', $louerchambreIds)
+                ->latest()
+                ->paginate(10);
+        }
+        // Si l'utilisateur est un super admin
+        else if ($user->hasRole('Super-Admin')) {
             $interventions = Intervention::latest()->paginate(10);
         }
 
-        return view('intervention.index', compact('interventions'))
+        return view('dashboard', compact('interventions'))
             ->with('i', ($request->input('page', 1) - 1) * $interventions->perPage());
     }
-
 
 
     /**
@@ -80,7 +82,7 @@ class InterventionController extends Controller
             $gerant->notify(new InterventionSoumise($intervention));
         }
 
-        return Redirect::route('interventions.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Intervention créée avec succès !');
     }
 
@@ -128,7 +130,7 @@ class InterventionController extends Controller
         $intervention = Intervention::findOrFail($id);
         $intervention->update(['statut' => 'CONFIRMER']);
 
-        return redirect()->route('interventions.index')->with('success', 'Intervention confirmée avec succès.');
+        return redirect()->route('dashboard')->with('success', 'Intervention confirmée avec succès.');
     }
 
     public function rejeter($id): RedirectResponse
@@ -136,7 +138,7 @@ class InterventionController extends Controller
         $intervention = Intervention::findOrFail($id);
         $intervention->update(['statut' => 'REJETER']);
 
-        return redirect()->route('interventions.index')->with('success', 'Intervention rejetée avec succès.');
+        return redirect()->route('dashboard')->with('success', 'Intervention rejetée avec succès.');
     }
 
 
@@ -152,7 +154,7 @@ class InterventionController extends Controller
         }
 
 
-        return Redirect::route('interventions.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Intervention a été supprimé(e) avec succes !');
     }
 }

@@ -4,12 +4,12 @@
         <span class="hide-menu ps-1">Accueil</span>
     </a>
 </li> --}}
-<li class="sidebar-item">
+{{-- <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg" href="{{ route('dashboard') }}" aria-expanded="false">
         <iconify-icon icon="iconamoon:home" class="fs-6 aside-icon"></iconify-icon>
         <span class="hide-menu ps-1">Accueil</span>
     </a>
-</li>
+</li> --}}
 {{-- <li class="sidebar-item">
     <a class="sidebar-link primary-hover-bg" href="{{ route('users.index') }}" aria-expanded="false">
         <iconify-icon icon="icomoon-free:users" class="fs-6 aside-icon"></iconify-icon>
@@ -84,10 +84,6 @@
                         <span class="hide-menu ps-1">Catégorie de chambres</span>
                     </a>
                 </li>
-
-
-
-
         </ul>
     </li>
 @endrole
@@ -102,38 +98,19 @@
 @endrole
 
 
-@role('Super-admin|gerant')
+{{-- @role('Super-admin|gerant')
     <li class="sidebar-item">
         <a class="sidebar-link primary-hover-bg" href="{{ route('maisons.index') }}" aria-expanded="false">
             <iconify-icon icon="mdi:home-city-outline" class="fs-6 aside-icon"></iconify-icon>
             <span class="hide-menu ps-1">Maisons</span>
         </a>
-        {{-- <ul aria-expanded="false" class="collapse first-level">
 
-
-                <li class="sidebar-item">
-                    <a class="sidebar-link primary-hover-bg" href="{{ route('maisons.index') }}" aria-expanded="false">
-                        <iconify-icon icon="mdi:home-outline" class="fs-6 aside-icon"></iconify-icon>
-                        <span class="hide-menu ps-1">
-                            Maisons
-                        </span>
-                    </a>
-                </li>
-
-                <li class="sidebar-item">
-                    <a class="sidebar-link primary-hover-bg" href="{{route('suivi_mensuel.create')}}" aria-expanded="false">
-                        <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
-                        <span class="hide-menu ps-1">Suivi Mensuel</span>
-                    </a>
-                </li>
-        </ul> --}}
     </li>
-@endrole
+@endrole --}}
 
 
 
-@role('locataire')
-    @if(Auth::user()->louerchambres && Auth::user()->louerchambres->count())
+{{-- @role('locataire')
         <li class="sidebar-item">
             <a class="sidebar-link has-arrow primary-hover-bg" href="javascript:void(0)" aria-expanded="false">
                 <iconify-icon icon="mdi:bed" class="fs-6 aside-icon"></iconify-icon>
@@ -151,19 +128,19 @@
                 @endforeach
             </ul>
         </li>
-    @endif
-@endrole
+
+@endrole --}}
 
 
 
-@role('locataire|gerant|Super-admin')
+{{-- @role('locataire|gerant|Super-admin')
 
         <li class="sidebar-item">
             <a class="sidebar-link primary-hover-bg" href="{{ route('interventions.index') }}" aria-expanded="false">
                 <iconify-icon icon="mdi:tools" class="fs-6 aside-icon"></iconify-icon>
                 <span class="hide-menu ps-1">Interventions</span>
             </a>
-            {{-- <ul aria-expanded="false" class="collapse first-level">
+            <ul aria-expanded="false" class="collapse first-level">
                 @if(Auth::user()->louerchambre)
                     <li class="sidebar-item">
                         <a class="sidebar-link primary-hover-bg" href="{{ route('chambres.show', ['chambre' => Auth::user()->louerchambre->chambre_id]) }}" aria-expanded="false">
@@ -172,10 +149,10 @@
                         </a>
                     </li>
                 @endif
-            </ul> --}}
+            </ul>
         </li>
 
-@endrole
+@endrole --}}
 
 
 

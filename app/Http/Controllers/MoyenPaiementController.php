@@ -44,7 +44,7 @@ class MoyenPaiementController extends Controller
 
         MoyenPaiement::create($all);
 
-        return Redirect::route('moyen-paiements.index')
+        return Redirect::route('dashboard')
             ->with('success', 'MoyenPaiement a été créé(e) avec succes !');
     }
 
@@ -77,7 +77,7 @@ class MoyenPaiementController extends Controller
         $all=$request->validated();
         $moyenPaiement->update($all);
 
-        return Redirect::route('moyen-paiements.index')
+        return Redirect::route('dashboard')
             ->with('success', 'MoyenPaiement a été mis(e) à jour avec succes !');
     }
 
@@ -93,7 +93,7 @@ class MoyenPaiementController extends Controller
         }
 
 
-        return Redirect::route('moyen-paiements.index')
+        return Redirect::route('dashboard')
             ->with('success', 'MoyenPaiement a été supprimé(e) avec succes !');
     }
 }

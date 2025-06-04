@@ -50,7 +50,7 @@
         <!--  Sidebar End -->
         <div class="page-wrapper">
 
-            @include('layouts.partials.right-sidebar')
+            {{-- @include('layouts.partials.right-sidebar') --}}
             {{-- @include('layouts.partials.left-sidebar-with-horizontal') --}}
 
             <div class="body-wrapper">
@@ -66,7 +66,7 @@
 
 
                     <!--  Header End -->
-                    @include('layouts.partials.banner')
+                    {{-- @include('layouts.partials.banner') --}}
                     @yield('content')
                 </div>
                 @yield('content-fluid')
@@ -154,6 +154,30 @@
             });
         });
     </script>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Récupère l'onglet actif depuis le localStorage
+    let activeTab = localStorage.getItem('activeTab');
+
+    if (activeTab) {
+      let triggerEl = document.querySelector(`a[data-bs-toggle="tab"][href="${activeTab}"]`);
+      if (triggerEl) {
+        let tab = new bootstrap.Tab(triggerEl);
+        tab.show();
+      }
+    }
+
+    // Enregistre le nouvel onglet actif quand on clique sur un onglet
+    document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(function (el) {
+      el.addEventListener('shown.bs.tab', function (event) {
+        localStorage.setItem('activeTab', event.target.getAttribute('href'));
+      });
+    });
+  });
+</script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>

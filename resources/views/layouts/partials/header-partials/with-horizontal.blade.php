@@ -1,5 +1,5 @@
 <div class="app-header with-horizontal  ">
-    <nav class="navbar navbar-expand-xl container-fluid p-0">
+    <nav class="navbar navbar-expand-xl container-fluid p-3">
         {{-- <ul class="navbar-nav">
             <li class="nav-item d-none d-xl-block">
                 <a href="index.html" class="text-nowrap nav-link">

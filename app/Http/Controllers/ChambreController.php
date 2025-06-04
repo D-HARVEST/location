@@ -53,7 +53,7 @@ class ChambreController extends Controller
         $all = $request->validated();
         Chambre::create($all);
 
-        return Redirect::route('maison.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Chambre a été créé(e) avec succes !');
     }
 
@@ -125,7 +125,7 @@ class ChambreController extends Controller
             ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer]);
 
 
-        return Redirect::route('maison.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Chambre a été mis(e) à jour avec succes !');
     }
 
@@ -144,7 +144,7 @@ class ChambreController extends Controller
                 ->withErrors(["Une erreur s'est produite lors de la suppression du Chambre !" . $th->getMessage()]);
         }
 
-        return Redirect::route('maison.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Chambre a été supprimé(e) avec succes !');
     }
 

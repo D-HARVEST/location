@@ -58,7 +58,7 @@
         </div>
 
         <div class="mb-3">
-            <label for="phone" class="form-label">Numéro personnel d'identifiaction(NPI)</label>
+            <label for="phone" class="form-label">Numéro de téléphone</label>
             <input id="phone" type="text" class="form-control  @error('phone') is-invalid @enderror"
                 id="phone" required autocomplete="phone" autofocus name="phone" value="{{ old('phone') }}">
             @error('phone')

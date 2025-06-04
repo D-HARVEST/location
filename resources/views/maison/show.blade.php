@@ -1,8 +1,9 @@
  <div class="container p-4">
             <div class="row mt-4">
             @forelse ($maison->chambres as $chambre)
-            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
-                <div class="card-body position-relative bg-white shadow-lg rounded-2">
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 h-100">
+
+                <div class="card-body position-relative bg-white border shadow-sm rounded-2">
                     {{-- Bouton menu (3 points) --}}
                     <div class="dropdown position-absolute top-0 end-0 m-2">
                         <a class="text-muted" href="#" role="button" id="dropdownMenu{{ $chambre->id }}"
@@ -60,14 +61,19 @@
                     </div>
 
                      @if ($chambre->statut === 'Disponible')
-                     <button type="button"
-                  class="btn btn-outline-secondary rounded-1  mt-4"
-                  onclick="setChambreId({{ $chambre->id }})"
-                  data-bs-toggle="modal"
-                  data-bs-target="#createChambreModal">
-                  Assigner locataire
-              </button>
-                   @endif
+    <button type="button"
+        class="btn btn-outline-secondary rounded-1 mt-4 mt-auto"
+        onclick="setChambreId({{ $chambre->id }})"
+        data-bs-toggle="modal"
+        data-bs-target="#createChambreModal">
+        Assigner locataire
+    </button>
+@else
+    <div class="mt-4 mt-auto" style="visibility: hidden;">
+        <button class="btn btn-outline-secondary rounded-1">Placeholder</button>
+    </div>
+@endif
+
                 </div>
             </div>
            @empty

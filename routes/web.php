@@ -68,4 +68,4 @@ Route::get('/landing', function () {
 Route::redirect('/', '/landing')->name('home');
 Route::redirect('/home', '/landing');
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+

@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\GoogleAuthController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ChambreController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\InterventionController;
 use App\Http\Controllers\LouerchambreController;
 use App\Http\Controllers\MaisonController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\PaiementespeceController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\TypeController;
 use Illuminate\Support\Facades\Route;
+
 
 
 
@@ -49,12 +51,15 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/paiements/nettoyage', [LouerchambreController::class, 'apresPaiement'])->name('paiements.nettoyage');
         Route::delete('/paiement/annuler/{id}', [LouerchambreController::class, 'annulerPaiement'])->name('paiement.annuler');
         Route::get('/paiementespeces/{id}/facture', [PaiementespeceController::class, 'telechargerFacture'])->name('paiementespeces.facture');
-
+        Route::post('/louer_chambre/valider', [LouerChambreController::class, 'valider'])->name('louer_chambre.valider');
+        Route::get('/louer_chambre', function () {
+            return view('louerchambre.forch');
+        })->name('louerchambre.forch');
+        Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     });
 });
 
 
-   Route::get('/contrat', function () {
+Route::get('/contrat', function () {
     return view('landing.partials.contrat');
-  })->name('contrat');
-
+})->name('contrat');

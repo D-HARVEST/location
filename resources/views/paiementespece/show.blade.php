@@ -17,9 +17,16 @@
 
 
                     <div class="card-body">
+                        @role('locataire')
                         <div class="text-end">
                             <a href="{{ route('louerchambres.show', $louerchambre->id) }}" class="btn btn-sm btn-primary"> Retour</a>
                         </div>
+                        @endrole
+                        @role('gerant')
+                         <div class="text-end">
+                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary"> Retour</a>
+                        </div>
+                        @endrole
                         <div class="row">
 
 
