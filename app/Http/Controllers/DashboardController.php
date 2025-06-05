@@ -79,6 +79,15 @@ class DashboardController extends Controller
             ->get();
 
 
+        $paiementespecesvalid = \App\Models\PaiementEspece::where('statut', 'EN ATTENTE')
+            ->whereHas('louerchambre.chambre.maison', function ($query) use ($user) {
+                $query->where('user_id', $user->id);
+            })
+            ->with(['louerchambre.chambre.maison', 'louerchambre.user']) // optimisation
+            ->latest()
+            ->count();
+
+
         // Exécuter les requêtes avec les relations utiles
         $louerChambres = $louerChambresQuery->with(['chambre.maison', 'user'])->latest()->paginate(10);
         $interventions = $interventionsQuery->with(['louerchambre.chambre.maison', 'louerchambre.user'])->latest()->get();
@@ -87,16 +96,25 @@ class DashboardController extends Controller
         // Statistiques
         $userId = $user->id;
         $chambreIds = Chambre::whereHas('maison', fn($q) => $q->where('user_id', $userId))->pluck('id');
-        $louerIds = LouerChambre::whereIn('chambre_id', $chambreIds)->pluck('id');
+        // $louerIds = LouerChambre::where('statut', 'CONFIRMER')->pluck('id');
+
 
         $nombreMaisons = Maison::where('user_id', $userId)->count();
         $nombreChambres = Chambre::whereHas('maison', fn($q) => $q->where('user_id', $userId))->count();
         $nombreOccupations = LouerChambre::whereIn('chambre_id', $chambreIds)
             ->where('statut', 'CONFIRMER')
             ->count();
-        $revenusMensuels = HistoriquePaiement::whereIn('louerchambre_id', $louerIds)
-            ->whereMonth('datePaiement', now()->month)
-            ->sum('montant');
+
+        $chambreIds = \App\Models\Chambre::whereHas('maison', function ($query) {
+            $query->where('user_id', auth()->id());
+        })->pluck('id');
+
+        $revenusMensuels = \App\Models\LouerChambre::whereIn('chambre_id', $chambreIds)
+            ->where('statut', 'CONFIRMER')
+            ->sum('loyer');
+
+
+
 
         $interventionsEnAttente = $interventionsQuery->where('statut', 'EN ATTENTE')->count();
 
@@ -139,7 +157,8 @@ class DashboardController extends Controller
             'prochainPaiement' => $prochainPaiement,
             'chambreCount' => $chambreCount,
             'moyenPaiements' => $moyenPaiements,
-            'paiementespeces' => $paiementespeces
+            'paiementespeces' => $paiementespeces,
+            'paiementespecesvalid' => $paiementespecesvalid
         ])->with('i', ($request->input('page', 1) - 1) * $maisons->perPage());
     }
 }

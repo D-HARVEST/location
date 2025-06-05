@@ -106,7 +106,7 @@
                                 <hr>
                             </div>
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover datatable">
+                                <table class="table table-striped table-hover datatable w-100">
                                     <thead class="thead">
                                         <tr>
                                             <th>N°</th>
@@ -303,13 +303,14 @@
                                                                         <i class="fs-4 ti ti-eye"></i> Détails
                                                                     </a>
                                                                 </li>
-
+                                                              
+                                                                @role('locataire')
                                                                 <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
                                                                         <i class="fs-4 ti ti-edit"></i> Modifier
                                                                     </a>
                                                                 </li>
-                                                                @role('locataire')
+                                                             
                                                                 <li>
                                                                     <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
                                                                         @csrf
@@ -321,6 +322,8 @@
 
                                                                 </li>
                                                                 @endrole
+
+
                                                                 @role('gerant')
                                                                     @if($paiementespece->statut == 'EN ATTENTE')
                                                                         <form action="{{ route('paiementespeces.changerStatut', $paiementespece->id) }}" method="POST" style="display:inline">
@@ -430,6 +433,7 @@
                                        class="btn btn-success w-100 rounded-1"
                                        onclick="payer(this);"
                                        data-montant="{{ $montantLoyer }}"
+                                       data-chambre="{{ $louerchambre->id }}" 
                                        id="payerBtn">
                                    <i class="fa fa-credit-card me-2"></i>
                                    Payer le loyer
@@ -631,16 +635,18 @@
                                             <td >{{ $paiement->modePaiement }}</td>
                                             <td>
                                                 @if(!empty($paiement) && !empty($paiement->moisPaiement))
-                                                    @php
-                                                        $moisArray = json_decode($paiement->moisPaiement, true);
-                                                    @endphp
-                                                    @if(is_array($moisArray))
-                                                        @foreach($moisArray as $mois)
-                                                            {{ \Carbon\Carbon::parse($mois)->locale('fr')->translatedFormat('F Y') }}<br>
-                                                        @endforeach
-                                                    @else
-                                                        {{ \Carbon\Carbon::parse($paiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                                                    @endif
+                                                  @php
+$moisBruts = $paiement->moisPaiement ?? '';
+$moisArray = json_decode($moisBruts, true) ?? [];
+@endphp
+
+@foreach($moisArray as $mois)
+    @if(!empty(trim($mois)))
+        {{ \Carbon\Carbon::parse(trim($mois))->locale('fr')->translatedFormat('F Y') }}<br>
+    @endif
+@endforeach
+
+
                                                 @else
                                                     -
                                                 @endif
@@ -757,6 +763,7 @@ function payer(btn) {
      var moisPaiement = Array.from(document.getElementById('moisPaiement').selectedOptions).map(option => option.value);
      var montantUnitaire = parseInt(btn.getAttribute('data-montant'));
      var montant = montantUnitaire * moisPaiement.length;
+     var chambreId = btn.getAttribute('data-chambre');
 
    if (moisPaiement.length === 0) {
     Swal.fire({
@@ -794,7 +801,8 @@ function payer(btn) {
         },
         body: JSON.stringify({
             montant: montant,
-            moisPaiement: Array.from(moisPaiement)
+            moisPaiement: Array.from(moisPaiement),
+            chambre_id: chambreId
         })
     })
     .then(res => res.json())

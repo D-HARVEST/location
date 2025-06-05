@@ -1,85 +1,98 @@
 @php
     $pagetitle = 'Détails Paiementespece';
     $breadcrumbs = ['Liste des Paiementespece' => route('paiementespeces.index'), 'Détails Paiementespece' => ''];
+    use Carbon\Carbon;
 @endphp
 
 @extends('layouts.app')
 
 @section('template_title')
-    Détails  Paiementespece
+    Détails Paiementespece
 @endsection
 
 @section('content')
     <section class="">
         <div class="row">
             <div class="col-md-12">
-                <div class="card">
-
-
+                <div class="card shadow-sm border-0">
                     <div class="card-body">
-                        @role('locataire')
-                        <div class="text-end">
-                            <a href="{{ route('louerchambres.show', $louerchambre->id) }}" class="btn btn-sm btn-primary"> Retour</a>
-                        </div>
-                        @endrole
-                        @role('gerant')
-                         <div class="text-end">
-                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary"> Retour</a>
-                        </div>
-                        @endrole
-                        <div class="row">
 
-
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Motif:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->Motif }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Montant:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->Montant }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Date:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->Date }}"
-                                readonly>
-                        </div>
-
-                        {{-- <div class="col-lg-4">
-                            <strong class="text-dark ">Date de reception:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->DateReception }}"
-                                readonly>
-                        </div> --}}
-
-                        <div class="col-lg-6">
-                            <strong class="text-dark ">Mois:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->Mois }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-6">
-                            <strong class="text-dark ">Locataire:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $louerchambre->user->name }} ({{ $louerchambre->chambre->libelle }} - {{ $louerchambre->chambre->maison->libelle }})"
-                                readonly>
-                        </div>
-
-                        @if ($paiementespece->statut == 'REJETER')
-                            <div class="col-lg-12">
-                                <strong class="text-dark ">Motif du rejet de paiement en espece:</strong>
-                                <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->Motif_rejet }}"
-                                    readonly>
+                            <div class="text-end mb-3">
+                                <a href="{{ route('louerchambres.show', $louerchambre->id) }}" class="btn btn-sm btn-primary">Retour</a>
                             </div>
-                        @endif
+                       
+                        {{-- @role('gerant')
+                            <div class="text-end mb-3">
+                                <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary">Retour</a>
+                            </div>
+                        @endrole --}}
 
-                        <div class="col-lg-12">
-                            <strong class="text-dark ">Observation:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $paiementespece->observation }}"
-                                readonly>
-                        </div>
+                        <div class="row g-4">
+
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Motif</div>
+                                    <div class="fw-semibold text-dark">{{ $paiementespece->Motif }}</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Montant</div>
+                                    <div class="fw-semibold text-dark">{{ number_format($paiementespece->Montant, 0, ',', ' ') }} FCFA</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Date</div>
+                                    <div class="fw-semibold text-dark">{{ $paiementespece->Date }}</div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Mois</div>
+                                    <div class="fw-semibold text-dark">
+                                        @php
+                                            Carbon::setLocale('fr');
+                                            $moisArray = is_array($paiementespece->moisPayes) ? $paiementespece->moisPayes : json_decode($paiementespece->moisPayes, true);
+                                            if ($moisArray) {
+                                                foreach ($moisArray as $mois) {
+                                                    echo ucfirst(Carbon::parse($mois)->translatedFormat('F Y')) . '<br>';
+                                                }
+                                            } else {
+                                                echo '-';
+                                            }
+                                        @endphp
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Locataire</div>
+                                    <div class="fw-semibold text-dark">
+                                        {{ $louerchambre->user->name }} ({{ $louerchambre->chambre->libelle }} - {{ $louerchambre->chambre->maison->libelle }})
+                                    </div>
+                                </div>
+                            </div>
+
+                            @if ($paiementespece->statut == 'REJETER')
+                                <div class="col-lg-12">
+                                    <div class="bg-light p-3 rounded">
+                                        <div class="text-muted small">Motif du rejet de paiement en espèces</div>
+                                        <div class="fw-semibold text-dark">{{ $paiementespece->Motif_rejet }}</div>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <div class="col-lg-12">
+                                <div class="bg-light p-3 rounded">
+                                    <div class="text-muted small">Observation</div>
+                                    <div class="fw-semibold text-dark">{{ $paiementespece->observation }}</div>
+                                </div>
+                            </div>
 
                         </div>
                     </div>

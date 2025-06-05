@@ -28,7 +28,7 @@ class HistoriquepaiementRequest extends FormRequest
 			'montant' => 'required',
 			'modePaiement' => 'required|string',
 			'idTransaction' => 'nullable|string',
-			'moisPaiement' => 'nullable',
+			'moisPaiement' => 'nullable|array',
 			'user_id' => 'required',
         ];
     }

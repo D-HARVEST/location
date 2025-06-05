@@ -62,8 +62,8 @@ class PaiementespeceController extends Controller
 
             // Vérifie si le mois a déjà été payé
             $existe = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-            ->whereJsonContains('moisPaiement', $mois)
-            ->exists();
+                ->whereJsonContains('moisPaiement', $mois)
+                ->exists();
 
             if ($existe) {
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
@@ -113,28 +113,43 @@ class PaiementespeceController extends Controller
     {
         $all = $request->validated();
 
-
-        $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-            ->where('moisPaiement', $all['Mois'])
-            ->exists();
-
-        if ($existeDeja) {
-            return Redirect::back()->withInput()->with('error', 'Ce mois a déjà été payé.');
-        }
-
         $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation);
-        $moisPaiement = Carbon::parse($all['Mois'] . '-01');
 
-        if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
-            return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer un mois antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+        // Vérification pour chaque mois payé
+        foreach ($all['moisPayes'] as $mois) {
+            $moisDate = Carbon::parse($mois . '-01')->startOfMonth();
+
+             // Vérifie si le mois est antérieur à l’entrée
+            if ($moisDate->lt($debutOccupation)) {
+                return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
+            }
+
+            $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+                ->whereJsonContains('moisPaiement', $mois)
+                ->exists();
+
+               
+
+            if ($existeDeja) {
+                return Redirect::back()->withInput()->with('error', "Le mois $mois a déjà été payé.");
+            }
+
+            $moisPaiement = Carbon::parse($mois . '-01');
+
+            if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
+                return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer le mois $mois car il est antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+            }
         }
+
+        // Mettre à jour le paiement avec statut
         $all['statut'] = 'EN ATTENTE';
         $paiementespece->update($all);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])
-            ->with('success', 'Paiement en espèce a été mis(e) à jour avec succes !');
+            ->with('success', 'Paiement en espèce mis à jour avec succès !');
     }
+
 
     public function destroy($id): RedirectResponse
     {
@@ -161,6 +176,7 @@ class PaiementespeceController extends Controller
 
         $paiement = Paiementespece::findOrFail($id);
         $paiement->statut = $request->statut;
+        // $moisPayes = $request->moisPayes;
 
         if ($request->statut === 'REJETER') {
             $paiement->Motif_rejet = $request->motif_rejet;

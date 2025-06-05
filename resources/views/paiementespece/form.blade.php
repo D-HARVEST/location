@@ -1,82 +1,76 @@
 <div class="">
     <div class="row">
 
-        <!-- Champ Motif -->
         <div class="col-lg-6 form-group mb-2 mb20">
-            <label for="motif" class="form-label fw-bold">{{ __('Motif') }} <span class="text-danger">*</span></label>
-            <input type="text" name="Motif" id="motif" required
-                class="form-control @error('Motif') is-invalid @enderror rounded-05"
-                value="{{ old('Motif', $paiementespece?->Motif) }}">
+            <strong> <label for="motif" class="form-label">{{ __('Motif') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
+            <input type="text" name="Motif" class="form-control @error('Motif') is-invalid @enderror rounded-05" value="{{ old('Motif', $paiementespece?->Motif) }}" id="motif" required >
             {!! $errors->first('Motif', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
-        <!-- Champ Montant -->
         <div class="col-lg-6 form-group mb-2 mb20">
-            <label for="Montant" class="form-label fw-bold">{{ __('Montant') }} <span class="text-danger">*</span></label>
-            <input type="number" name="Montant" id="Montant" required min="0" step="0.01"
-                class="form-control @error('Montant') is-invalid @enderror rounded-05"
-                value="{{ old('Montant', $paiementespece?->Montant ?? $louerchambre->loyer) }}">
+            <strong> <label for="montant" class="form-label">{{ __('Montant') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
+            <input type="text" name="Montant" id="Montant" class="form-control @error('Montant') is-invalid @enderror"
+                    value="{{ old('Montant', $paiementespece?->Montant ?? $louerchambre->loyer) }}">
             {!! $errors->first('Montant', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
-        <!-- Champ Date -->
         <div class="col-lg-6 form-group mb-2 mb20">
+            <strong> <label for="date" class="form-label">{{ __('Date') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             @php
                 use Carbon\Carbon;
+
                 $dateValue = old('Date', $paiementespece?->Date ? Carbon::parse($paiementespece->Date)->format('Y-m-d') : now()->format('Y-m-d'));
             @endphp
-            <label for="date" class="form-label fw-bold">{{ __('Date') }} <span class="text-danger">*</span></label>
-            <input type="date" name="Date" id="date" required
-                class="form-control @error('Date') is-invalid @enderror rounded-05"
-                value="{{ $dateValue }}">
+
+            <input type="date" name="Date" class="form-control @error('Date') is-invalid @enderror rounded-05" value="{{ $dateValue }}" id="date">
             {!! $errors->first('Date', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
-        <!-- Champ Mois de paiement -->
-        <div class="col-lg-6 form-group mb-2 mb20">
-            <label for="moisPayes" class="form-label fw-bold">{{ __('Mois de paiement') }} <span class="text-danger">*</span></label>
-            @php
-                Carbon::setLocale('fr');
-                $start = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
-                $now = Carbon::now()->startOfMonth();
-                $end = $now->copy()->addMonths(24);
-                $selectedMois = old('moisPayes', $paiementespece?->moisPayes ?? []);
-                $moisDejaPayes = $louerchambre->paiements()->pluck('moisPayes')->flatten()->toArray();
-            @endphp
+        {{-- <div class="col-lg-6 form-group mb-2 mb20">
+            <strong> <label for="dateReception" class="form-label">{{ __('Date de reception') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
+            <input type="date" name="DateReception" class="form-control @error('DateReception') is-invalid @enderror rounded-05" value="{{ old('DateReception', $paiementespece?->DateReception) }}" id="dateReception" >
+            {!! $errors->first('DateReception', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
+        </div> --}}
+        <div class="col-lg-6 form-group mb-2 mb20" >
+            <strong> <label for="moisPayes" class="form-label">{{ __('Mois de paiement') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <select name="moisPayes[]" id="moisPayes" class="form-control select2 bg-light border-dark text-dark @error('moisPayes') is-invalid @enderror" multiple required>
+                @php
+    Carbon::setLocale('fr');
+
+    $start = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+    $now = Carbon::now()->startOfMonth();
+    $end = $now->copy()->addMonths(24);
+
+    $selectedMois = old('moisPayes', $paiementespece?->moisPayes ?? []);
+    if (is_string($selectedMois)) {
+        $selectedMois = explode(',', $selectedMois);
+    }
+@endphp
+
+
                 @while ($start <= $end)
-                    @php $mois = $start->format('Y-m'); @endphp
-                    <option value="{{ $mois }}"
-                        {{ in_array($mois, $selectedMois) ? 'selected' : '' }}
-                        {{ in_array($mois, $moisDejaPayes) ? 'disabled' : '' }}>
-                        {{ ucfirst($start->translatedFormat('F Y')) }} {{ in_array($mois, $moisDejaPayes) ? '(déjà payé)' : '' }}
+                    <option value="{{ $start->format('Y-m') }}"
+                        {{ in_array($start->format('Y-m'), $selectedMois) ? 'selected' : '' }}>
+                        {{ ucfirst($start->translatedFormat('F Y')) }}
                     </option>
                     @php $start->addMonth(); @endphp
                 @endwhile
             </select>
+
             {!! $errors->first('moisPayes', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
-        <!-- Champ Locataire -->
         <div class="col-lg-12 form-group mb-2 mb20">
-            <label for="louerchambre_id" class="form-label fw-bold">{{ __('Locataire') }} <span class="text-danger">*</span></label>
+            <strong> <label for="louerchambre_id" class="form-label">{{ __('Locataire') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="hidden" name="louerchambre_id" value="{{ $louerchambre->id }}">
+
             <input type="text" class="form-control" readonly
                 value="{{ $louerchambre->user->name }} ({{ $louerchambre->chambre->libelle }} - {{ $louerchambre->chambre->maison->libelle }})">
             {!! $errors->first('louerchambre_id', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-
-        <!-- Champ Observation -->
         <div class="col-lg-12 form-group mb-2 mb20">
-            <label for="observation" class="form-label fw-bold">{{ __('Observation') }}</label>
-            <textarea name="observation" id="observation" rows="3"
-                class="form-control @error('observation') is-invalid @enderror rounded-05">{{ old('observation', $paiementespece?->observation) }}</textarea>
+            <strong> <label for="observation" class="form-label">{{ __('Observation') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
+            <textarea type="text" name="observation" class="form-control @error('observation') is-invalid @enderror rounded-05" value="{{ old('observation', $paiementespece?->observation) }}" id="observation" ></textarea>
             {!! $errors->first('observation', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
 
     </div>
-
-    <!-- Bouton d'enregistrement -->
     <div class="box-footer mt-3">
         <button type="submit" class="btn btn-success rounded-1">Enregistrer</button>
     </div>

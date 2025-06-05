@@ -2,6 +2,7 @@
     $pagetitle = 'Détails Historiquepaiement';
     $breadcrumbs = ['Liste des Historiquepaiement' => route('historiquepaiements.index'), 'Détails Historiquepaiement' => ''];
     use Carbon\Carbon;
+    $mois = explode(',', $historiquepaiement->moisPaiement);
 @endphp
 
 @extends('layouts.app')
@@ -43,11 +44,13 @@
                                 <div class="bg-light p-3 rounded">
                                     <div class="text-muted small">Mois de paiement</div>
                                     <div class="fw-semibold text-dark">
-                                        @if (!empty($historiquepaiement->moisPaiement))
-                                            {{ \Carbon\Carbon::parse($historiquepaiement->moisPaiement)->locale('fr')->translatedFormat('F Y') }}
-                                        @else
-                                            -
-                                        @endif
+                                       @if (!empty($mois))
+    @foreach ($mois as $m)
+        {{ \Carbon\Carbon::parse(trim($m))->locale('fr')->translatedFormat('F Y') }}<br>
+    @endforeach
+@else
+    -
+@endif
                                     </div>
                                 </div>
                             </div>

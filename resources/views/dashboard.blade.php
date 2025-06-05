@@ -86,7 +86,7 @@
     </div>
 
     <!-- Revenus/mois -->
-    <div class="col-6 col-md-6 col-lg-3">
+    <div class="col-6 col-md-6 col-lg-2">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -98,8 +98,22 @@
       </div>
     </div>
 
+
+     <!-- Revenus/mois -->
+    <div class="col-6 col-md-6 col-lg-2">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div><small class="text-muted">Paiement en attente de validation</small></div>
+            <i class="fas fa-credit-card text-muted"></i>
+          </div>
+          <h4 class="mt-2 mb-0"><span class="text-warning">{{ $paiementespecesvalid ?? 0 }}</span></h4>
+        </div>
+      </div>
+    </div>
+
     <!-- Interventions -->
-    <div class="col-6 col-md-6 col-lg-3">
+    <div class="col-6 col-md-6 col-lg-2">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">

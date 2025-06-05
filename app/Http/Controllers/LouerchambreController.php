@@ -282,16 +282,14 @@ class LouerchambreController extends Controller
 
     public function initialiserPaiement(Request $request)
     {
-        $louerchambre = Louerchambre::where('user_id', auth()->id())
+        $louerchambre = Louerchambre::where('id', $request->chambre_id)
+            ->where('user_id', auth()->id())
+            ->where('statut', 'CONFIRMER')
             ->latest()
             ->first();
 
         if (!$louerchambre) {
             return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée.'], 404);
-        }
-
-        if ($louerchambre->statut !== 'CONFIRMER') {
-            return response()->json(['success' => false, 'message' => 'Aucune location confirmée trouvée.']);
         }
 
         $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
@@ -312,10 +310,24 @@ class LouerchambreController extends Controller
                 ]);
             }
 
-            $paiementExistant = Historiquepaiement::where('moisPaiement', 'like', "%$mois%")
-                ->where('user_id', auth()->id())
+            // $paiementExistant = Historiquepaiement::where('user_id', auth()->id())
+            //     ->where('louerchambre_id', $louerchambre->id)
+            //     ->whereJsonContains('moisPaiement', 'like', "%$mois%")
+            //     ->where('modePaiement', '!=', 'EN_ATTENTE')
+            //     ->latest()
+            //     ->first();
+
+            $paiementExistant = Historiquepaiement::where('user_id', auth()->id())
+                ->where('louerchambre_id', $louerchambre->id)
                 ->where('modePaiement', '!=', 'EN_ATTENTE')
-                ->first();
+                ->get()
+                ->filter(function ($p) use ($mois) {
+                    $moisExistants = json_decode($p->moisPaiement, true);
+                    return in_array($mois, $moisExistants);
+                })
+                ->isNotEmpty();
+
+
 
             if ($paiementExistant) {
                 return response()->json([
@@ -333,7 +345,7 @@ class LouerchambreController extends Controller
                 'louerchambre_id' => $louerchambre->id,
                 'montant' => $montantTotal,
                 'modePaiement' => 'EN_ATTENTE',
-                'moisPaiement' => json_encode($moisPaiement), // ou implode(',', $moisPaiement)
+                'moisPaiement' => json_encode($moisPaiement),
                 'nb_mois' => count($moisPaiement),
                 'user_id' => auth()->id(),
             ]);
@@ -348,8 +360,6 @@ class LouerchambreController extends Controller
             return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
         }
     }
-
-
 
 
 
@@ -390,8 +400,6 @@ class LouerchambreController extends Controller
 
         $transaction = $response->json();
 
-
-
         if (
             isset($transaction['v1/transaction']['status'])
             && $transaction['v1/transaction']['status'] == 'approved'
@@ -399,8 +407,7 @@ class LouerchambreController extends Controller
 
 
             $paiement = Historiquepaiement::where('user_id', auth()->id())
-                ->where('louerchambre_id', $louerchambre->id)
-                ->where('modePaiement', 'EN_ATTENTE')
+                ->where('idTransaction', 'EN_ATTENTE')
                 ->latest()
                 ->first();
 
@@ -424,8 +431,8 @@ class LouerchambreController extends Controller
                         'quittanceUrl' => $transaction['v1/transaction']['receipt_url'],
                     ]);
 
-                    return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
-                        ->with('success', 'Paiement effectué avec succès; veillez ajouter la quittance et le mois');
+                    return redirect()->back()
+                        ->with('success', 'Paiement effectué avec succès; veuillez ajouter la quittance et le mois');
                 } else {
                     if (is_null($paiement->datePaiement) && $paiement->modePaiement === 'EN_ATTENTE') {
                         $paiement->delete();
@@ -442,7 +449,6 @@ class LouerchambreController extends Controller
         // ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
 
     }
-
 
     public function annulerPaiement($id)
     {
