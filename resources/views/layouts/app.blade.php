@@ -156,27 +156,6 @@
     </script>
 
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Récupère l'onglet actif depuis le localStorage
-    let activeTab = localStorage.getItem('activeTab');
-
-    if (activeTab) {
-      let triggerEl = document.querySelector(`a[data-bs-toggle="tab"][href="${activeTab}"]`);
-      if (triggerEl) {
-        let tab = new bootstrap.Tab(triggerEl);
-        tab.show();
-      }
-    }
-
-    // Enregistre le nouvel onglet actif quand on clique sur un onglet
-    document.querySelectorAll('a[data-bs-toggle="tab"]').forEach(function (el) {
-      el.addEventListener('shown.bs.tab', function (event) {
-        localStorage.setItem('activeTab', event.target.getAttribute('href'));
-      });
-    });
-  });
-</script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -191,6 +170,35 @@
             });
         });
     </script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('.collapse').forEach(function (collapseElement) {
+        const collapseId = collapseElement.id;
+        const maisonId = collapseId.replace('collapseMaison', '');
+        
+        // Vérifie l'état sauvegardé
+        const savedState = localStorage.getItem(collapseId);
+
+        const bsCollapse = new bootstrap.Collapse(collapseElement, { toggle: false });
+
+        if (savedState === 'open') {
+            bsCollapse.show();
+        } else {
+            bsCollapse.hide(); // Fermé par défaut
+        }
+
+        // Sauvegarde de l'état à chaque changement
+        collapseElement.addEventListener('shown.bs.collapse', function () {
+            localStorage.setItem(collapseId, 'open');
+        });
+
+        collapseElement.addEventListener('hidden.bs.collapse', function () {
+            localStorage.setItem(collapseId, 'closed');
+        });
+    });
+});
+</script>
 
 
 <script>

@@ -19,7 +19,7 @@
 
                     <div class="card-body">
                         <div class="text-end">
-                            <a href="{{ route('maisons.index') }}" class="btn btn-sm btn-primary"> Retour</a>
+                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary"> Retour</a>
                         </div>
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">Nouveau : Maison</h5>

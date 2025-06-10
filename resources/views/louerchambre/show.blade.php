@@ -771,7 +771,7 @@ function payer(btn) {
         title: 'Veuillez sélectionner au moins un mois de paiement.'
     });
     return;
-}
+   }
 
 
      if (!fedapayKey || fedapayKey.trim() === "") {

@@ -256,19 +256,19 @@
     <div class="row align-items-center">
       
       <!-- Colonne image -->
-      <div class="col-md-6  mb-md-0">
-        <img src="{{ asset('assets/ri.png') }}" alt="Illustration avantages" >
+      <div class="col-md-5 mb-md-0">
+        <img src="{{ asset('assets/ri.png') }}" alt="Illustration avantages" height="500vh" class="img-fluid">
       </div>
 
       <!-- Colonne accordéons -->
-      <div class="col-md-6">
+      <div class="col-md-6" style="font-size:16px">
         <div class="accordion" id="accordionAvantages">
 
           <!-- Propriétaires -->
           <div class="accordion-item">
             <h2 class="accordion-header" id="headingProprietaires">
               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProprietaires" aria-expanded="false" aria-controls="collapseProprietaires">
-                <i class="bi bi-house-door text-success me-2"></i> Propriétaires
+                <i class="bi bi-house-door text-success me-3"></i> Propriétaires
               </button>
             </h2>
             <div id="collapseProprietaires" class="accordion-collapse collapse" aria-labelledby="headingProprietaires" data-bs-parent="#accordionAvantages">
@@ -338,13 +338,13 @@
 <section>
     <div class="container py-5">
   <div class="text-center mb-4">
-    <h5>Une tarification simple et transparente</h5>
-    <p style="font-size: 0.8rem">
+    <h4>Une tarification simple et transparente</h4>
+    <p style="font-size: 1 rem">
       Notre modèle de frais est basé sur un pourcentage fixe du loyer mensuel, ce qui nous permet d'aligner nos intérêts avec les vôtres.
     </p>
   </div>
 
-  <div class="card mx-auto shadow" style="max-width: 800px;">
+  <div class="card mx-auto shadow mb-4" style="max-width: 800px;">
     <div class="card-body text-white text-center rounded-2" style="background-color: #54b435">
       <h3 class="mb-3">Frais de gestion</h3>
       <h5 class="mb-2"><strong>4% du loyer</strong> mensuel</h5>
@@ -352,14 +352,14 @@
       {{-- <a href="#" class="btn btn-light mt-2">Demander un devis personnalisé</a> --}}
     </div>
 
-    <div class="card-body bg-light">
+    <div class="card-body bg-light fs-4" >
       <h5 class="mb-3"><strong>Ce qui est inclus :</strong></h5>
       <div class="row">
         <div class="col-12 col-md-6">
           <ul class="list-unstyled">
             <li class="mb-2">✔️ Gestion complète de vos biens immobiliers</li>
             <li class="mb-2">✔️ Sélection et vérification des locataires</li>
-            <li class="mb-2">✔️ Accès à l'application mobile (iOS & Android)</li>
+            <li class="mb-2">✔️ Accès à l'application mobile</li>
             <li class="mb-2">✔️ Rapports financiers détaillés</li>
           </ul>
         </div>
@@ -390,7 +390,7 @@
    <div class="row g-4">
     <!-- Marie L. -->
     <div class="col-md-6" >
-      <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
+      <div class="testimonial-card d-flex flex-column shadow-sm rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/women/16.jpg" alt="Marie L." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -410,7 +410,7 @@
 
     <!-- Thomas B. -->
     <div class="col-md-6 rounded-2"  >
-      <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
+      <div class="testimonial-card d-flex flex-column shadow-sm rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Thomas B." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -430,7 +430,7 @@
 
     <!-- Sophie M. -->
     <div class="col-md-6 rounded-2" >
-       <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
+       <div class="testimonial-card d-flex flex-column shadow-sm rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/women/36.jpg" alt="Sophie M." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -450,7 +450,7 @@
 
     <!-- Lucas D. -->
     <div class="col-md-6 rounded-2 "  >
-       <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
+       <div class="testimonial-card d-flex flex-column shadow-sm rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/men/70.jpg" alt="Lucas D." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -486,105 +486,66 @@
 
 
 
-    <section id="contact" class="hiro">
-        <h2 class="text-center mb-5"> Contactez-nous</h2>
-        <div class="">
-            <div class="row d-flex align-items-stretch ">
-                <div class="col-lg-4 col-sm-6 ">
-                    <div class="card w-100 border shadow-none p-3 border-radius-xl shadow">
-                        <div class="row d-flex align-items-stretch ">
-                            <div class="col-3">
-                                <div
-                                    class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center h-100">
-
-                                    <img src="https://ornestaste.com/spike/socialmedia_tech_09.png" class="img-fluid"
-                                        alt="">
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <h4>Messagerie</h4>
-
-                                <div class="">
-                                    <a href="https://wa.me/0167404081" target="_blank" style="text-decoration: none; color: #25D366;">
-                                        <i class="bi bi-whatsapp" style="font-size: 1rem;"></i> Discuter sur WhatsApp
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="d-flex">
-
-                                <div class="ms-2">
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 ">
-                    <div class="card w-100 border shadow-none p-3 border-radius-xl shadow">
-                        <div class="row d-flex align-items-stretch ">
-                            <div class="col-3">
-                                <div class=" d-flex justify-content-center align-items-center h-100">
-
-                                    <img src="https://ornestaste.com/ccc.png" class="img-fluid" alt="">
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <h4>Email</h4>
-
-                                <a href="mailto:freedie@benis.online"
-                                    class="card-subtitle mt-2 mb-0 fw-normal text-muted">
-                                    contact@d-harvest.com
-                                </a>
-
-                            </div>
-                            <div class="d-flex">
-
-                                <div class="ms-2">
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
-                <div class="col-lg-4 col-sm-6 ">
-                    <div class="card w-100 border shadow-none p-3 border-radius-xl shadow">
-                        <div class="row d-flex align-items-stretch ">
-                            <div class="col-3">
-                                <div class=" d-flex justify-content-center align-items-center h-100">
-
-                                    <img src="https://ornestaste.com/eee.png" class="img-fluid" alt="">
-                                </div>
-                            </div>
-                            <div class="col-9">
-                                <h4>Téléphone</h4>
-
-                                <a class="card-subtitle mt-2 mb-0 fw-normal fw-semibold text-muted ">
-                                    (+229) 01 61 30 62 94
-
-                                </a>
-
-                            </div>
-                            <div class="d-flex">
-
-                                <div class="ms-2">
-
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+   <section id="contact" class="hiro">
+  <h2 class="text-center mb-5">Contactez-nous</h2>
+  <div class="container">
+    <div class="row d-flex align-items-stretch">
+      <!-- Carte Messagerie -->
+      <div class="col-lg-4 col-sm-6 mb-4">
+        <div class="card h-100 border shadow-sm p-3 border-radius-xl shadow">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-3 d-flex justify-content-center align-items-center">
+              <div class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center">
+                <img src="{{ asset('assets/www.jpeg') }}" class="img-fluid" alt="">
+              </div>
             </div>
-
-
+            <div class="col-9 d-flex flex-column justify-content-center">
+              <h4>Messagerie</h4>
+              <a href="https://wa.me/0167404081" target="_blank" style="text-decoration: none; color: #25D366;">
+                <i class="bi bi-whatsapp" style="font-size: 1rem;"></i> Discuter sur WhatsApp
+              </a>
+            </div>
+          </div>
         </div>
-    </section>
+      </div>
+
+      <!-- Carte Email -->
+      <div class="col-lg-4 col-sm-6 mb-4">
+        <div class="card h-100 border shadow-sm p-3 border-radius-xl shadow">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-3 d-flex justify-content-center align-items-center">
+              <img src="{{ asset('assets/ccc.png') }}" class="img-fluid" alt="">
+            </div>
+            <div class="col-9 d-flex flex-column justify-content-center">
+              <h4>Email</h4>
+              <a href="mailto:freedie@benis.online" class="card-subtitle mt-2 mb-0 fw-normal text-muted">
+                contact@d-harvest.com
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Carte Téléphone -->
+      <div class="col-lg-4 col-sm-6 mb-4">
+        <div class="card h-100 border shadow-sm p-3 border-radius-xl shadow">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-3 d-flex justify-content-center align-items-center">
+              <img src="{{ asset('assets/eee.png') }}" class="img-fluid" alt="">
+            </div>
+            <div class="col-9 d-flex flex-column justify-content-center">
+              <h4>Téléphone</h4>
+              <p class="card-subtitle mt-2 mb-0 fw-normal fw-semibold text-muted">
+                (+229) 01 61 30 62 94
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 
 
 
@@ -593,10 +554,9 @@
 <footer class="footer py-4">
     <div class="container d-flex justify-content-between align-items-center">
         <p class="mb-0">&copy; 2024 D-Go. Tous droits réservés.</p>
-        <p class="mb-0">Suivez-nous :
-            <a href="#" class="mx-1"><i class="fa-brands fa-facebook"></i></a>
-            <a href="#" class="mx-1"><i class="fa-brands fa-twitter"></i></a>
-            <a href="#" class="mx-1"><i class="fa-brands fa-instagram"></i></a>
+        <p class="mb-0">Réalisé par:
+            <a href="https://d-harvest.com/" class="mx-1"><span  style="font-size: 1.1 rem; color: #54b435">D-HARVEST</span></a>
+           
         </p>
     </div>
 </footer>

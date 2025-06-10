@@ -72,6 +72,8 @@ class PaiementespeceController extends Controller
             $moisAEnregistrer[] = $mois;
         }
 
+        
+
         // Enregistre les mois en JSON
         $all['moisPayes'] = json_encode($moisAEnregistrer);
 

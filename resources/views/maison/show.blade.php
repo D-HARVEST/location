@@ -57,7 +57,7 @@
                         <span class="fw-bold text-dark"></span>
                     </div>
                     <div class="">
-                        <span class="text-muted ">{{ $chambre->category?->libelle ?? 'N/A' }}, {{ $chambre->type?->libelle ?? 'Type inconnu' }}</span>
+                        <span class="text-muted ">{{ $chambre->category?->libelle ?? 'N/A' }}, <br> {{ $chambre->type?->libelle ?? 'Type inconnu' }}</span>
                     </div>
 
                      @if ($chambre->statut === 'Disponible')

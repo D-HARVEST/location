@@ -46,7 +46,7 @@
   <div class="row mb-4">
 
     <!-- Propriétés -->
-    <div class="col-6 col-md-4 col-lg-2">
+    <div class="col-6 col-md-4 col-lg-3">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -54,22 +54,27 @@
             <i class="fas fa-building text-muted"></i>
           </div>
           <h4 class="mt-2 mb-0">{{ $nombreMaisons ?? 0 }}</h4>
+
+           <div class="d-flex justify-content-between align-items-start">
+            <div><small class="text-muted">Chambres</small></div>
+            <i class="fas fa-home text-muted"></i>
+          </div>
+          <h4 class="mt-2 mb-0">{{ $nombreChambres ?? 0 }}</h4>
+          
         </div>
       </div>
     </div>
 
     <!-- Chambres -->
-    <div class="col-6 col-md-4 col-lg-2">
+    {{-- <div class="col-6 col-md-4 col-lg-2">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-start">
-            <div><small class="text-muted">Chambres</small></div>
-            <i class="fas fa-home text-muted"></i>
-          </div>
-          <h4 class="mt-2 mb-0">{{ $nombreChambres ?? 0 }}</h4>
+
+         
         </div>
+
       </div>
-    </div>
+    </div> --}}
 
     <!-- Occupées -->
     <div class="col-6 col-md-4 col-lg-2">
@@ -100,7 +105,7 @@
 
 
      <!-- Revenus/mois -->
-    <div class="col-6 col-md-6 col-lg-2">
+    <div class="col-6 col-md-6 col-lg-3">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -181,7 +186,9 @@
       </div>
       <div class="text-end d-flex flex-wrap align-items-center justify-content-end gap-2">
         <span class="badge rounded-pill bg-light text-dark border me-3">6/8 occupées</span>
-        <a id="toggleBtn{{ $maison->id }}" class="btn btn-outline-secondary btn-sm me-1" data-bs-toggle="collapse" href="#collapseMaison{{ $maison->id }}" role="button" aria-expanded="false" aria-controls="collapseMaison{{ $maison->id }}">
+        <a id="toggleBtn{{ $maison->id }}" class="btn btn-outline-secondary btn-sm me-1" data-bs-toggle="collapse"
+             href="#collapseMaison{{ $maison->id }}" role="button" aria-expanded="false" 
+             aria-controls="collapseMaison{{ $maison->id }}">
          <i class="ti ti-eye"></i> Voir chambres
         </a>
 
@@ -700,7 +707,7 @@
   <div class="row g-3">
 
     <!-- Propriétés -->
-    <div class="col-6 col-md-4 col-lg-2">
+    <div class="col-6 col-md-4 col-lg-3">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -727,7 +734,7 @@
     </div>
 
      <!-- retart -->
-    <div class="col-6 col-md-4 col-lg-3">
+    {{-- <div class="col-6 col-md-4 col-lg-3">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -737,12 +744,12 @@
           <h4 class="mt-2 mb-1">{{ $prochainPaiement ? $prochainPaiement->datePaiement->format('d/m/Y') : '—' }}</h4>
          </div>
       </div>
-    </div>
+    </div> --}}
 
 
 
     <!-- retart -->
-    <div class="col-6 col-md-4 col-lg-2">
+    <div class="col-6 col-md-4 col-lg-3">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -756,7 +763,7 @@
 
 
     <!-- Interventions -->
-    <div class="col-6 col-md-6 col-lg-2">
+    <div class="col-6 col-md-6 col-lg-3">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
