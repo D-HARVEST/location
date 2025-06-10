@@ -34,7 +34,7 @@
      padding-left: 30px;
      padding-right: 30px;
      padding-top: 20px;
-
+ 
    }
 /* .tilt-card:hover {
   transform: rotate(-3deg);
@@ -65,18 +65,40 @@
     .hiro{
          background: white;
          padding: 20px;
-         padding-top: 30px
+         padding-top: 30px;
+         
+
     }
 
 .hero{
   padding-top: 80px;
-  padding-bottom: 90px;
+  padding-bottom: 40px;
   background: #eff5fe;
+  margin-top: 20px;
 }
 
+.heero{
+     padding-top: 20px;
+     padding-bottom: 5px;
+     background: #eff5fe;
+    margin-top: 20px;
+    
+}
 .hero li{
     font-size: 1rem;
 }
+
+
+.card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-radius: 12px;
+}
+
+.card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+}
+
 
 
 
@@ -116,7 +138,7 @@
           <a href="#contact" class="btn btn-outline-secondary px-4 rounded-1 bg-white text-secondary" style="font-size: 1.2rem;">Nous contacter</a>
         </div>
         <!-- Features -->
-    <div class="Feature">
+    {{-- <div class="Feature">
         <div class="row">
           <div class="col-4">
               <span class="icon text-primary">📍</span>
@@ -134,7 +156,7 @@
               <span>Gestion des paiements</span>
           </div>
         </div>
-    </div>
+    </div> --}}
     </div>
       <!-- Right Side -->
       <div class="col-md-6 mt-4 mt-md-0">
@@ -161,7 +183,7 @@
 
 
 
-<section class="hiro">
+<section class="hiro" style="padding-bottom: 80px">
  <div class="container mt-5">
     <h2 class="text-center">Fonctionnalités principales</h2>
 
@@ -169,7 +191,7 @@
   <div class="row g-4">
     <div class="col-md-4 " >
       <div class="card h-100 p-3 border-1">
-        <div class="fs-10">📄</div>
+        <div class="fs-10">📝</div>
         <h5 class="mt-3 fw-bold">Rédaction des contrats de location</h5>
         <p>Générez et stockez les contrats de location simplement, sans complication.</p>
       </div>
@@ -191,7 +213,7 @@
     </div>
     <div class="col-md-4">
       <div class="card h-100 p-3 border-1">
-        <div class="fs-10">✉️</div>
+        <div class="fs-10">📩</div>
         <h5 class="mt-3 fw-bold">Gestion des demandes</h5>
         <p>Les locataires peuvent envoyer des requêtes (réparations, documents, etc.) directement via l'application.</p>
       </div>
@@ -211,13 +233,13 @@
       </div>
     </div>
 
-     <div class="col-md-4">
+     {{-- <div class="col-md-4">
       <div class="card h-100 p-3 border-1">
         <div class="fs-10">🌍</div>
         <h5 class="mt-3 fw-bold">Disponible partout</h5>
         <p>Application disponible sur Android, iOS et web pour une gestion où que vous soyez.</p>
       </div>
-    </div>
+    </div> --}}
 
   </div>
 </div>
@@ -227,86 +249,136 @@
 
 
 
-<section class="hero">
-    <h2 class="text-center">Fonctionnalités principales</h2>
+<section class="heero">
+  <div class="container">
+    <h2 class="text-center">Avantages pour chaque utilisateur</h2>
+    
+    <div class="row align-items-center">
+      
+      <!-- Colonne image -->
+      <div class="col-md-6  mb-md-0">
+        <img src="{{ asset('assets/ri.png') }}" alt="Illustration avantages" >
+      </div>
 
-<div class="container my-5">
-  <div class="row g-4">
-    <!-- Carte Propriétaires -->
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm" style="border-top: 20px solid #00B86B; border-radius: 15px;">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <div class="bg-light rounded-circle p-3">
-              <i class="bi bi-house-door fs-6 text-success"></i>
+      <!-- Colonne accordéons -->
+      <div class="col-md-6">
+        <div class="accordion" id="accordionAvantages">
+
+          <!-- Propriétaires -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingProprietaires">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseProprietaires" aria-expanded="false" aria-controls="collapseProprietaires">
+                <i class="bi bi-house-door text-success me-2"></i> Propriétaires
+              </button>
+            </h2>
+            <div id="collapseProprietaires" class="accordion-collapse collapse" aria-labelledby="headingProprietaires" data-bs-parent="#accordionAvantages">
+              <div class="accordion-body">
+                <ul class="list-unstyled mb-0">
+                  <li><span style="color: #00B86B">✔</span> Meilleure traçabilité des paiements et des communications</li>
+                  <li><span style="color: #00B86B">✔</span> Réduction des litiges grâce à la documentation automatique</li>
+                  <li><span style="color: #00B86B">✔</span> Tout est digitalisé, fini les papiers perdus ou les erreurs</li>
+                  <li><span style="color: #00B86B">✔</span> Gain de temps considérable dans la gestion quotidienne</li>
+                  <li><span style="color: #00B86B">✔</span> Rappels automatiques pour moins d'impayés</li>
+                </ul>
+              </div>
             </div>
           </div>
-          <h5 class="fw-bold">Propriétaires</h5>
-          <ul class="list-unstyled mt-3">
-            <li><span style="color: #00B86B">✔</span> Meilleure traçabilité des paiements et des communications</li>
-            <li><span style="color: #00B86B">✔</span> Réduction des litiges grâce à la documentation automatique</li>
-            <li><span style="color: #00B86B">✔</span> Tout est digitalisé, fini les papiers perdus ou les erreurs</li>
-            <li><span style="color: #00B86B">✔</span> Gain de temps considérable dans la gestion quotidienne</li>
-            <li><span style="color: #00B86B">✔</span> Rappels automatiques pour moins d'impayés</li>
-          </ul>
-        </div>
+
+          <!-- Locataires -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingLocataires">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseLocataires" aria-expanded="false" aria-controls="collapseLocataires">
+                <i class="bi bi-person text-warning me-2"></i> Locataires
+              </button>
+            </h2>
+            <div id="collapseLocataires" class="accordion-collapse collapse" aria-labelledby="headingLocataires" data-bs-parent="#accordionAvantages">
+              <div class="accordion-body">
+                <ul class="list-unstyled mb-0">
+                  <li><span style="color: #F5A623">✔</span> Preuve de paiement immédiate avec quittance numérique</li>
+                  <li><span style="color: #F5A623">✔</span> Interface simple pour communiquer avec le propriétaire</li>
+                  <li><span style="color: #F5A623">✔</span> Historique des quittances accessible à tout moment</li>
+                  <li><span style="color: #F5A623">✔</span> Demandes de réparations ou d'intervention simplifiées</li>
+                  <li><span style="color: #F5A623">✔</span> Rappels bienveillants pour éviter les retards</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Gestionnaires -->
+          <div class="accordion-item">
+            <h2 class="accordion-header" id="headingGestionnaires">
+              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseGestionnaires" aria-expanded="false" aria-controls="collapseGestionnaires">
+                <i class="bi bi-people text-dark me-2"></i> Gestionnaires immobiliers
+              </button>
+            </h2>
+            <div id="collapseGestionnaires" class="accordion-collapse collapse" aria-labelledby="headingGestionnaires" data-bs-parent="#accordionAvantages">
+              <div class="accordion-body">
+                <ul class="list-unstyled mb-0">
+                  <li>✔ Rapports exportables pour analyse et comptabilité</li>
+                  <li>✔ Gestion multi-biens depuis une seule interface</li>
+                  <li>✔ Transparence totale sur l'historique des relations</li>
+                  <li>✔ Automatisation des tâches administratives récurrentes</li>
+                  <li>✔ Données centralisées accessibles de partout</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+        </div> <!-- Fin accordion -->
       </div>
     </div>
 
-    <!-- Carte Locataires -->
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm" style="border-top: 20px solid #F5A623; border-radius: 15px;">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <div class="bg-light rounded-circle p-3">
-              <i class="bi bi-person fs-6 text-warning"></i>
-            </div>
-          </div>
-          <h5 class="fw-bold">Locataires</h5>
-          <ul class="list-unstyled mt-3">
-            <li><span style="color: #F5A623">✔</span>  Preuve de paiement immédiate avec quittance numérique</li>
-            <li><span style="color: #F5A623">✔</span>  Interface simple pour communiquer avec le propriétaire</li>
-            <li><span style="color: #F5A623">✔</span>  Historique des quittances accessible à tout moment</li>
-            <li><span style="color: #F5A623">✔</span>  Demandes de réparations ou d'intervention simplifiées</li>
-            <li><span style="color: #F5A623">✔</span>  Rappels bienveillants pour éviter les retards</li>
-          </ul>
-        </div>
-      </div>
+    <!-- Tarification -->
+
+  </div>
+</section>
+
+
+
+<section>
+    <div class="container py-5">
+  <div class="text-center mb-4">
+    <h5>Une tarification simple et transparente</h5>
+    <p style="font-size: 0.8rem">
+      Notre modèle de frais est basé sur un pourcentage fixe du loyer mensuel, ce qui nous permet d'aligner nos intérêts avec les vôtres.
+    </p>
+  </div>
+
+  <div class="card mx-auto shadow" style="max-width: 800px;">
+    <div class="card-body text-white text-center rounded-2" style="background-color: #54b435">
+      <h3 class="mb-3">Frais de gestion</h3>
+      <h5 class="mb-2"><strong>4% du loyer</strong> mensuel</h5>
+      <p>Négociable selon vos besoins et le volume de biens</p>
+      {{-- <a href="#" class="btn btn-light mt-2">Demander un devis personnalisé</a> --}}
     </div>
 
-    <!-- Carte Gestionnaires immobiliers -->
-    <div class="col-md-4">
-      <div class="card h-100 shadow-sm" style="border-top: 20px solid #3C465C; border-radius: 15px;">
-        <div class="card-body">
-          <div class="d-flex align-items-center mb-3">
-            <div class="bg-light rounded-circle p-3">
-              <i class="bi bi-people fs-6 text-dark"></i>
-            </div>
-          </div>
-          <h5 class="fw-bold">Gestionnaires immobiliers</h5>
-          <ul class="list-unstyled mt-3">
-            <li>✔ Rapports exportables pour analyse et comptabilité</li>
-            <li>✔ Gestion multi-biens depuis une seule interface</li>
-            <li>✔ Transparence totale sur l'historique des relations</li>
-            <li>✔ Automatisation des tâches administratives récurrentes</li>
-            <li>✔ Données centralisées accessibles de partout</li>
+    <div class="card-body bg-light">
+      <h5 class="mb-3"><strong>Ce qui est inclus :</strong></h5>
+      <div class="row">
+        <div class="col-12 col-md-6">
+          <ul class="list-unstyled">
+            <li class="mb-2">✔️ Gestion complète de vos biens immobiliers</li>
+            <li class="mb-2">✔️ Sélection et vérification des locataires</li>
+            <li class="mb-2">✔️ Accès à l'application mobile (iOS & Android)</li>
+            <li class="mb-2">✔️ Rapports financiers détaillés</li>
+          </ul>
+        </div>
+        <div class="col-12 col-md-6">
+          <ul class="list-unstyled">
+            <li class="mb-2">✔️ Collecte automatisée des loyers</li>
+            <li class="mb-2">✔️ Gestion des demandes de maintenance</li>
+            <li class="mb-2">✔️ Support client 7j/7</li>
+            <li class="mb-2">✔️ Assistance juridique pour les contrats</li>
           </ul>
         </div>
       </div>
+
+     
+
     </div>
   </div>
 </div>
 
-<div class="container mt-5">
-    <h2 class="text-center">
-    Une tarification simple et transparente
- </h2>
- <p class="text-center">
-    Notre modèle de frais est basé sur un pourcentage fixe du loyer mensuel, ce qui nous permet d'aligner nos intérêts avec les vôtres.
- </p>
-
-
-</div>
 </section>
 
 
@@ -317,8 +389,8 @@
    <div class="container py-5">
    <div class="row g-4">
     <!-- Marie L. -->
-    <div class="col-md-6 rounded-2"  >
-      <div class="testimonial-card d-flex flex-column h-100" style="background-color: #eff5fe;">
+    <div class="col-md-6" >
+      <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/women/16.jpg" alt="Marie L." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -328,7 +400,7 @@
         </div>
         <div class="d-flex">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">
+          <p class="fs-3">
             Depuis que j'utilise cette app, je n'ai plus besoin de carnet papier, tout est automatique.
             Plus de quittances perdues, plus de rappels à envoyer !
           </p>
@@ -338,7 +410,7 @@
 
     <!-- Thomas B. -->
     <div class="col-md-6 rounded-2"  >
-      <div class="testimonial-card d-flex flex-column h-100" style="background-color: #eff5fe;">
+      <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/men/91.jpg" alt="Thomas B." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -348,7 +420,7 @@
         </div>
         <div class="d-flex">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">
+          <p class="fs-3">
             La communication avec mon propriétaire n'a jamais été aussi simple. Je peux faire des demandes
             de réparation et suivre leur avancement en temps réel.
           </p>
@@ -358,7 +430,7 @@
 
     <!-- Sophie M. -->
     <div class="col-md-6 rounded-2" >
-      <div class="testimonial-card d-flex flex-column h-100"  style="background-color: #eff5fe;">
+       <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/women/36.jpg" alt="Sophie M." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -368,7 +440,7 @@
         </div>
         <div class="d-flex">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">
+          <p class="fs-3">
             En tant qu'agence immobilière, nous gérons plus de 150 biens avec cette application.
             L'export des rapports nous fait gagner des heures chaque mois.
           </p>
@@ -378,7 +450,7 @@
 
     <!-- Lucas D. -->
     <div class="col-md-6 rounded-2 "  >
-      <div class="testimonial-card d-flex flex-column h-100" style="background-color: #eff5fe;">
+       <div class="testimonial-card d-flex flex-column  rounded-2" style="background-color: #eff5fe; padding: 10px">
         <div class="d-flex align-items-center mb-2">
           <img src="https://randomuser.me/api/portraits/men/70.jpg" alt="Lucas D." class="testimonial-img rounded-circle" style="height: 60px;">
           <div class="ms-3">
@@ -388,7 +460,7 @@
         </div>
         <div class="d-flex">
           <div class="testimonial-quote">“</div>
-          <p class="testimonial-text">
+          <p class="fs-3">
             Je reçois automatiquement une notification quand le loyer est dû, et je peux payer directement
             depuis l'application. C'est vraiment pratique !
           </p>
@@ -400,7 +472,7 @@
 </section>
 
 
-<section>
+{{-- <section>
     <div class="container hero">
         <h2 class="text-center">Générer votre contrat gratuitement</h2>
         <p class="text-center mb-4" style="font-size: 1.1rem;">
@@ -410,7 +482,7 @@
             <a href="{{ route('contrat') }}" class="btn text-white px-4 rounded-1" style="font-size: 1.2rem; background-color: #54b435">Commencer</a>
         </div>
     </div>
-</section>
+</section> --}}
 
 
 
@@ -517,18 +589,20 @@
 
 
 
-    <!-- Footer -->
-    <footer class="footer py-4">
-        <div class="container text-center">
-            <p>&copy; 2024 D-Go. Tous droits réservés.</p>
-            <p>Suivez-nous :
-                <a href="#" class="mx-1"><i class="fa-brands fa-facebook"></i></a>
-                <a href="#" class="mx-1"><i class="fa-brands fa-twitter"></i></a>
-                <a href="#" class="mx-1"><i class="fa-brands fa-instagram"></i></a>
-            </p>
-        </div>
+   <!-- Footer -->
+<footer class="footer py-4">
+    <div class="container d-flex justify-content-between align-items-center">
+        <p class="mb-0">&copy; 2024 D-Go. Tous droits réservés.</p>
+        <p class="mb-0">Suivez-nous :
+            <a href="#" class="mx-1"><i class="fa-brands fa-facebook"></i></a>
+            <a href="#" class="mx-1"><i class="fa-brands fa-twitter"></i></a>
+            <a href="#" class="mx-1"><i class="fa-brands fa-instagram"></i></a>
+        </p>
+    </div>
+</footer>
 
-    </footer>
+
+    
         <!-- Scripts -->
         <script src="{{ asset('spike/assets/js/vendor.min.js') }}"></script>
         <script src="{{ asset('spike/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>

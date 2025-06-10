@@ -29,6 +29,8 @@ class MaisonController extends Controller
         $categories = Category::pluck('libelle', 'id');
         $types = Type::pluck('libelle', 'id');
 
+        
+
         $louerChambres = LouerChambre::whereHas('chambre.maison', function ($query) {
             $query->where('user_id', Auth::id());
         })->with(['chambre.maison']) // Eager loading des relations
