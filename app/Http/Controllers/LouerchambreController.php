@@ -129,10 +129,11 @@ class LouerchambreController extends Controller
 
     public function store(Request $request)
     {
+        $chambre = Chambre::find($request->chambre_id);
+
         $request->validate([
             'chambre_id' => 'required|exists:chambres,id',
             'debutOccupation' => 'required|date',
-            'loyer' => 'required|numeric',
             'jourPaiementLoyer' => 'required|integer|min:1|max:31',
             'cautionLoyer' => 'nullable|numeric',
             'cautionElectricite' => 'nullable|numeric',
@@ -143,7 +144,7 @@ class LouerchambreController extends Controller
             'chambre_id' => $request->chambre_id,
             'user_id' => null, // on laisse volontairement null
             'debutOccupation' => $request->debutOccupation,
-            'loyer' => $request->loyer,
+            'loyer' => $chambre->loyer,
             'jourPaiementLoyer' => $request->jourPaiementLoyer,
             'cautionLoyer' => $request->cautionLoyer,
             'cautionElectricite' => $request->cautionElectricite,

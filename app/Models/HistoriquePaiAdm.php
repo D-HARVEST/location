@@ -15,6 +15,7 @@ class HistoriquePaiAdm extends Model
         'idTransaction',
         'datePaiement',
         'moisPaiement',
+        'statut',
         'quittanceUrl'
     ];
 

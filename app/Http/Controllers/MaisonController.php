@@ -29,7 +29,7 @@ class MaisonController extends Controller
         $categories = Category::pluck('libelle', 'id');
         $types = Type::pluck('libelle', 'id');
 
-        
+
 
         $louerChambres = LouerChambre::whereHas('chambre.maison', function ($query) {
             $query->where('user_id', Auth::id());
@@ -110,7 +110,7 @@ class MaisonController extends Controller
         $all = $request->validated();
         $maison->update($all);
 
-        return Redirect::route('maisons.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Maison a été mis(e) à jour avec succes !');
     }
 

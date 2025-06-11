@@ -2,8 +2,8 @@
     <div class="row">
 
         <div class="col-lg-6 form-group mb-2 mb20">
-            <strong> <label for="designation" class="form-label">{{ __('Designation') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            {{ html()->select('Designation', [''  =>'--Sélectionner la désignation--','FedaPay' => 'FedaPay', 'KKiaPay' => 'KKiaPay'])
+            <strong> <label for="designation" class="form-label">{{ __('Designation') }}</label> <!-- <strong class="text-danger"> , 'KKiaPay' => 'KKiaPay' </strong> -->  </strong>
+            {{ html()->select('Designation', [''  =>'--Sélectionner la désignation--','FedaPay' => 'FedaPay'])
                 ->class('form-control rounded-05 ' . ($errors->has('Designation') ? 'is-invalid' : ''))
                 ->required()
                 ->value(old('Designation', $moyenPaiement?->Designation))

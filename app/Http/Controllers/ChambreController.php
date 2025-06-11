@@ -51,6 +51,7 @@ class ChambreController extends Controller
     public function store(ChambreRequest $request): RedirectResponse
     {
         $all = $request->validated();
+        
         Chambre::create($all);
 
         return Redirect::route('dashboard')
@@ -122,7 +123,7 @@ class ChambreController extends Controller
         // Mettre à jour le loyer dans la table louerchambres
         DB::table('louerchambres')
             ->where('chambre_id', $chambre->id)
-            ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer]);
+            ->update(['jourPaiementLoyer' => $chambre->jourPaiementLoyer, 'loyer' => $chambre->loyer]);
 
 
         return Redirect::route('dashboard')

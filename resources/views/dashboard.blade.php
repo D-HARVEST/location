@@ -224,11 +224,8 @@
 <div class="row">
      <div class="card border">
                             <div class="card-body">
-                                <form id="formPayer">
-                               @csrf
-                                   
-
-
+             <form id="formPayer">
+            @csrf
     <button type="button"
         class="btn btn-success w-100 rounded-1"
         onclick="payer(this);"
@@ -260,8 +257,11 @@
          <li class="nav-item">
       <a class="nav-link rounded-1" data-bs-toggle="tab" href="#locataires">Locataires</a>
          </li>
+          <li class="nav-item">
+         <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">Abonnement en attente de paiement</a>
+         </li>
          <li class="nav-item">
-        <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiementenattentev">Paiements en attente de validation</a>
+         <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiementenattentev">Paiements en attente de validation</a>
          </li>
          <li class="nav-item">
       <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">Paiements</a>
@@ -452,6 +452,30 @@
     <div class="tab-pane fade" id="moyenspaiement">
        @include('moyen-paiement.index');
     </div>
+
+
+     <div class="tab-pane fade" id="abonnement">
+       @if($abonnementEnAttente)
+      <div class="alert alert-warning">
+        Paiement de 5% non effectué pour le mois {{ \Carbon\Carbon::now()->translatedFormat('F Y') }} :
+        <strong>{{ number_format($abonnementEnAttente->montant, 0, ',', ' ') }} F</strong>
+
+           <form id="formPayer">
+            @csrf
+          <button type="button"
+        class="btn btn-success w-100 rounded-1"
+        onclick="payer(this);"
+        id="payerBtn">
+        <i class="fa fa-credit-card me-2"></i>
+        Payer l'abonnement ({{ number_format($abonnementEnAttente->montant, 0, ',', ' ') }} FCFA)
+    </button>
+</form>
+    </div>
+@endif
+
+    </div>
+
+
 
     <div class="tab-pane fade" id="interventions">
        @include('intervention.index');

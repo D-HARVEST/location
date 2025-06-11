@@ -16,6 +16,7 @@ use App\Models\Type;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
@@ -92,12 +93,6 @@ class DashboardController extends Controller
             ->latest()
             ->count();
 
-
-
-
-
-
-
         // Exécuter les requêtes avec les relations utiles
         $louerChambres = $louerChambresQuery->with(['chambre.maison', 'user'])->latest()->paginate(10);
         $interventions = $interventionsQuery->with(['louerchambre.chambre.maison', 'louerchambre.user'])->latest()->get();
@@ -126,9 +121,16 @@ class DashboardController extends Controller
         $montantAbonnement =  $revenusMensuels * 5 / 100;
 
 
+        $moisActuel = now()->format('Y-m');
+
+        $abonnementEnAttente = \App\Models\HistoriquePaiAdm::where('user_id', $user->id)
+            ->where('moisPaiement', $moisActuel)
+            ->where('statut', 'EN ATTENTE')
+            ->first();
+
+
+
         $interventionsEnAttente = $interventionsQuery->where('statut', 'EN ATTENTE')->count();
-
-
 
         // Spécifique au locataire
         $loyerMensuel = null;
@@ -169,7 +171,8 @@ class DashboardController extends Controller
             'moyenPaiements' => $moyenPaiements,
             'paiementespeces' => $paiementespeces,
             'paiementespecesvalid' => $paiementespecesvalid,
-            'montantAbonnement' => $montantAbonnement
+            'montantAbonnement' => $montantAbonnement,
+            'abonnementEnAttente' => $abonnementEnAttente
         ])->with('i', ($request->input('page', 1) - 1) * $maisons->perPage());
     }
 
@@ -219,6 +222,64 @@ class DashboardController extends Controller
                     'modePaiement' => $transaction['v1/transaction']['mode'] ?? '',
                     'idTransaction' => $transaction_id,
                     'quittanceUrl' => $transaction['v1/transaction']['receipt_url'] ?? '',
+                    'moisPaiement' => Carbon::now()->format('Y-m'),
+                    'statut' => 'PAYER',
+                    'user_id' => auth()->id()
+                ]);
+            }
+            return redirect()->back()
+                ->with('success', 'Paiement effectué avec succès');
+        } else {
+            return Redirect::route('dashboard')
+                ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
+        }
+    }
+
+
+
+     public function payerAbonnement(string $transaction_id)
+    {
+
+        $superAdmin = User::whereHas('roles', function ($q) {
+            $q->where('name', 'Super-admin');
+        })->first();
+
+        $moyenPaiement = MoyenPaiement::where('user_id', $superAdmin->id)
+            ->where('isActive', 1)
+            ->first();
+
+        if (!$moyenPaiement) {
+            return back()->with('error', "Le moyen de paiement n'est pas actif. Veuillez contacter votre propriétaire pour résoudre ce problème.");
+        }
+
+
+        $cle_privee = $moyenPaiement->Cle_privee;
+        $response = Http::withToken($cle_privee)
+            ->accept('application/json')
+            ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
+                'include' => 'customer.phone_number,currency,payment_method',
+                'locale' => 'fr'
+            ]);
+
+        $transaction = $response->json();
+        //   dump($transaction);
+        if (
+            isset($transaction['v1/transaction']['status']) &&
+            $transaction['v1/transaction']['status'] == 'approved' &&
+            isset($transaction['v1/transaction']['amount']) &&
+            intval($transaction['v1/transaction']['amount']) == $transaction['v1/transaction']['amount']
+        ) {
+            // Vérifie si l'enregistrement existe déjà
+            $existant = HistoriquePaiAdm::where('idTransaction', $transaction_id)->first();
+
+            if (!$existant) {
+                HistoriquePaiAdm::update([
+                    'datePaiement' => now(),
+                    'montant' => $transaction['v1/transaction']['amount'],
+                    'modePaiement' => $transaction['v1/transaction']['mode'] ?? '',
+                    'idTransaction' => $transaction_id,
+                    'quittanceUrl' => $transaction['v1/transaction']['receipt_url'] ?? '',
+                    'statut' => 'PAYER',
                     'user_id' => auth()->id()
                 ]);
             }

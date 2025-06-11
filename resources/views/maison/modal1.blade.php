@@ -17,10 +17,10 @@
             <input type="date" name="debutOccupation" class="form-control" required>
           </div>
 
-          <div class="mb-3">
+          {{-- <div class="mb-3">
             <label for="loyer" class="form-label">Loyer (FCFA)</label>
             <input type="number" name="loyer" class="form-control" required>
-          </div>
+          </div> --}}
 
           <div class="mb-3">
             <label for="jourPaiementLoyer" class="form-label">Jour de paiement du loyer</label>
