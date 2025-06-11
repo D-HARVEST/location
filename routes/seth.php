@@ -13,13 +13,7 @@ use App\Http\Controllers\PaiementespeceController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\TypeController;
 use Illuminate\Support\Facades\Route;
-
-
-
-
-
-
-
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 Route::get('/login/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
@@ -56,6 +50,7 @@ Route::middleware(['auth'])->group(function () {
             return view('louerchambre.forch');
         })->name('louerchambre.forch');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+        
     });
 });
 

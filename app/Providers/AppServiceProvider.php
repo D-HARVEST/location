@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Models\Chambre;
 use App\Models\Louerchambre;
+use App\Models\User;
 use App\Observers\ChambreObserver;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Spatie\Permission\Models\Role;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,23 @@ class AppServiceProvider extends ServiceProvider
             }
 
             $view->with('clePublic', $clePublic);
+        });
+
+
+        // Clé publique du super-admin
+        View::composer('*', function ($view) {
+            $clePubliqueSuperAdmin = null;
+
+            // Ici, on suppose que le super-admin est identifié par un rôle spécifique
+            $superAdmin = User::role('Super-admin')->first();
+
+            if ($superAdmin && $superAdmin->moyenPaiement && $superAdmin->moyenPaiement->isActive == 1) {
+                $clePubliqueSuperAdmin = $superAdmin->moyenPaiement->Cle_public;
+            } else {
+                Session::flash('errorCleSuperAdmin', "Le moyen de paiement du super-admin n'est pas actif. Veuillez le contacter.");
+            }
+
+            $view->with('clePubliqueSuperAdmin', $clePubliqueSuperAdmin);
         });
     }
 

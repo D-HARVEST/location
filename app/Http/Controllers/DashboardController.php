@@ -88,6 +88,11 @@ class DashboardController extends Controller
             ->count();
 
 
+
+
+
+
+
         // Exécuter les requêtes avec les relations utiles
         $louerChambres = $louerChambresQuery->with(['chambre.maison', 'user'])->latest()->paginate(10);
         $interventions = $interventionsQuery->with(['louerchambre.chambre.maison', 'louerchambre.user'])->latest()->get();
@@ -109,11 +114,11 @@ class DashboardController extends Controller
             $query->where('user_id', auth()->id());
         })->pluck('id');
 
-        $revenusMensuels = \App\Models\LouerChambre::whereIn('chambre_id', $chambreIds)
+         $revenusMensuels = \App\Models\LouerChambre::whereIn('chambre_id', $chambreIds)
             ->where('statut', 'CONFIRMER')
             ->sum('loyer');
 
-
+        $montantAbonnement =  $revenusMensuels * 5 / 100;
 
 
         $interventionsEnAttente = $interventionsQuery->where('statut', 'EN ATTENTE')->count();
@@ -158,7 +163,12 @@ class DashboardController extends Controller
             'chambreCount' => $chambreCount,
             'moyenPaiements' => $moyenPaiements,
             'paiementespeces' => $paiementespeces,
-            'paiementespecesvalid' => $paiementespecesvalid
+            'paiementespecesvalid' => $paiementespecesvalid,
+            'montantAbonnement' => $montantAbonnement
         ])->with('i', ($request->input('page', 1) - 1) * $maisons->perPage());
     }
+
+
+
+
 }

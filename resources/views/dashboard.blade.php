@@ -9,6 +9,97 @@
 
 @section('content')
 
+
+
+
+
+@role('Super-admin')
+ <style>
+  .l1 {
+    background-color: white;
+    font-size: 1.2rem;
+    font-family: sans-serif;
+  }
+
+  .nav-tabs .nav-link {
+    font-weight: 500;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;
+  }
+
+  .nav-tabs .nav-link.active {
+    background-color: #f8f9fa;
+    border-color: #dee2e6 #dee2e6 #fff;
+    color: #1d1a1a;
+  }
+
+  .nav-tabs .nav-link:hover {
+    background-color: #f1f1f1;
+
+  }
+</style>
+
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+   <div class="col-md-12">
+  <!-- Onglets de navigation -->
+
+      <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
+        <li class="nav-item">
+           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
+         </li>
+
+
+         <li class="nav-item">
+           <a class="nav-link  active rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Propriétés</a>
+         </li>
+
+       </ul>
+
+  <!-- Contenu des onglets -->
+  <div class="tab-content mt-4">
+
+
+    <div class="tab-pane fade" id="moyenspaiement">
+       @include('moyen-paiement.index');
+    </div>
+
+
+
+  </div>
+ </div>
+
+</div>
+ </div>
+
+@endrole
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 @role('gerant')
 
 @include('maison.modal1')
@@ -60,7 +151,7 @@
             <i class="fas fa-home text-muted"></i>
           </div>
           <h4 class="mt-2 mb-0">{{ $nombreChambres ?? 0 }}</h4>
-          
+
         </div>
       </div>
     </div>
@@ -70,7 +161,7 @@
       <div class="card h-100 shadow-sm">
         <div class="card-body">
 
-         
+
         </div>
 
       </div>
@@ -135,14 +226,35 @@
 </div>
 
 
+<div class="row">
+     <div class="card border">
+                            <div class="card-body">
+                                <form id="formPayer">
+    @csrf
+    <button type="button"
+        class="btn btn-success w-100 rounded-1"
+        onclick="payer(this);"
+        id="payerBtn">
+        <i class="fa fa-credit-card me-2"></i>
+        Payer l'abonnement ({{ number_format($montantAbonnement, 0, ',', ' ') }} FCFA)
+    </button>
+</form>
+
+                            </div>
+     </div>
+</div>
+
+
 <div class="container mt-5">
   <div class="row justify-content-center">
    <div class="col-md-12">
   <!-- Onglets de navigation -->
+
       <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
         <li class="nav-item">
            <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
          </li>
+
 
          <li class="nav-item">
            <a class="nav-link  active rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Propriétés</a>
@@ -187,7 +299,7 @@
       <div class="text-end d-flex flex-wrap align-items-center justify-content-end gap-2">
         <span class="badge rounded-pill bg-light text-dark border me-3">6/8 occupées</span>
         <a id="toggleBtn{{ $maison->id }}" class="btn btn-outline-secondary btn-sm me-1" data-bs-toggle="collapse"
-             href="#collapseMaison{{ $maison->id }}" role="button" aria-expanded="false" 
+             href="#collapseMaison{{ $maison->id }}" role="button" aria-expanded="false"
              aria-controls="collapseMaison{{ $maison->id }}">
          <i class="ti ti-eye"></i> Voir chambres
         </a>
@@ -299,7 +411,7 @@
                         {{ $location->chambre->libelle ?? 'Ville inconnue' }}
                     </li>
                 </ul>
-               
+
     <div class="mt-3">
         @if($location->copieContrat)
             <a href="{{ asset('storage/' . $location->copieContrat) }}" target="_blank" download class="btn btn-outline-success btn-sm me-2">
@@ -339,11 +451,11 @@
 
 
 
-    <div class="tab-pane fade" id="moyenspaiement">   
+    <div class="tab-pane fade" id="moyenspaiement">
        @include('moyen-paiement.index');
     </div>
 
-    <div class="tab-pane fade" id="interventions">   
+    <div class="tab-pane fade" id="interventions">
        @include('intervention.index');
     </div>
 
@@ -351,7 +463,7 @@
 
     @php $i = 0; @endphp
 
-<div class="tab-pane fade" id="paiementenattentev">   
+<div class="tab-pane fade" id="paiementenattentev">
     <div class="card-title text-dark fw-bolder">Paiements en espèces</div>
     <hr>
 
@@ -503,7 +615,7 @@
 
 
     <div class="tab-pane fade" id="paiements">
-                 
+
            <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                         <hr>
                         <div class="table-responsive">
@@ -544,7 +656,7 @@
                                          Télécharger la facture
                                        </a>
 
-                                  @else 
+                                  @else
                                       <span class="badge bg-danger">
                                           Aucune quittance
                                       </span>
@@ -873,7 +985,7 @@
                     </li>
                 </ul>
 
-               
+
     <div class="mt-3">
         @if($location->copieContrat)
             <a href="{{ asset('storage/' . $location->copieContrat) }}" target="_blank" download class="btn btn-outline-success btn-sm me-2">
@@ -883,7 +995,7 @@
             <span class="badge bg-secondary">Aucun contrat disponible</span>
         @endif
     </div>
-    
+
                 <hr>
                 <div class="d-flex justify-content-between">
                     <div>
@@ -1065,3 +1177,99 @@
 
 
 
+
+
+
+
+@role('gerant')
+@section('script')
+<script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
+<script>
+    let fedapayKey =  "{{ $clePubliqueSuperAdmin }}"
+    let montant = "{{ $montantAbonnement }}"
+
+</script>
+
+
+<script>
+function payer(btn) {
+
+
+     if (!fedapayKey || fedapayKey.trim() === "") {
+        Swal.fire({
+            icon: 'error',
+            title: 'Moyen de paiement indisponible',
+            text: "Le moyen de paiement n'est pas encore actif. Veuillez contacter votre propriétaire."
+        });
+        return;
+         }
+
+
+
+    fetch("{{ route('paiement.initialiser') }}", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+        },
+        body: JSON.stringify({
+            montant: montant,
+
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+    if (data.success) {
+        let paiementId = data.paiement_id;
+        let widget = FedaPay.init({
+            public_key: fedapayKey,
+            sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
+            transaction: {
+                amount: montant,
+                description: 'Paiement de loyer',
+            },
+            onComplete: (response) => {
+                if (response.reason === 'CHECKOUT COMPLETE') {
+                    window.location.href = '/paiement/' + response.transaction.id;
+                } else {
+                    // 🔁 Paiement non complété => supprimer l'entrée
+                    fetch(`/paiement/annuler/${paiementId}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                        }
+                    });
+                }
+            },
+            onError: (error) => {
+                // 🔁 Paiement échoué => supprimer aussi
+                fetch(`/paiement/annuler/${paiementId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
+                    }
+                });
+
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Erreur lors du paiement. Veuillez réessayer.'
+                });
+            }
+        });
+
+        widget.open({
+            amount: montant,
+            description: 'Paiement de loyer'
+        });
+    } else {
+        Swal.fire({
+            icon: 'error',
+            title: data.message || 'Erreur lors de l’enregistrement initial.'
+        });
+    }
+});
+}
+</script>
+@endsection
+
+@endrole

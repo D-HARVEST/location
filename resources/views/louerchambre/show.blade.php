@@ -303,14 +303,14 @@
                                                                         <i class="fs-4 ti ti-eye"></i> Détails
                                                                     </a>
                                                                 </li>
-                                                              
+
                                                                 @role('locataire')
                                                                 <li>
                                                                     <a class="dropdown-item d-flex align-items-center gap-3" href="{{ route('paiementespeces.edit',$paiementespece->id) }}">
                                                                         <i class="fs-4 ti ti-edit"></i> Modifier
                                                                     </a>
                                                                 </li>
-                                                             
+
                                                                 <li>
                                                                     <form action="{{ route('paiementespeces.destroy',$paiementespece->id) }}" method="POST">
                                                                         @csrf
@@ -433,7 +433,7 @@
                                        class="btn btn-success w-100 rounded-1"
                                        onclick="payer(this);"
                                        data-montant="{{ $montantLoyer }}"
-                                       data-chambre="{{ $louerchambre->id }}" 
+                                       data-chambre="{{ $louerchambre->id }}"
                                        id="payerBtn">
                                    <i class="fa fa-credit-card me-2"></i>
                                    Payer le loyer
