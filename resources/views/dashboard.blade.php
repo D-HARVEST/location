@@ -1,5 +1,3 @@
-
-
 @extends('layouts.app')
 
 @php
@@ -8,9 +6,6 @@
 @endphp
 
 @section('content')
-
-
-
 
 
 @role('Super-admin')
@@ -230,7 +225,10 @@
      <div class="card border">
                             <div class="card-body">
                                 <form id="formPayer">
-    @csrf
+                               @csrf
+                                   
+
+
     <button type="button"
         class="btn btn-success w-100 rounded-1"
         onclick="payer(this);"
@@ -1185,71 +1183,32 @@
 @section('script')
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
 <script>
-    let fedapayKey =  "{{ $clePubliqueSuperAdmin }}"
-    let montant = "{{ $montantAbonnement }}"
+    let fedapayKey = "{{ $clePubliqueSuperAdmin }}";
+    let montant = "{{ $montantAbonnement }}";
 
-</script>
+    function payer(btn) {
+        if (!fedapayKey || fedapayKey.trim() === "") {
+            Swal.fire({
+                icon: 'error',
+                title: 'Moyen de paiement indisponible',
+                text: "Le moyen de paiement n'est pas encore actif. Veuillez contacter votre propriétaire."
+            });
+            return;
+        }
 
-
-<script>
-function payer(btn) {
-
-
-     if (!fedapayKey || fedapayKey.trim() === "") {
-        Swal.fire({
-            icon: 'error',
-            title: 'Moyen de paiement indisponible',
-            text: "Le moyen de paiement n'est pas encore actif. Veuillez contacter votre propriétaire."
-        });
-        return;
-         }
-
-
-
-    fetch("{{ route('paiement.initialiser') }}", {
-        method: "POST",
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-        },
-        body: JSON.stringify({
-            montant: montant,
-
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-    if (data.success) {
-        let paiementId = data.paiement_id;
         let widget = FedaPay.init({
             public_key: fedapayKey,
             sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
             transaction: {
                 amount: montant,
-                description: 'Paiement de loyer',
+                description: 'Paiement de l\'abonnement'
             },
             onComplete: (response) => {
                 if (response.reason === 'CHECKOUT COMPLETE') {
-                    window.location.href = '/paiement/' + response.transaction.id;
-                } else {
-                    // 🔁 Paiement non complété => supprimer l'entrée
-                    fetch(`/paiement/annuler/${paiementId}`, {
-                        method: 'DELETE',
-                        headers: {
-                            'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                        }
-                    });
+                    window.location.href = '/paiementa/' + response.transaction.id;
                 }
             },
             onError: (error) => {
-                // 🔁 Paiement échoué => supprimer aussi
-                fetch(`/paiement/annuler/${paiementId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value
-                    }
-                });
-
                 Swal.fire({
                     icon: 'error',
                     title: 'Erreur lors du paiement. Veuillez réessayer.'
@@ -1259,17 +1218,11 @@ function payer(btn) {
 
         widget.open({
             amount: montant,
-            description: 'Paiement de loyer'
-        });
-    } else {
-        Swal.fire({
-            icon: 'error',
-            title: data.message || 'Erreur lors de l’enregistrement initial.'
+            description: 'Paiement de l\'abonnement'
         });
     }
-});
-}
 </script>
+
 @endsection
 
 @endrole

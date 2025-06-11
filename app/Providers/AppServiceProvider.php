@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use App\Models\Chambre;
 use App\Models\Louerchambre;
+use App\Models\MoyenPaiement;
 use App\Models\User;
 use App\Observers\ChambreObserver;
 use Illuminate\Support\Facades\App;
@@ -47,19 +48,28 @@ class AppServiceProvider extends ServiceProvider
         });
 
 
-        // Clé publique du super-admin
         View::composer('*', function ($view) {
+            // Récupérer le super-admin
+            $superAdmin = User::whereHas('roles', function ($q) {
+                $q->where('name', 'Super-admin');
+            })->first();
+
             $clePubliqueSuperAdmin = null;
 
-            // Ici, on suppose que le super-admin est identifié par un rôle spécifique
-            $superAdmin = User::role('Super-admin')->first();
+            if ($superAdmin) {
+                // Vérifier si le moyen de paiement du super-admin est actif
+                $moyenPaiement = MoyenPaiement::where('user_id', $superAdmin->id)
+                    ->where('isActive', 1)
+                    ->first();
 
-            if ($superAdmin && $superAdmin->moyenPaiement && $superAdmin->moyenPaiement->isActive == 1) {
-                $clePubliqueSuperAdmin = $superAdmin->moyenPaiement->Cle_public;
-            } else {
-                Session::flash('errorCleSuperAdmin', "Le moyen de paiement du super-admin n'est pas actif. Veuillez le contacter.");
+                if ($moyenPaiement) {
+                    $clePubliqueSuperAdmin = $moyenPaiement->Cle_public;
+                } else {
+                    Session::flash('errorCleSuperAdmin', "Le moyen de paiement du super-admin n'est pas actif. Veuillez le contacter.");
+                }
             }
 
+            // Envoyer la clé publique à toutes les vues
             $view->with('clePubliqueSuperAdmin', $clePubliqueSuperAdmin);
         });
     }

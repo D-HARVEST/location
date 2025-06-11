@@ -4,16 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Models\Category;
 use App\Models\Chambre;
+use App\Models\HistoriquePaiAdm;
 use App\Models\HistoriquePaiement;
 use App\Models\Intervention;
 use App\Models\LouerChambre;
 use App\Models\Maison;
+use App\Models\MoyenPaiement;
 use App\Models\Paiementenattente;
 use App\Models\Paiementespece;
 use App\Models\Type;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -114,7 +119,7 @@ class DashboardController extends Controller
             $query->where('user_id', auth()->id());
         })->pluck('id');
 
-         $revenusMensuels = \App\Models\LouerChambre::whereIn('chambre_id', $chambreIds)
+        $revenusMensuels = \App\Models\LouerChambre::whereIn('chambre_id', $chambreIds)
             ->where('statut', 'CONFIRMER')
             ->sum('loyer');
 
@@ -171,4 +176,57 @@ class DashboardController extends Controller
 
 
 
+
+    public function enregistrerPaiement(string $transaction_id)
+    {
+
+        $superAdmin = User::whereHas('roles', function ($q) {
+            $q->where('name', 'Super-admin');
+        })->first();
+
+        $moyenPaiement = MoyenPaiement::where('user_id', $superAdmin->id)
+            ->where('isActive', 1)
+            ->first();
+
+        if (!$moyenPaiement) {
+            return back()->with('error', "Le moyen de paiement n'est pas actif. Veuillez contacter votre propriétaire pour résoudre ce problème.");
+        }
+
+
+        $cle_privee = $moyenPaiement->Cle_privee;
+        $response = Http::withToken($cle_privee)
+            ->accept('application/json')
+            ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
+                'include' => 'customer.phone_number,currency,payment_method',
+                'locale' => 'fr'
+            ]);
+
+        $transaction = $response->json();
+        //   dump($transaction);
+        if (
+            isset($transaction['v1/transaction']['status']) &&
+            $transaction['v1/transaction']['status'] == 'approved' &&
+            isset($transaction['v1/transaction']['amount']) &&
+            intval($transaction['v1/transaction']['amount']) == $transaction['v1/transaction']['amount']
+        ) {
+            // Vérifie si l'enregistrement existe déjà
+            $existant = HistoriquePaiAdm::where('idTransaction', $transaction_id)->first();
+
+            if (!$existant) {
+                HistoriquePaiAdm::create([
+                    'datePaiement' => now(),
+                    'montant' => $transaction['v1/transaction']['amount'],
+                    'modePaiement' => $transaction['v1/transaction']['mode'] ?? '',
+                    'idTransaction' => $transaction_id,
+                    'quittanceUrl' => $transaction['v1/transaction']['receipt_url'] ?? '',
+                    'user_id' => auth()->id()
+                ]);
+            }
+            return redirect()->back()
+                ->with('success', 'Paiement effectué avec succès');
+        } else {
+            return Redirect::route('dashboard')
+                ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
+        }
+    }
 }

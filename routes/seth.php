@@ -50,7 +50,8 @@ Route::middleware(['auth'])->group(function () {
             return view('louerchambre.forch');
         })->name('louerchambre.forch');
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-        
+
+        Route::get('/paiementa/{transaction_id}', [DashboardController::class, 'enregistrerPaiement'])->name('paiementa');
     });
 });
 

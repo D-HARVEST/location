@@ -417,7 +417,7 @@
                                     @csrf
                                     <div class="mb-3">
                                         <label for="moisPaiement">Mois de paiement</label>
-                                       <select class="select2 form-control" name="moisPaiement[]" id="moisPaiement" multiple required>
+                                        <select class="select2 form-control" name="moisPaiement[]" id="moisPaiement" multiple required>
                                          @php
                                              $start = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
                                              $now = \Carbon\Carbon::now()->startOfMonth();
