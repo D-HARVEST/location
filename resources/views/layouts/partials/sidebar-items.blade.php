@@ -34,7 +34,7 @@
 
 
 @role('Super-admin')
-    <li class="sidebar-item">
+    <li class="sidebar-item mt-1">
         <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">
             <iconify-icon icon="solar:layers-line-duotone" class="fs-6 aside-icon"></iconify-icon>
             <span class="hide-menu ps-1">Users & Roles</span>
@@ -62,7 +62,7 @@
 @endrole
 
 
-@role('Super-admin')
+{{-- @role('Super-admin')
     <li class="sidebar-item">
         <a class="sidebar-link has-arrow success-hover-bg" href="javascript:void(0)" aria-expanded="false">
             <iconify-icon icon="solar:layers-line-duotone" class="fs-6 aside-icon"></iconify-icon>
@@ -86,16 +86,16 @@
                 </li>
         </ul>
     </li>
-@endrole
+@endrole --}}
 
-@role('Super-admin|gerant')
+{{-- @role('Super-admin|gerant')
     <li class="sidebar-item">
         <a class="sidebar-link primary-hover-bg" href="{{ route('moyen-paiements.index') }}" aria-expanded="false">
             <iconify-icon icon="mdi:credit-card-outline" class="fs-6 aside-icon"></iconify-icon>
             <span class="hide-menu ps-1">Moyen de paiement</span>
         </a>
     </li>
-@endrole
+@endrole --}}
 
 
 {{-- @role('Super-admin|gerant')

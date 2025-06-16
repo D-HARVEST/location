@@ -281,6 +281,88 @@ class LouerchambreController extends Controller
 
 
 
+    // public function initialiserPaiement(Request $request)
+    // {
+    //     $louerchambre = Louerchambre::where('id', $request->chambre_id)
+    //         ->where('user_id', auth()->id())
+    //         ->where('statut', 'CONFIRMER')
+    //         ->latest()
+    //         ->first();
+
+    //     if (!$louerchambre) {
+    //         return response()->json(['success' => false, 'message' => 'Aucune chambre louée trouvée.'], 404);
+    //     }
+
+    //     $debutOccupation = \Carbon\Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+    //     $moisPaiement = $request->moisPaiement;
+
+    //     if (!is_array($moisPaiement) || count($moisPaiement) === 0) {
+    //         return response()->json(['success' => false, 'message' => 'Aucun mois de paiement sélectionné.']);
+    //     }
+
+    //     // Vérification des mois
+    //     foreach ($moisPaiement as $mois) {
+    //         $moisDate = \Carbon\Carbon::parse($mois)->startOfMonth();
+
+    //         if ($moisDate->lt($debutOccupation)) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Le mois ' . $moisDate->translatedFormat('F Y') . ' est antérieur à votre début d’occupation.'
+    //             ]);
+    //         }
+
+    //         // $paiementExistant = Historiquepaiement::where('user_id', auth()->id())
+    //         //     ->where('louerchambre_id', $louerchambre->id)
+    //         //     ->whereJsonContains('moisPaiement', 'like', "%$mois%")
+    //         //     ->where('modePaiement', '!=', 'EN_ATTENTE')
+    //         //     ->latest()
+    //         //     ->first();
+
+    //         $paiementExistant = Historiquepaiement::where('user_id', auth()->id())
+    //             ->where('louerchambre_id', $louerchambre->id)
+    //             ->where('modePaiement', '!=', 'EN_ATTENTE')
+    //             ->get()
+    //             ->filter(function ($p) use ($mois) {
+    //                 $moisExistants = json_decode($p->moisPaiement, true);
+    //                 return in_array($mois, $moisExistants);
+    //             })
+    //             ->isNotEmpty();
+
+
+
+    //         if ($paiementExistant) {
+    //             return response()->json([
+    //                 'success' => false,
+    //                 'message' => 'Vous avez déjà payé pour le mois de ' . $moisDate->translatedFormat('F Y') . '.'
+    //             ]);
+    //         }
+    //     }
+
+    //     $montantTotal = count($moisPaiement) * $louerchambre->loyer;
+
+    //     try {
+    //         $paiement = Historiquepaiement::create([
+    //             'idTransaction' => 'EN_ATTENTE',
+    //             'louerchambre_id' => $louerchambre->id,
+    //             'montant' => $montantTotal,
+    //             'modePaiement' => 'EN_ATTENTE',
+    //             'moisPaiement' => json_encode($moisPaiement),
+    //             'nb_mois' => count($moisPaiement),
+    //             'user_id' => auth()->id(),
+    //         ]);
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'paiement_id' => $paiement->id,
+    //             'montant_total' => $montantTotal
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         Log::error('Erreur paiement groupé : ' . $e->getMessage());
+    //         return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
+    //     }
+    // }
+
+
     public function initialiserPaiement(Request $request)
     {
         $louerchambre = Louerchambre::where('id', $request->chambre_id)
@@ -300,43 +382,57 @@ class LouerchambreController extends Controller
             return response()->json(['success' => false, 'message' => 'Aucun mois de paiement sélectionné.']);
         }
 
-        // Vérification des mois
-        foreach ($moisPaiement as $mois) {
-            $moisDate = \Carbon\Carbon::parse($mois)->startOfMonth();
+        // Récupérer tous les mois déjà payés (hors EN_ATTENTE)
+        $paiementsExistants = Historiquepaiement::where('user_id', auth()->id())
+            ->where('louerchambre_id', $louerchambre->id)
+            ->where('modePaiement', '!=', 'EN_ATTENTE')
+            ->get();
 
-            if ($moisDate->lt($debutOccupation)) {
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Le mois ' . $moisDate->translatedFormat('F Y') . ' est antérieur à votre début d’occupation.'
-                ]);
+        $moisPayes = [];
+        foreach ($paiementsExistants as $p) {
+            $mois = json_decode($p->moisPaiement, true);
+            foreach ($mois as $m) {
+                $moisPayes[] = \Carbon\Carbon::parse($m)->startOfMonth();
             }
+        }
 
-            // $paiementExistant = Historiquepaiement::where('user_id', auth()->id())
-            //     ->where('louerchambre_id', $louerchambre->id)
-            //     ->whereJsonContains('moisPaiement', 'like', "%$mois%")
-            //     ->where('modePaiement', '!=', 'EN_ATTENTE')
-            //     ->latest()
-            //     ->first();
+        // On trie les mois déjà payés
+        $moisPayes = collect($moisPayes)->sort();
 
-            $paiementExistant = Historiquepaiement::where('user_id', auth()->id())
-                ->where('louerchambre_id', $louerchambre->id)
-                ->where('modePaiement', '!=', 'EN_ATTENTE')
-                ->get()
-                ->filter(function ($p) use ($mois) {
-                    $moisExistants = json_decode($p->moisPaiement, true);
-                    return in_array($mois, $moisExistants);
-                })
-                ->isNotEmpty();
+        // Trouver le prochain mois à payer
+        if ($moisPayes->isNotEmpty()) {
+            $dernierMoisPaye = $moisPayes->last();
+            $moisAttendu = $dernierMoisPaye->copy()->addMonthNoOverflow();
+        } else {
+            $moisAttendu = $debutOccupation;
+        }
 
 
 
-            if ($paiementExistant) {
+
+        // Vérifier que le premier mois choisi est bien le mois attendu
+        $moisChoisi = collect($moisPaiement)->map(function ($m) {
+            return \Carbon\Carbon::parse($m)->startOfMonth();
+        })->sort();
+
+        // Vérification supplémentaire : s'assurer qu'aucun des mois choisis n'est déjà payé
+        foreach ($moisChoisi as $mois) {
+            if ($moisPayes->contains(fn($m) => $m->equalTo($mois))) {
                 return response()->json([
                     'success' => false,
-                    'message' => 'Vous avez déjà payé pour le mois de ' . $moisDate->translatedFormat('F Y') . '.'
+                    'message' => 'Le mois ' . $mois->translatedFormat('F Y') . ' a déjà été payé.'
                 ]);
             }
         }
+
+        if (!$moisChoisi->first()->equalTo($moisAttendu)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Vous devez d’abord payer pour le mois de ' . $moisAttendu->translatedFormat('F Y') . '.'
+            ]);
+        }
+
+
 
         $montantTotal = count($moisPaiement) * $louerchambre->loyer;
 
@@ -361,6 +457,7 @@ class LouerchambreController extends Controller
             return response()->json(['success' => false, 'message' => 'Erreur interne.'], 500);
         }
     }
+
 
 
 
@@ -412,6 +509,7 @@ class LouerchambreController extends Controller
                 ->latest()
                 ->first();
 
+
             $nombreMois = $paiement->nb_mois;
             $montantAttendu = intval($louerchambre->loyer) * $nombreMois;
 
@@ -433,7 +531,7 @@ class LouerchambreController extends Controller
                     ]);
 
                     return redirect()->back()
-                        ->with('success', 'Paiement effectué avec succès; veuillez ajouter la quittance et le mois');
+                        ->with('success', 'Paiement effectué avec succès');
                 } else {
                     if (is_null($paiement->datePaiement) && $paiement->modePaiement === 'EN_ATTENTE') {
                         $paiement->delete();

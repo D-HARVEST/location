@@ -43,45 +43,103 @@ class PaiementespeceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
+    // public function store(PaiementespeceRequest $request): RedirectResponse
+    // {
+    //     $all = $request->validated();
+
+    //     $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
+    //     $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
+
+
+    //     $moisAEnregistrer = [];
+
+    //     foreach ($all['moisPayes'] as $mois) {
+    //         $moisDate = Carbon::parse($mois . '-01')->startOfMonth();
+
+    //         // Vérifie si le mois est antérieur à l’entrée
+    //         if ($moisDate->lt($debutOccupation)) {
+    //             return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
+    //         }
+
+    //         // Vérifie si le mois a déjà été payé
+    //         $existe = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+    //             ->whereJsonContains('moisPaiement', $mois)
+    //             ->exists();
+
+    //         if ($existe) {
+    //             return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
+    //         }
+
+    //         $moisAEnregistrer[] = $mois;
+    //     }
+
+
+
+    //     // Enregistre les mois en JSON
+    //     $all['moisPayes'] = json_encode($moisAEnregistrer);
+
+    //     $paiement = Paiementespece::create($all);
+
+    //     return Redirect::route('louerchambres.show', ['louerchambre' => $paiement->louerchambre_id])
+    //         ->with('success', 'Paiement en espèce enregistré avec succès pour les mois sélectionnés.');
+    // }
+
+
     public function store(PaiementespeceRequest $request): RedirectResponse
     {
         $all = $request->validated();
-
         $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
+        // Récupère tous les mois déjà payés
+        $moisDejaPayes = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+            ->pluck('moisPaiement')
+            ->flatMap(function ($item) {
+                return json_decode($item, true);
+            })
+            ->map(fn($mois) => Carbon::parse($mois . '-01')->startOfMonth())
+            ->sort()
+            ->values();
+
+        // Détermine le mois minimum à payer (dernier mois payé +1 ou début occupation)
+        if ($moisDejaPayes->isNotEmpty()) {
+            $dernierMoisPaye = $moisDejaPayes->last();
+            $moisAttendu = $dernierMoisPaye->copy()->addMonth();
+        } else {
+            $moisAttendu = $debutOccupation;
+        }
+
+        // Trie les mois envoyés
+        $moisDemandes = collect($all['moisPayes'])->map(fn($m) => Carbon::parse($m . '-01')->startOfMonth())->sort()->values();
+
         $moisAEnregistrer = [];
 
-        foreach ($all['moisPayes'] as $mois) {
-            $moisDate = Carbon::parse($mois . '-01')->startOfMonth();
-
-            // Vérifie si le mois est antérieur à l’entrée
+        foreach ($moisDemandes as $moisDate) {
             if ($moisDate->lt($debutOccupation)) {
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
             }
 
-            // Vérifie si le mois a déjà été payé
-            $existe = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-                ->whereJsonContains('moisPaiement', $mois)
-                ->exists();
-
-            if ($existe) {
+            // Mois déjà payé
+            if ($moisDejaPayes->contains(fn($d) => $d->equalTo($moisDate))) {
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
             }
 
-            $moisAEnregistrer[] = $mois;
+            // Vérifie si les mois suivent bien la séquence attendue
+            if (!$moisDate->equalTo($moisAttendu)) {
+                return Redirect::back()->withInput()->with('error', "Vous devez payer le mois de {$moisAttendu->translatedFormat('F Y')} avant {$moisDate->translatedFormat('F Y')}.");
+            }
+
+            $moisAEnregistrer[] = $moisDate->format('Y-m');
+            $moisAttendu->addMonth(); // Passe au mois suivant
         }
 
-        
-
-        // Enregistre les mois en JSON
         $all['moisPayes'] = json_encode($moisAEnregistrer);
-
         $paiement = Paiementespece::create($all);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiement->louerchambre_id])
             ->with('success', 'Paiement en espèce enregistré avec succès pour les mois sélectionnés.');
     }
+
 
     /**
      * Display the specified resource.
@@ -111,41 +169,97 @@ class PaiementespeceController extends Controller
     /**
      * Update the specified resource in storage.
      */
+    // public function update(PaiementespeceRequest $request, Paiementespece $paiementespece): RedirectResponse
+    // {
+    //     $all = $request->validated();
+
+    //     $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
+    //     $debutOccupation = Carbon::parse($louerchambre->debutOccupation);
+
+    //     // Vérification pour chaque mois payé
+    //     foreach ($all['moisPayes'] as $mois) {
+    //         $moisDate = Carbon::parse($mois . '-01')->startOfMonth();
+
+    //         // Vérifie si le mois est antérieur à l’entrée
+    //         if ($moisDate->lt($debutOccupation)) {
+    //             return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
+    //         }
+
+    //         $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+    //             ->whereJsonContains('moisPaiement', $mois)
+    //             ->exists();
+
+
+
+    //         if ($existeDeja) {
+    //             return Redirect::back()->withInput()->with('error', "Le mois $mois a déjà été payé.");
+    //         }
+
+    //         $moisPaiement = Carbon::parse($mois . '-01');
+
+    //         if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
+    //             return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer le mois $mois car il est antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+    //         }
+    //     }
+
+    //     // Mettre à jour le paiement avec statut
+    //     $all['statut'] = 'EN ATTENTE';
+    //     $paiementespece->update($all);
+
+    //     return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])
+    //         ->with('success', 'Paiement en espèce mis à jour avec succès !');
+    // }
+
+
+
     public function update(PaiementespeceRequest $request, Paiementespece $paiementespece): RedirectResponse
     {
         $all = $request->validated();
-
         $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
-        $debutOccupation = Carbon::parse($louerchambre->debutOccupation);
+        $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
-        // Vérification pour chaque mois payé
-        foreach ($all['moisPayes'] as $mois) {
-            $moisDate = Carbon::parse($mois . '-01')->startOfMonth();
+        // Récupère tous les mois déjà payés par d'autres paiements (hors celui qu'on modifie)
+        $moisDejaPayes = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+            ->where('id', '!=', $paiementespece->id)
+            ->pluck('moisPaiement')
+            ->flatMap(fn($item) => json_decode($item, true))
+            ->map(fn($mois) => Carbon::parse($mois . '-01')->startOfMonth())
+            ->sort()
+            ->values();
 
-             // Vérifie si le mois est antérieur à l’entrée
+        // Déterminer le premier mois à payer : dernier payé + 1 ou date d’entrée
+        $moisAttendu = $moisDejaPayes->isNotEmpty()
+            ? $moisDejaPayes->last()->copy()->addMonth()
+            : $debutOccupation;
+
+        $moisDemandes = collect($all['moisPayes'])
+            ->map(fn($m) => Carbon::parse($m . '-01')->startOfMonth())
+            ->sort()
+            ->values();
+
+        $moisAEnregistrer = [];
+
+        foreach ($moisDemandes as $moisDate) {
             if ($moisDate->lt($debutOccupation)) {
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
             }
 
-            $existeDeja = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
-                ->whereJsonContains('moisPaiement', $mois)
-                ->exists();
-
-               
-
-            if ($existeDeja) {
-                return Redirect::back()->withInput()->with('error', "Le mois $mois a déjà été payé.");
+            if ($moisDejaPayes->contains(fn($d) => $d->equalTo($moisDate))) {
+                return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
             }
 
-            $moisPaiement = Carbon::parse($mois . '-01');
-
-            if ($moisPaiement->lt($debutOccupation->startOfMonth())) {
-                return Redirect::back()->withInput()->with('error', "Vous ne pouvez pas payer le mois $mois car il est antérieur à votre date d’entrée : " . $debutOccupation->format('d/m/Y'));
+            if (!$moisDate->equalTo($moisAttendu)) {
+                return Redirect::back()->withInput()->with('error', "Vous devez payer le mois de {$moisAttendu->translatedFormat('F Y')} avant {$moisDate->translatedFormat('F Y')}.");
             }
+
+            $moisAEnregistrer[] = $moisDate->format('Y-m');
+            $moisAttendu->addMonth();
         }
 
-        // Mettre à jour le paiement avec statut
+        // Mettre à jour les données
+        $all['moisPayes'] = json_encode($moisAEnregistrer);
         $all['statut'] = 'EN ATTENTE';
+
         $paiementespece->update($all);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])

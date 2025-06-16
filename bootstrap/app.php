@@ -18,6 +18,9 @@ return Application::configure(basePath: dirname(__DIR__))
             "update-last-login" => \App\Http\Middleware\UpdateLastLogin::class,
         ]);
     })
+    ->withCommands([
+        \App\Console\Commands\GenererPaiementAbonnement::class,
+    ])
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();

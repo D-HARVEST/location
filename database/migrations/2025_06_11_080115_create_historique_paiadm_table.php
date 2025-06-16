@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('quittanceUrl')->nullable();
             $table->double('montant');
             $table->string('modePaiement')->nullable();
-            $table->string('idTransaction');
+            $table->string('idTransaction')->nullable();
             $table->string('moisPaiement')->nullable();
             $table->enum('statut', ['EN ATTENTE', 'PAYER'])->default('EN ATTENTE');
             $table->foreignId('user_id')->constrained("users")->cascadeOnUpdate();

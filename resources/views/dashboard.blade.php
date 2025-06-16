@@ -47,7 +47,11 @@
 
 
          <li class="nav-item">
-           <a class="nav-link  active rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Propriétés</a>
+           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Abonnements impayés</a>
+         </li>
+
+         <li class="nav-item">
+           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#historique" >Historique paiement d'abonnement</a>
          </li>
 
        </ul>
@@ -55,10 +59,84 @@
   <!-- Contenu des onglets -->
   <div class="tab-content mt-4">
 
-
     <div class="tab-pane fade" id="moyenspaiement">
        @include('moyen-paiement.index');
     </div>
+
+     <div class="tab-pane fade" id="proprietes">
+      <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (5%)/mois</div>
+          <hr>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover datatable w-100 rounded-2">
+                <thead class="thead">
+                    <tr>
+                        <th>Gérant</th>
+                        <th>Mois</th>
+                        <th>Montant à payer</th>
+                        <th>Statut</th>
+
+                    </tr>
+                </thead>
+                 <tbody>
+       @foreach($abonnementEnAttenteA as $abonnement)
+        <tr>
+        <td>{{ $abonnement->user->name }}</td>
+        <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $abonnement->moisPaiement)->format('F Y') }}</td>
+        <td>{{ number_format($abonnement->montant, 0, ',', ' ') }} FCFA</td>
+        <td>
+            <span class="badge bg-warning text-dark">
+                {{ $abonnement->statut }}
+            </span>
+        </td>
+
+    </tr>
+       @endforeach
+        </tbody>
+    </table>
+    </div>
+    </div>
+
+
+
+
+     <div class="tab-pane fade" id="historique">
+
+        <div class="card-title text-dark fw-bolder">Historique de paiement de l’abonnement (5%)/mois</div>
+    <hr>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover datatable w-100 rounded-2">
+                <thead class="thead">
+                    <tr>
+                        <th>Gérant</th>
+                        <th>Mois</th>
+                        <th>Montant à payer</th>
+                        <th>Statut</th>
+
+                    </tr>
+                </thead>
+                 <tbody>
+       @foreach($abonnementEnAttenteH as $abonnement)
+        <tr>
+        <td>{{ $abonnement->user->name }}</td>
+        <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $abonnement->moisPaiement)->format('F Y') }}</td>
+        <td>{{ number_format($abonnement->montant, 0, ',', ' ') }} FCFA</td>
+        <td>
+            <span class="badge bg-success text-dark">
+                {{ $abonnement->statut }}
+            </span>
+        </td>
+
+    </tr>
+   @endforeach
+   </tbody>
+    </table>
+    </div>
+
+
+    </div>
+
+
+
 
 
 
@@ -129,10 +207,10 @@
 
 
 <div class="container">
-  <div class="row mb-4">
+  <div class="row g-3">
 
-    <!-- Propriétés -->
-    <div class="col-6 col-md-4 col-lg-3">
+    <!-- Propriétés et Chambres -->
+    <div class="col-md-4">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
@@ -141,31 +219,16 @@
           </div>
           <h4 class="mt-2 mb-0">{{ $nombreMaisons ?? 0 }}</h4>
 
-           <div class="d-flex justify-content-between align-items-start">
+          <hr class="my-2">
+
+          <div class="d-flex justify-content-between align-items-start">
             <div><small class="text-muted">Chambres</small></div>
             <i class="fas fa-home text-muted"></i>
           </div>
           <h4 class="mt-2 mb-0">{{ $nombreChambres ?? 0 }}</h4>
 
-        </div>
-      </div>
-    </div>
+          <hr class="my-2">
 
-    <!-- Chambres -->
-    {{-- <div class="col-6 col-md-4 col-lg-2">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
-
-
-        </div>
-
-      </div>
-    </div> --}}
-
-    <!-- Occupées -->
-    <div class="col-6 col-md-4 col-lg-2">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
             <div><small class="text-muted">Occupées</small></div>
             <i class="fas fa-user-friends text-muted"></i>
@@ -176,37 +239,43 @@
       </div>
     </div>
 
+
+
     <!-- Revenus/mois -->
-    <div class="col-6 col-md-6 col-lg-2">
+    <div class="col-md-4">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
             <div><small class="text-muted">Revenus/mois</small></div>
             <i class="fas fa-credit-card text-muted"></i>
           </div>
-          <h4 class="mt-2 mb-0">{{ number_format($revenusMensuels, 0, ',', ' ' )  }} FCFA</h4>
+          <h4 class="mt-2 mb-0">
+            {{ number_format($revenusMensuels, 0, ',', ' ') }} FCFA
+          </h4>
         </div>
       </div>
     </div>
 
-
-     <!-- Revenus/mois -->
-    <div class="col-6 col-md-6 col-lg-3">
+    <!-- Paiements/Abonnements en attente -->
+    <div class="col-md-4">
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
-            <div><small class="text-muted">Paiement en attente de validation</small></div>
+            <div><small class="text-muted">Paiements en attente</small></div>
             <i class="fas fa-credit-card text-muted"></i>
           </div>
-          <h4 class="mt-2 mb-0"><span class="text-warning">{{ $paiementespecesvalid ?? 0 }}</span></h4>
-        </div>
-      </div>
-    </div>
+          <h4 class="mt-2 mb-0 text-warning">{{ $paiementespecesvalid ?? 0 }}</h4>
 
-    <!-- Interventions -->
-    <div class="col-6 col-md-6 col-lg-2">
-      <div class="card h-100 shadow-sm">
-        <div class="card-body">
+          <hr class="my-2">
+
+          <div class="d-flex justify-content-between align-items-start">
+            <div><small class="text-muted">Abonnements impayés</small></div>
+            <i class="fas fa-credit-card text-muted"></i>
+          </div>
+          <h4 class="mt-2 mb-0 text-warning">{{ $nombreAbonnementEnAttente ?? 0 }}</h4>
+
+          <hr class="my-2">
+
           <div class="d-flex justify-content-between align-items-start">
             <div><small class="text-muted">Interventions</small></div>
             <i class="fas fa-cog text-muted"></i>
@@ -217,27 +286,13 @@
       </div>
     </div>
 
+
+
   </div>
 </div>
 
 
-<div class="row">
-     <div class="card border">
-                            <div class="card-body">
-             <form id="formPayer">
-            @csrf
-    <button type="button"
-        class="btn btn-success w-100 rounded-1"
-        onclick="payer(this);"
-        id="payerBtn">
-        <i class="fa fa-credit-card me-2"></i>
-        Payer l'abonnement ({{ number_format($montantAbonnement, 0, ',', ' ') }} FCFA)
-    </button>
-</form>
 
-                            </div>
-     </div>
-</div>
 
 
 <div class="container mt-5">
@@ -249,25 +304,23 @@
         <li class="nav-item">
            <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
          </li>
-
-
          <li class="nav-item">
            <a class="nav-link  active rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Propriétés</a>
          </li>
          <li class="nav-item">
-      <a class="nav-link rounded-1" data-bs-toggle="tab" href="#locataires">Locataires</a>
+          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#locataires">Locataires</a>
          </li>
           <li class="nav-item">
-         <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">Abonnement en attente de paiement</a>
+         <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">Abonnements impayés</a>
          </li>
          <li class="nav-item">
          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiementenattentev">Paiements en attente de validation</a>
          </li>
          <li class="nav-item">
-      <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">Paiements</a>
+          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">Historiques Paiements</a>
          </li>
          <li class="nav-item ">
-      <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">Interventions</a>
+          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">Interventions</a>
          </li>
        </ul>
 
@@ -454,26 +507,49 @@
     </div>
 
 
-     <div class="tab-pane fade" id="abonnement">
-       @if($abonnementEnAttente)
-      <div class="alert alert-warning">
-        Paiement de 5% non effectué pour le mois {{ \Carbon\Carbon::now()->translatedFormat('F Y') }} :
-        <strong>{{ number_format($abonnementEnAttente->montant, 0, ',', ' ') }} F</strong>
+ <div class="tab-pane fade" id="abonnement">
 
-           <form id="formPayer">
-            @csrf
-          <button type="button"
-        class="btn btn-success w-100 rounded-1"
-        onclick="payer(this);"
-        id="payerBtn">
-        <i class="fa fa-credit-card me-2"></i>
-        Payer l'abonnement ({{ number_format($abonnementEnAttente->montant, 0, ',', ' ') }} FCFA)
-    </button>
-</form>
-    </div>
-@endif
 
-    </div>
+    <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (5%)/mois</div>
+    <hr>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover datatable w-100 rounded-2">
+                <thead class="thead">
+                    <tr>
+                        <th>Mois</th>
+                        <th>Montant à payer</th>
+                        <th>Statut</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                 <tbody>
+      @foreach($abonnementEnAttente as $abonnement)
+        <tr>
+        <td>{{ \Carbon\Carbon::createFromFormat('Y-m', $abonnement->moisPaiement)->format('F Y') }}</td>
+        <td>{{ number_format($abonnement->montant, 0, ',', ' ') }} FCFA</td>
+        <td>
+            <span class="badge bg-warning text-dark">
+                {{ $abonnement->statut }}
+            </span>
+        </td>
+        <td>
+            <form id="formPayer">
+                @csrf
+                <input type="hidden" name="abonnement_id" value="{{ $abonnement->id }}">
+                <button type="button"
+                        class="btn btn-success rounded-1"
+                        onclick="payer(this);"
+                         id="payerBtn">
+                    <i class="fas fa-credit-card"></i> Payer {{ number_format($abonnement->montant, 0, ',', ' ') }} FCFA
+                </button>
+            </form>
+        </td>
+    </tr>
+   @endforeach
+   </tbody>
+    </table>
+        </div>
+</div>
 
 
 
@@ -485,7 +561,7 @@
 
     @php $i = 0; @endphp
 
-<div class="tab-pane fade" id="paiementenattentev">
+ <div class="tab-pane fade" id="paiementenattentev">
     <div class="card-title text-dark fw-bolder">Paiements en espèces</div>
     <hr>
 
@@ -963,11 +1039,11 @@
                     <i class="ti ti-file-plus me-1"></i> Ajouter votre contrat
                 </a>
               </li>
-               <li>
+               {{-- <li>
                 <a class="dropdown-item" href="{{ route('louerchambres.edit', $location->id) }}">
                     <i class="ti ti-edit me-1"></i> Modifier
                 </a>
-              </li>
+              </li> --}}
           </ul>
         </div>
 
@@ -1208,7 +1284,9 @@
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
 <script>
     let fedapayKey = "{{ $clePubliqueSuperAdmin }}";
-    let montant = "{{ $montantAbonnement }}";
+    let montant = "{{ $montantAbonnement}}";
+
+
 
     function payer(btn) {
         if (!fedapayKey || fedapayKey.trim() === "") {
@@ -1220,6 +1298,9 @@
             return;
         }
 
+        let form = btn.closest('form');
+        let abonnementId = form.querySelector('input[name="abonnement_id"]').value;
+
         let widget = FedaPay.init({
             public_key: fedapayKey,
             sandbox: {{ config("services.fedapay.sandbox") ? 'true' : 'false' }},
@@ -1229,7 +1310,8 @@
             },
             onComplete: (response) => {
                 if (response.reason === 'CHECKOUT COMPLETE') {
-                    window.location.href = '/paiementa/' + response.transaction.id;
+                    // window.location.href = '/paiementa/' + response.transaction.id;
+                     window.location.href = `/paiementa/${response.transaction.id}?abonnement_id=${abonnementId}`;
                 }
             },
             onError: (error) => {

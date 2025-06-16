@@ -52,7 +52,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/paiementa/{transaction_id}', [DashboardController::class, 'enregistrerPaiement'])->name('paiementa');
-        Route::post('/paiementa/{transaction_id}', [DashboardController::class, 'payerAbonnement'])->name('abonnement');
+       
 
     });
 });

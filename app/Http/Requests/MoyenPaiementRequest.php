@@ -25,7 +25,7 @@ class MoyenPaiementRequest extends FormRequest
 			'Designation' => 'required|string',
 			'Cle_privee' => 'required|string',
 			'Cle_public' => 'required|string',
-			'isActive' => 'required',
+			// 'isActive' => 'required',
         ];
     }
 }

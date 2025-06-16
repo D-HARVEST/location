@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('Designation');
             $table->string('Cle_privee');
             $table->string('Cle_public');
-            $table->boolean('isActive')->default(0);
+            $table->boolean('isActive')->default(1);
             $table->foreignId('user_id')->constrained('users');
             $table->timestamps();
         });

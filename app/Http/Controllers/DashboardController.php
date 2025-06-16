@@ -121,12 +121,19 @@ class DashboardController extends Controller
         $montantAbonnement =  $revenusMensuels * 5 / 100;
 
 
-        $moisActuel = now()->format('Y-m');
-
-        $abonnementEnAttente = \App\Models\HistoriquePaiAdm::where('user_id', $user->id)
-            ->where('moisPaiement', $moisActuel)
+        $abonnementEnAttente = HistoriquePaiAdm::where('user_id', $userId)
             ->where('statut', 'EN ATTENTE')
-            ->first();
+            ->get();
+
+        $nombreAbonnementEnAttente = HistoriquePaiAdm::where('user_id', $userId)
+            ->where('statut', 'EN ATTENTE')
+            ->count();
+
+        $abonnementEnAttenteA = HistoriquePaiAdm::where('statut', 'EN ATTENTE')
+            ->get();
+
+        $abonnementEnAttenteH = HistoriquePaiAdm::where('statut', 'PAYER')
+            ->get();
 
 
 
@@ -172,9 +179,15 @@ class DashboardController extends Controller
             'paiementespeces' => $paiementespeces,
             'paiementespecesvalid' => $paiementespecesvalid,
             'montantAbonnement' => $montantAbonnement,
-            'abonnementEnAttente' => $abonnementEnAttente
+            'abonnementEnAttente' => $abonnementEnAttente,
+            'nombreAbonnementEnAttente' => $nombreAbonnementEnAttente,
+            'abonnementEnAttenteA' => $abonnementEnAttenteA,
+            'abonnementEnAttenteH' => $abonnementEnAttenteH
         ])->with('i', ($request->input('page', 1) - 1) * $maisons->perPage());
     }
+
+
+
 
 
 
@@ -205,7 +218,9 @@ class DashboardController extends Controller
             ]);
 
         $transaction = $response->json();
-        //   dump($transaction);
+        $abonnement_id = request()->query('abonnement_id');
+
+
         if (
             isset($transaction['v1/transaction']['status']) &&
             $transaction['v1/transaction']['status'] == 'approved' &&
@@ -213,76 +228,28 @@ class DashboardController extends Controller
             intval($transaction['v1/transaction']['amount']) == $transaction['v1/transaction']['amount']
         ) {
             // Vérifie si l'enregistrement existe déjà
-            $existant = HistoriquePaiAdm::where('idTransaction', $transaction_id)->first();
+            $existant = HistoriquePaiAdm::where('id',  $abonnement_id)
+                ->where('statut', 'EN ATTENTE')
+                ->where('user_id', auth()->id())
+                ->first();
 
-            if (!$existant) {
-                HistoriquePaiAdm::create([
+
+
+            if ($existant) {
+                $existant->update([
                     'datePaiement' => now(),
                     'montant' => $transaction['v1/transaction']['amount'],
                     'modePaiement' => $transaction['v1/transaction']['mode'] ?? '',
-                    'idTransaction' => $transaction_id,
                     'quittanceUrl' => $transaction['v1/transaction']['receipt_url'] ?? '',
-                    'moisPaiement' => Carbon::now()->format('Y-m'),
+                    'idTransaction' => $transaction_id ?? '',
                     'statut' => 'PAYER',
                     'user_id' => auth()->id()
                 ]);
+            } else {
+                // Tester si jamais aucune ligne ne correspond
+                Log::warning("Aucun historique trouvé pour la transaction : " . $transaction_id);
             }
-            return redirect()->back()
-                ->with('success', 'Paiement effectué avec succès');
-        } else {
-            return Redirect::route('dashboard')
-                ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
-        }
-    }
 
-
-
-     public function payerAbonnement(string $transaction_id)
-    {
-
-        $superAdmin = User::whereHas('roles', function ($q) {
-            $q->where('name', 'Super-admin');
-        })->first();
-
-        $moyenPaiement = MoyenPaiement::where('user_id', $superAdmin->id)
-            ->where('isActive', 1)
-            ->first();
-
-        if (!$moyenPaiement) {
-            return back()->with('error', "Le moyen de paiement n'est pas actif. Veuillez contacter votre propriétaire pour résoudre ce problème.");
-        }
-
-
-        $cle_privee = $moyenPaiement->Cle_privee;
-        $response = Http::withToken($cle_privee)
-            ->accept('application/json')
-            ->get("https://sandbox-api.fedapay.com/v1/transactions/{$transaction_id}", [
-                'include' => 'customer.phone_number,currency,payment_method',
-                'locale' => 'fr'
-            ]);
-
-        $transaction = $response->json();
-        //   dump($transaction);
-        if (
-            isset($transaction['v1/transaction']['status']) &&
-            $transaction['v1/transaction']['status'] == 'approved' &&
-            isset($transaction['v1/transaction']['amount']) &&
-            intval($transaction['v1/transaction']['amount']) == $transaction['v1/transaction']['amount']
-        ) {
-            // Vérifie si l'enregistrement existe déjà
-            $existant = HistoriquePaiAdm::where('idTransaction', $transaction_id)->first();
-
-            if (!$existant) {
-                HistoriquePaiAdm::update([
-                    'datePaiement' => now(),
-                    'montant' => $transaction['v1/transaction']['amount'],
-                    'modePaiement' => $transaction['v1/transaction']['mode'] ?? '',
-                    'idTransaction' => $transaction_id,
-                    'quittanceUrl' => $transaction['v1/transaction']['receipt_url'] ?? '',
-                    'statut' => 'PAYER',
-                    'user_id' => auth()->id()
-                ]);
-            }
             return redirect()->back()
                 ->with('success', 'Paiement effectué avec succès');
         } else {

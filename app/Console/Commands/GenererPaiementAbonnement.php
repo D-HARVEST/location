@@ -2,52 +2,74 @@
 
 namespace App\Console\Commands;
 
-use Illuminate\Console\Command;
-use App\Models\User;
 use App\Models\Chambre;
+use App\Models\HistoriquePaiadm;
 use App\Models\LouerChambre;
-use App\Models\HistoriquePaiAdm;
-use Carbon\Carbon;
+use App\Models\User;
+use Illuminate\Console\Command;
+use Illuminate\Support\Carbon;
 
 class GenererPaiementAbonnement extends Command
 {
     protected $signature = 'abonnement:generer';
-    protected $description = 'Générer les paiements de 5% pour chaque propriétaire le 5 du mois';
+    protected $description = 'Créer un paiement en attente pour chaque gérant à chaque 5 du mois';
 
     public function handle()
     {
-        $today = Carbon::now();
-        if ($today->day != 5) {
-            return 0;
-        }
+        $this->info("Début de la génération des paiements d’abonnement...");
 
-        $proprietaires = User::whereHas('roles', fn($q) => $q->where('name', 'gerant'))->get();
+        $gerants = User::role('gerant')->get();
 
-        foreach ($proprietaires as $user) {
-            $moisPaiement = $today->format('Y-m');
-            $existe = HistoriquePaiAdm::where('user_id', $user->id)
+        foreach ($gerants as $gerant) {
+            // Mois précédent
+            // $debut = Carbon::now()->subMonth()->startOfMonth();
+            // $fin = Carbon::now()->subMonth()->endOfMonth();
+
+            $debut = Carbon::now()->startOfMonth();
+            $fin = Carbon::now()->endOfMonth();
+
+
+            // Toutes les chambres de ses maisons
+            $chambreIds = Chambre::whereHas('maison', fn($q) => $q->where('user_id', $gerant->id))->pluck('id');
+
+            // Revenus du mois précédent
+            $revenus = LouerChambre::whereIn('chambre_id', $chambreIds)
+                ->where('statut', 'CONFIRMER')
+                ->whereBetween('created_at', [$debut, $fin])
+                ->sum('loyer');
+
+            $montant = round($revenus * 0.05);
+
+
+            // Sauter si aucun revenu
+            if ($montant <= 0) continue;
+
+            // Vérifier doublon
+            $moisPaiement = $debut->format('Y-m');
+            $dejaCree = HistoriquePaiadm::where('user_id', $gerant->id)
                 ->where('moisPaiement', $moisPaiement)
                 ->exists();
 
-            if ($existe) continue;
+            if ($dejaCree) continue;
 
-            $chambreIds = Chambre::whereHas('maison', fn($q) => $q->where('user_id', $user->id))->pluck('id');
-            $revenus = LouerChambre::whereIn('chambre_id', $chambreIds)
-                ->where('statut', 'CONFIRMER')
-                ->sum('loyer');
+            // Création
+            HistoriquePaiadm::create([
+                'datePaiement' => null,
+                'quittanceUrl' => null,
+                'montant' => $montant,
+                'modePaiement' => null,
+                'idTransaction' => null,
+                'moisPaiement' => $moisPaiement,
+                'statut' => 'EN ATTENTE',
+                'user_id' => $gerant->id,
+            ]);
 
-            $montant = $revenus * 5 / 100;
+            // Envoyer la notification par e-mail
+            $gerant->notify(new \App\Notifications\PaiementEnAttenteNotification($montant, $moisPaiement, $gerant));
 
-            if ($montant > 0) {
-                HistoriquePaiAdm::create([
-                    'montant' => $montant,
-                    'moisPaiement' => $moisPaiement,
-                    'statut' => 'EN ATTENTE',
-                    'user_id' => $user->id
-                ]);
-            }
+            $this->info("Paiement en attente créé pour le gérant ID {$gerant->id} - Mois : $moisPaiement - Montant : $montant");
         }
 
-        return 0;
+        $this->info("Génération terminée.");
     }
 }

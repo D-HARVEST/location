@@ -9,7 +9,7 @@
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="montant" class="form-label">{{ __('Montant') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             <input type="text" name="Montant" id="Montant" class="form-control @error('Montant') is-invalid @enderror"
-                    value="{{ old('Montant', $paiementespece?->Montant ?? $louerchambre->loyer) }}">
+                    value="{{ old('Montant', $paiementespece?->Montant ?? $louerchambre->loyer) }}" readonly>
             {!! $errors->first('Montant', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
@@ -42,8 +42,7 @@
     if (is_string($selectedMois)) {
         $selectedMois = explode(',', $selectedMois);
     }
-@endphp
-
+  @endphp
 
                 @while ($start <= $end)
                     <option value="{{ $start->format('Y-m') }}"

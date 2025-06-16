@@ -51,7 +51,9 @@
         <div class="page-wrapper">
 
             {{-- @include('layouts.partials.right-sidebar') --}}
-            {{-- @include('layouts.partials.left-sidebar-with-horizontal') --}}
+            @role('Super-admin')
+            @include('layouts.partials.left-sidebar-with-horizontal')
+            @endrole
 
             <div class="body-wrapper">
                 <div class="container-fluid">
@@ -176,7 +178,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.collapse').forEach(function (collapseElement) {
         const collapseId = collapseElement.id;
         const maisonId = collapseId.replace('collapseMaison', '');
-        
+
         // Vérifie l'état sauvegardé
         const savedState = localStorage.getItem(collapseId);
 
@@ -198,6 +200,27 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Restaurer l'onglet actif depuis localStorage
+    var activeTab = localStorage.getItem('activeTab');
+    if (activeTab) {
+      var tabTrigger = document.querySelector('a[href="' + activeTab + '"]');
+      if (tabTrigger) {
+        new bootstrap.Tab(tabTrigger).show();
+      }
+    }
+
+    // Mémoriser l'onglet cliqué
+    var tabLinks = document.querySelectorAll('a[data-bs-toggle="tab"]');
+    tabLinks.forEach(function (tab) {
+      tab.addEventListener('shown.bs.tab', function (event) {
+        localStorage.setItem('activeTab', event.target.getAttribute('href'));
+      });
+    });
+  });
 </script>
 
 

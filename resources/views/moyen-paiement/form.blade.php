@@ -20,7 +20,7 @@
             <input type="text" name="Cle_public" class="form-control @error('Cle_public') is-invalid @enderror rounded-05" value="{{ old('Cle_public', $moyenPaiement?->Cle_public) }}" id="cle_public" >
             {!! $errors->first('Cle_public', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
-        <div class="col-lg-6 form-group mb-2 mb20">
+        {{-- <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="is_active" class="form-label">{{ __('Statut') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
             {{ html()->select('isActive', [''  => '-- Sélectionner le statut --','1' => 'Active', '0' => 'Non Active'])
                 ->class('form-control rounded-05 ' . ($errors->has('isActive') ? 'is-invalid' : ''))
@@ -28,7 +28,7 @@
                 ->value(old('isActive', $moyenPaiement?->isActive))
             }}
             {!! $errors->first('isActif', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
-        </div>
+        </div> --}}
 
     </div>
     <div class="box-footer mt-3">

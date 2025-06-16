@@ -19,9 +19,14 @@
                             </div>
                         @endif
 
-                        <div class="text-end">
-                            <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
+                        <div class="d-flex justify-content-end gap-2">
+                            <a href="{{ route('users.create') }}" class="btn btn-sm btn-warning rounded-05"> Nouveau</a>
+
+                            <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary"> Retour</a>
                         </div>
+
+
+
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">User(s)</h5>
                             <span>Liste des User(s)</span>
@@ -93,7 +98,7 @@
                                                         </li>
                                                     </ul>
                                                 </div> -->
-                                                
+
                                                     <div class="dropdown">
                                                         <button class="btn btn-primary dropdown-toggle btn-sm" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                                             Actions
@@ -109,7 +114,7 @@
                                                             </form>
                                                         </div>
                                                     </div>
-                                                
+
                                             </td>
 
                                         </tr>
