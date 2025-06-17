@@ -48,8 +48,13 @@
 
         <div class="mb-3">
             <label for="npi" class="form-label">Numéro personnel d'identifiaction(NPI)</label>
-            <input id="npi" type="text" class="form-control  @error('npi') is-invalid @enderror"
-                id="npi" required autocomplete="npi" autofocus name="npi" value="{{ old('npi') }}">
+           <input id="npi" type="text"
+    class="form-control @error('npi') is-invalid @enderror"
+    name="npi"
+    value="{{ old('npi') }}"
+    pattern="\d{10}" maxlength="10" minlength="10"
+    required autocomplete="npi" autofocus>
+
             @error('npi')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>
@@ -59,8 +64,18 @@
 
         <div class="mb-3">
             <label for="phone" class="form-label">Numéro de téléphone</label>
-            <input id="phone" type="text" class="form-control  @error('phone') is-invalid @enderror"
-                id="phone" required autocomplete="phone" autofocus name="phone" value="{{ old('phone') }}">
+           <input id="phone" type="text"
+    class="form-control @error('phone') is-invalid @enderror"
+    name="phone"
+    value="{{ old('phone') }}"
+    pattern="01\d{8}"
+    maxlength="10"
+    minlength="10"
+    required
+    autocomplete="tel"
+    placeholder="01xxxxxxxx"
+    autofocus>
+
             @error('phone')
                 <span class="invalid-feedback" role="alert">
                     <strong>{{ $message }}</strong>

@@ -224,6 +224,9 @@ document.addEventListener('DOMContentLoaded', function () {
 </script>
 
 
+
+
+
 <script>
     function setChambreId(chambreId) {
     console.log('setChambreId called with', chambreId);

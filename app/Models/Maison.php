@@ -33,7 +33,7 @@ class Maison extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['libelle', 'Pays', 'ville', 'quartier', 'adresse', 'user_id', 'jourPaiementLoyer', 'moyenPaiement_id'];
+    protected $fillable = ['libelle', 'Pays', 'ville', 'quartier', 'adresse', 'user_id', 'jourPaiementLoyer', 'pourcentage_special', 'date_fin_mois', 'moyenPaiement_id'];
 
 
     /**
@@ -57,5 +57,5 @@ class Maison extends Model
         return $this->belongsTo(\App\Models\MoyenPaiement::class, 'moyenPaiement_id', 'id');
     }
 
-  
+
 }

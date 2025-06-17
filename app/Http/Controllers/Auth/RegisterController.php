@@ -40,9 +40,9 @@ class RegisterController extends Controller
     {
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255'],
-            'npi' => ['required', 'string', 'max:50'],
-            'phone' => ['required', 'string', 'max:50'],
+            'email' => ['required', 'email', 'max:255', 'unique:users,email'],
+            'npi' => ['required', 'string', 'max:50', 'unique:users,npi'],
+            'phone' => ['required', 'string', 'max:50', 'unique:users,phone'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'string', 'exists:roles,name'],
         ], [
@@ -75,16 +75,16 @@ class RegisterController extends Controller
 
 
 
-            $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'phone' => $data['phone'],
-                'npi' => $data['npi'] ?? null,
-                'password' => Hash::make($data['password']),
-            ]);
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'npi' => $data['npi'] ?? null,
+            'password' => Hash::make($data['password']),
+        ]);
 
-            // Attribution du rôle
-            $user->assignRole($data['role']);
+        // Attribution du rôle
+        $user->assignRole($data['role']);
 
 
         Auth::login($user);

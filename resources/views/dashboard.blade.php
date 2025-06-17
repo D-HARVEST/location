@@ -35,6 +35,26 @@
 </style>
 
 
+
+<div class="container">
+  <div class="row g-3">
+
+    <!-- Propriétés et Chambres -->
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start">
+            <div><small class="text-muted">Abonnements impayés</small></div>
+            <i class="fas fa-credit-card text-muted"></i>
+          </div>
+          <h4 class="mt-2 mb-0 text-warning">{{ $abonnementEnAttenteHc}}</h4>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+
 <div class="container mt-5">
   <div class="row justify-content-center">
    <div class="col-md-12">
@@ -43,6 +63,10 @@
       <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
         <li class="nav-item">
            <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
+         </li>
+
+        <li class="nav-item">
+           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#tousproprietes" > Tous les Propriétés</a>
          </li>
 
 
@@ -63,8 +87,100 @@
        @include('moyen-paiement.index');
     </div>
 
+    <div class="tab-pane fade" id="tousproprietes">
+
+          <div class="card-title text-dark fw-bolder">Tous les propriétés</div>
+          <hr>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover datatable w-100 rounded-2">
+                <thead class="thead">
+                    <tr>
+                        <th>Libelle</th>
+                        <th>Gérant</th>
+                        <th>Ville</th>
+                        <th>Quartier</th>
+                        <th>Pourcentage spécial</th>
+                        <th>Mois de fin pourcentage spécial</th>
+                        <th>Action</th>
+
+                    </tr>
+                </thead>
+                 <tbody>
+       @foreach($propriete as $abonnement)
+        <tr>
+        <td>{{ $abonnement->libelle?? '' }}</td>
+        <td>{{ $abonnement->user->name ?? '' }}</td>
+        <td>{{$abonnement->ville ?? ''}}</td>
+        <td>{{ $abonnement->quartier ?? '' }}</td>
+        <td>{{ $abonnement->pourcentage_special ?? '4' }} %</td>
+        <td>{{  $abonnement->date_fin_mois ?? '-'}}</td>
+        <td>
+
+            <button type="button" class="btn btn-outline-secondary btn-sm me-2"
+                data-bs-toggle="modal"
+                data-bs-target="#editModal{{ $abonnement->id }}">
+                <i class="ti ti-edit"></i> Modifier
+            </button>
+
+        </td>
+
+    </tr>
+       @endforeach
+
+       @foreach($propriete as $abonnement)
+<!-- Modal -->
+<div class="modal fade" id="editModal{{ $abonnement->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $abonnement->id }}" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <form method="POST" action="{{ route('maisons.update', $abonnement->id) }}">
+      @csrf
+      @method('PUT')
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editModalLabel{{ $abonnement->id }}">Modifier la maison</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+        </div>
+        <div class="modal-body row">
+          <div class="col-lg-6 form-group mb-2">
+    <strong><label for="pourcentage_special" class="form-label">Pourcentage Spécial</label></strong>
+
+    <input type="range"
+           name="pourcentage_special"
+           id="pourcentage_special"
+           min="0"
+           max="100"
+           step="1"
+           value="{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}"
+           class="form-range"
+           oninput="document.getElementById('valeurPourcentage').innerText = this.value + '%';" />
+
+    <div><strong><span id="valeurPourcentage">{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}%</span></strong></div>
+</div>
+
+
+          <div class="col-lg-6 form-group mb-2">
+            <strong><label for="date_fin_mois" class="form-label">Date Fin mois</label></strong>
+            <input type="date" name="date_fin_mois" class="form-control"
+              value="{{ old('date_fin_mois', $abonnement->date_fin_mois) }}" />
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary rounded-1" data-bs-dismiss="modal">Fermer</button>
+          <button type="submit" class="btn btn-primary rounded-1">Enregistrer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+@endforeach
+
+        </tbody>
+    </table>
+    </div>
+
+    </div>
+
      <div class="tab-pane fade" id="proprietes">
-      <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (5%)/mois</div>
+      <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (4%)/mois</div>
           <hr>
         <div class="table-responsive">
             <table class="table table-striped table-hover datatable w-100 rounded-2">
@@ -101,7 +217,7 @@
 
      <div class="tab-pane fade" id="historique">
 
-        <div class="card-title text-dark fw-bolder">Historique de paiement de l’abonnement (5%)/mois</div>
+        <div class="card-title text-dark fw-bolder">Historique de paiement de l’abonnement (4%)/mois</div>
     <hr>
         <div class="table-responsive">
             <table class="table table-striped table-hover datatable w-100 rounded-2">
@@ -174,6 +290,7 @@
 
 
 @role('gerant')
+
 
 @include('maison.modal1')
 
@@ -301,6 +418,7 @@
   <!-- Onglets de navigation -->
 
       <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
+
         <li class="nav-item">
            <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
          </li>
@@ -310,9 +428,11 @@
          <li class="nav-item">
           <a class="nav-link rounded-1" data-bs-toggle="tab" href="#locataires">Locataires</a>
          </li>
+
           <li class="nav-item">
-         <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">Abonnements impayés</a>
-         </li>
+           <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">Abonnements impayés</a>
+          </li>
+
          <li class="nav-item">
          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiementenattentev">Paiements en attente de validation</a>
          </li>
@@ -322,6 +442,7 @@
          <li class="nav-item ">
           <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">Interventions</a>
          </li>
+
        </ul>
 
   <!-- Contenu des onglets -->
@@ -419,12 +540,27 @@
                     <i class="ti ti-edit me-1"></i> Modifier
                 </a>
               </li>
-              {{-- <li>
-                <button class="btn btn-sm btn-secondary" onclick="submitStatutForm('ARCHIVER', {{ $louerchambre->id }})">
-                    <i class="ti ti-circle-check me-1"></i> Archiver
-                </button>
-              </li> --}}
+              <li>
+                <a class="dropdown-item" href="{{ route('contrat.show', $location->id) }}">
+                    <i class="ti ti-file-text me-1"></i>
+                     Générer le contrat</a>
+              </li>
+              @if ($location->statut === 'CONFIRMER')
+              <li>
+              <button class="dropdown-item" onclick="submitStatutForm('ARCHIVER', {{ $location->id }})">
+                  <i class="ti ti-circle-check me-1"></i> Désactiver
+              </button>
+
+            <form id="statut-form-{{ $location->id }}" action="{{ route('louerchambres.updateStatut', $location->id) }}" method="POST" style="display: none;">
+                @csrf
+                @method('PUT')
+                <input type="hidden" name="statut" value="">
+            </form>
+             </li>
+            @endif
           </ul>
+
+
         </div>
 
                 <div class="d-flex align-items-center mb-2">
@@ -437,15 +573,24 @@
                         <small class="text-muted "> <span class="text-success">Ref: {{ $location->chambre->ref }} </span></small>
                         @endrole
                     </div>
-                   @if ($location->statut !== 'CONFIRMER')
-                    <span class="badge mt-5
-                        {{
-                            $location->statut === 'EN ATTENTE' ? 'bg-warning text-dark' :
-                            ($location->statut === 'REJETER' ? 'bg-danger' : 'bg-secondary')
-                        }} ms-auto">
-                        {{ ucfirst(strtolower($location->statut)) }}
-                    </span>
-                   @endif
+                  @if ($location->statut !== 'CONFIRMER')
+    <span class="badge mt-5
+        {{
+            match ($location->statut) {
+                'EN ATTENTE' => 'bg-warning text-dark',
+                'REJETER'    => 'bg-danger',
+                'ARCHIVER'   => 'bg-dark',
+                default      => 'bg-secondary'
+            }
+        }} ms-auto">
+        {{
+            $location->statut === 'ARCHIVER'
+                ? 'Désactivé'
+                : ucfirst(strtolower($location->statut))
+        }}
+    </span>
+@endif
+
                 </div>
                 <ul class="list-unstyled mb-3">
                     <li class="mb-1">
@@ -510,7 +655,7 @@
  <div class="tab-pane fade" id="abonnement">
 
 
-    <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (5%)/mois</div>
+    <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (4%)/mois</div>
     <hr>
         <div class="table-responsive">
             <table class="table table-striped table-hover datatable w-100 rounded-2">
@@ -1281,6 +1426,18 @@
 
 @role('gerant')
 @section('script')
+
+<script>
+    function submitStatutForm(statut, id) {
+        const form = document.getElementById(`statut-form-${id}`);
+        form.querySelector('input[name="statut"]').value = statut;
+        form.submit();
+    }
+</script>
+
+
+
+
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
 <script>
     let fedapayKey = "{{ $clePubliqueSuperAdmin }}";
@@ -1328,6 +1485,10 @@
         });
     }
 </script>
+
+
+
+
 
 @endsection
 

@@ -50,6 +50,8 @@ class DashboardController extends Controller
             ->where('user_id', $user->id)
             ->paginate(10);
 
+         $propriete = Maison::all();
+
         $moyenPaiements = $user->moyenpaiements()->with('user')->latest()->paginate(10);
 
 
@@ -118,7 +120,7 @@ class DashboardController extends Controller
             ->where('statut', 'CONFIRMER')
             ->sum('loyer');
 
-        $montantAbonnement =  $revenusMensuels * 5 / 100;
+        $montantAbonnement =  $revenusMensuels * 4 / 100;
 
 
         $abonnementEnAttente = HistoriquePaiAdm::where('user_id', $userId)
@@ -134,6 +136,9 @@ class DashboardController extends Controller
 
         $abonnementEnAttenteH = HistoriquePaiAdm::where('statut', 'PAYER')
             ->get();
+
+        $abonnementEnAttenteHc = HistoriquePaiAdm::where('statut', 'EN ATTENTE')
+            ->count();
 
 
 
@@ -157,6 +162,8 @@ class DashboardController extends Controller
                 ->orderBy('datePaiement')
                 ->first();
         }
+
+
 
         return view('dashboard', [
             'maisons' => $maisons,
@@ -182,7 +189,10 @@ class DashboardController extends Controller
             'abonnementEnAttente' => $abonnementEnAttente,
             'nombreAbonnementEnAttente' => $nombreAbonnementEnAttente,
             'abonnementEnAttenteA' => $abonnementEnAttenteA,
-            'abonnementEnAttenteH' => $abonnementEnAttenteH
+            'abonnementEnAttenteH' => $abonnementEnAttenteH,
+            'abonnementEnAttenteHc' => $abonnementEnAttenteHc,
+            'propriete' => $propriete
+
         ])->with('i', ($request->input('page', 1) - 1) * $maisons->perPage());
     }
 
@@ -257,4 +267,8 @@ class DashboardController extends Controller
                 ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
         }
     }
+
+
+
+
 }

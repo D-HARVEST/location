@@ -22,13 +22,15 @@ class MaisonRequest extends FormRequest
     public function rules(): array
     {
         return [
-			'libelle' => 'required|string',
-			'Pays' => 'required|string',
-			'ville' => 'required|string',
-			'quartier' => 'required|string',
-			'adresse' => 'required|string',
-			'jourPaiementLoyer' => 'required',
-            'moyenPaiement_id' => 'required|exists:moyen_paiements,id',
+			'libelle' => 'nullable|string',
+			'Pays' => 'nullable|string',
+			'ville' => 'nullable|string',
+			'quartier' => 'nullable|string',
+            'pourcentage_special' => 'nullable',
+            'date_fin_mois' => 'nullable',
+			'adresse' => 'nullable|string',
+			'jourPaiementLoyer' => 'nullable',
+            'moyenPaiement_id' => 'nullable|exists:moyen_paiements,id',
         ];
     }
 }

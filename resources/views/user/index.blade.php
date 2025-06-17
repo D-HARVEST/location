@@ -107,6 +107,16 @@
                                                             <a class="dropdown-item" href="{{ route('users.show',$user->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Détails') }}</a>
                                                             <a class="dropdown-item" href="{{ route('users.edit',$user->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Modifier') }}</a>
                                                             <div class="dropdown-divider"></div>
+                                                             <form action="{{ route('users.toggleActivation', $user->id) }}" method="POST" class="d-inline">
+                                                               @csrf
+                                                              @method('PATCH')
+                                                              <button type="submit" class="dropdown-item {{ $user->isActive ? 'text-danger' : 'text-success' }}">
+                                                                  <i class="ti {{ $user->isActive ? 'ti-user-off' : 'ti-user-check' }} me-1"></i>
+                                                                  {{ $user->isActive ? 'Désactiver' : 'Activer' }}
+                                                              </button>
+                                                              </form>
+
+                                                            <div class="dropdown-divider"></div>
                                                             <form action="{{ route('users.destroy',$user->id) }}" method="POST">
                                                                 @csrf
                                                                 @method('DELETE')

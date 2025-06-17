@@ -10,5 +10,5 @@ Artisan::command('inspire', function () {
 })->purpose('Display an inspiring quote')->hourly();
 
 return function (Schedule $schedule) {
-    $schedule->command('abonnement:generer')->everyMinute();
+   $schedule->command('abonnement:generer')->monthlyOn(5, '00:00');
 };

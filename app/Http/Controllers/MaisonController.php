@@ -114,6 +114,19 @@ class MaisonController extends Controller
             ->with('success', 'Maison a été mis(e) à jour avec succes !');
     }
 
+
+    public function updatee(Request $request, $id)
+{
+    $maison = Maison::findOrFail($id);
+    $maison->update([
+        'pourcentage_special' => $request->pourcentage_special,
+        'date_fin_mois' => $request->date_fin_mois,
+    ]);
+
+    return back()->with('success', 'Maison mise à jour avec succès.');
+}
+
+
     public function destroy($id): RedirectResponse
     {
         $data = Maison::findOrFail($id);

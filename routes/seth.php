@@ -12,8 +12,10 @@ use App\Http\Controllers\PaiementenattenteController;
 use App\Http\Controllers\PaiementespeceController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\TypeController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+
 
 Route::get('/login/google', [GoogleAuthController::class, 'redirectToGoogle'])->name('login.google');
 Route::get('/login/google/callback', [GoogleAuthController::class, 'handleGoogleCallback'])->name('login.google.callback');
@@ -52,12 +54,20 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::get('/paiementa/{transaction_id}', [DashboardController::class, 'enregistrerPaiement'])->name('paiementa');
-       
+
+        Route::get('/contrat/{location}', [LouerchambreController::class, 'showContrat'])->name('contrat.show');
+
+        Route::put('/louerchambres/{id}/statut', [App\Http\Controllers\LouerChambreController::class, 'updateStatut'])->name('louerchambres.updateStatut');
+
+        Route::patch('/users/{id}/toggle-activation', [UserController::class, 'toggleActivation'])->name('users.toggleActivation');
+
+        Route::put('/maisons/{id}', [MaisonController::class, 'updatee'])->name('maisons.update');
+
 
     });
 });
 
 
-Route::get('/contrat', function () {
-    return view('landing.partials.contrat');
-})->name('contrat');
+// Route::get('/contrat', function () {
+//     return view('landing.partials.contrat');
+// })->name('contrat');

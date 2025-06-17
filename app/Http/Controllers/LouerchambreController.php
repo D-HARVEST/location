@@ -51,9 +51,8 @@ class LouerchambreController extends Controller
             return back()->with('error', 'Référence invalide. Contactez votre propriétaire.');
         }
 
-        // Vérifie s'il existe une réservation de cette chambre sans utilisateur
+        // Vérifie s'il existe une réservation avec statut en attente
         $louer = Louerchambre::where('chambre_id', $chambre->id)
-            ->whereNull('user_id')
             ->where('statut', 'EN ATTENTE')
             ->first();
 
@@ -159,6 +158,8 @@ class LouerchambreController extends Controller
         }
         return redirect()->back()->with('success', 'Chambre assignée avec succès (en attente de locataire).');
     }
+
+
 
 
 
@@ -278,6 +279,16 @@ class LouerchambreController extends Controller
         ));
     }
 
+
+
+    public function showContrat($id)
+    {
+        $location = LouerChambre::with(['user', 'chambre.maison.user'])->findOrFail($id);
+
+        return view('landing.partials.contrat', [
+            'location' => $location,
+        ]);
+    }
 
 
 
@@ -708,5 +719,32 @@ class LouerchambreController extends Controller
 
         return Redirect::route('chambres.show', ['chambre' => $chambreId])
             ->with('success', 'Louerchambre a été supprimé(e) avec succes !');
+    }
+
+
+
+    public function updateStatut(Request $request, $id)
+    {
+        $request->validate([
+            'statut' => 'required|in:EN ATTENTE,CONFIRMER,REJETER,ARCHIVER',
+        ]);
+
+        $location = LouerChambre::with('chambre')->findOrFail($id);
+        $location->statut = $request->statut;
+        $location->save();
+
+        // Synchroniser le statut de la chambre si nécessaire
+        if ($request->statut === 'EN ATTENTE') {
+            $location->chambre->statut = 'En attente';
+            $location->chambre->save();
+        } elseif ($request->statut === 'REJETER' || $request->statut === 'ARCHIVER') {
+            $location->chambre->statut = 'Disponible';
+            $location->chambre->save();
+        } elseif ($request->statut === 'CONFIRMER') {
+            $location->chambre->statut = 'Non disponible';
+            $location->chambre->save();
+        }
+
+        return redirect()->back()->with('success', 'Statut mis à jour avec succès.');
     }
 }

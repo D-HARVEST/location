@@ -216,6 +216,7 @@
                     <div class="card-body border-1">
                         {{-- <h4 class="card-title">Paiement en espèce(s)</h4> --}}
                         @role('locataire')
+                         @if ($louerchambre->statut === 'CONFIRMER')
                         <div class="card border">
                         <div class="btn btn-success w-100 rounded-1">
                             <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="text-white" >
@@ -223,6 +224,11 @@
                                     Payer en espèce</a>
                         </div>
                         </div>
+                        @else
+                                <div class="alert alert-warning mb-0 text-center">
+                                    Paiement indisponible tant que le statut n’est pas confirmé.
+                                </div>
+                            @endif
                         @endrole
 
                         <div class="card-title text-dark fw-bolder mt-4">Paiements en espèces</div>

@@ -98,6 +98,21 @@ class UserController extends Controller
             ->with('success', 'Role ajouté avec succès !');
     }
 
+
+
+
+    public function toggleActivation($id)
+    {
+        $user = User::findOrFail($id);
+        $user->isActive = !$user->isActive;
+        $user->save();
+
+        return redirect()->back()->with('success', 'Le statut de l\'utilisateur a été mis à jour.');
+    }
+
+
+
+
     public function updateImage(Request $request)
     {
 

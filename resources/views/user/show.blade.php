@@ -22,7 +22,7 @@
                         </div>
                         <div class="row">
 
-                            
+
 
                         <div class="col-lg-4">
                             <strong class="text-dark ">Name:</strong>

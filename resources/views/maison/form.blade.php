@@ -3,27 +3,27 @@
 
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="libelle" class="form-label">{{ __('Nom de la maison') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="libelle" class="form-control @error('libelle') is-invalid @enderror rounded-05" value="{{ old('libelle', $maison?->libelle) }}" id="libelle" >
+            <input type="text" name="libelle" class="form-control @error('libelle') is-invalid @enderror rounded-05" value="{{ old('libelle', $maison?->libelle) }}" id="libelle" required>
             {!! $errors->first('libelle', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="pays" class="form-label">{{ __('Pays') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="Pays" class="form-control @error('Pays') is-invalid @enderror rounded-05" value="{{ old('Pays', $maison?->Pays) }}" id="pays" >
+            <input type="text" name="Pays" class="form-control @error('Pays') is-invalid @enderror rounded-05" value="{{ old('Pays', $maison?->Pays) }}" id="pays" required>
             {!! $errors->first('Pays', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="ville" class="form-label">{{ __('Ville') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="ville" class="form-control @error('ville') is-invalid @enderror rounded-05" value="{{ old('ville', $maison?->ville) }}" id="ville" >
+            <input type="text" name="ville" class="form-control @error('ville') is-invalid @enderror rounded-05" value="{{ old('ville', $maison?->ville) }}" id="ville" required>
             {!! $errors->first('ville', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="quartier" class="form-label">{{ __('Quartier') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="quartier" class="form-control @error('quartier') is-invalid @enderror rounded-05" value="{{ old('quartier', $maison?->quartier) }}" id="quartier" >
+            <input type="text" name="quartier" class="form-control @error('quartier') is-invalid @enderror rounded-05" value="{{ old('quartier', $maison?->quartier) }}" id="quartier" required>
             {!! $errors->first('quartier', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="adresse" class="form-label">{{ __('Adresses') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" name="adresse" class="form-control @error('adresse') is-invalid @enderror rounded-05" value="{{ old('adresse', $maison?->adresse) }}" id="adresse" >
+            <input type="text" name="adresse" class="form-control @error('adresse') is-invalid @enderror rounded-05" value="{{ old('adresse', $maison?->adresse) }}" id="adresse" required>
             {!! $errors->first('adresse', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         {{-- <div class="col-lg-6 form-group mb-2 mb20">
@@ -33,7 +33,7 @@
         </div> --}}
         <div class="col-lg-6 form-group mb-2 mb20">
             <strong> <label for="jour_paiement_loyer" class="form-label">{{ __('Jour Paiement Loyer') }}</label> <!-- <strong class="text-danger"> * </strong> -->  </strong>
-            <input type="text" text-muted name="jourPaiementLoyer" pattern="^(?:[1-9]|1[0-9]|2[0-8])$" title="Veuillez entrer un nombre entre 1 et 28" placeholder="Entrez le jour de paiement du loyer entre 1 et 28" class="form-control @error('jourPaiementLoyer') is-invalid @enderror rounded-05" value="{{ old('jourPaiementLoyer', $maison?->jourPaiementLoyer) }}" id="jour_paiement_loyer"  >
+            <input type="text" text-muted name="jourPaiementLoyer" pattern="^(?:[1-9]|1[0-9]|2[0-8])$" title="Veuillez entrer un nombre entre 1 et 28" placeholder="Entrez le jour de paiement du loyer entre 1 et 28" class="form-control @error('jourPaiementLoyer') is-invalid @enderror rounded-05" value="{{ old('jourPaiementLoyer', $maison?->jourPaiementLoyer) }}" id="jour_paiement_loyer" required >
             {!! $errors->first('jourPaiementLoyer', '<div class="invalid-feedback" role="alert"><strong>:message</strong></div>') !!}
         </div>
         <div class="form-group mb-2">

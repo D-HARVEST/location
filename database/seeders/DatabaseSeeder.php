@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleSeeder::class);
         $this->call(CategorieSeeder::class);
         $this->call(TypeSeeder::class);
+        $this->call(SettingsTableSeeder::class);
         try {
             $admin->assignRole('Super-admin');
         } catch (\Throwable $th) {
