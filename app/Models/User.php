@@ -67,6 +67,13 @@ class User extends Authenticatable
     }
 
 
+
+    public function paiementsAbonnements()
+    {
+        return $this->hasMany(\App\Models\HistoriquePaiadm::class);
+    }
+
+
     public function chambre()
     {
         return $this->belongsTo(Chambre::class, 'chambre_id');
@@ -85,27 +92,27 @@ class User extends Authenticatable
     }
 
     public function interventions()
-{
-    return $this->hasManyThrough(
-        \App\Models\Intervention::class,    // Le modèle final
-        \App\Models\Louerchambre::class,    // Le modèle intermédiaire
-        'user_id',                          // Clé étrangère sur le modèle Louerchambre
-        'louerchambre_id',                  // Clé étrangère sur le modèle Intervention
-        'id',                               // Clé locale sur le modèle User
-        'id'                                // Clé locale sur le modèle Louerchambre
-    );
-}
+    {
+        return $this->hasManyThrough(
+            \App\Models\Intervention::class,    // Le modèle final
+            \App\Models\Louerchambre::class,    // Le modèle intermédiaire
+            'user_id',                          // Clé étrangère sur le modèle Louerchambre
+            'louerchambre_id',                  // Clé étrangère sur le modèle Intervention
+            'id',                               // Clé locale sur le modèle User
+            'id'                                // Clé locale sur le modèle Louerchambre
+        );
+    }
 
-public function historiquesPaiements(){
+    public function historiquesPaiements()
+    {
 
-    return $this->hasManyThrough(
-        \App\Models\Historiquepaiement::class,    // Le modèle final
-        \App\Models\Louerchambre::class,    // Le modèle intermédiaire
-        'user_id',                          // Clé étrangère sur le modèle Louerchambre
-        'louerchambre_id',                  // Clé étrangère sur le modèle Historiquepaiement
-        'id',                               // Clé locale sur le modèle User
-        'id'                                // Clé locale sur le modèle Louerchambre
-    );
-}
-
+        return $this->hasManyThrough(
+            \App\Models\Historiquepaiement::class,    // Le modèle final
+            \App\Models\Louerchambre::class,    // Le modèle intermédiaire
+            'user_id',                          // Clé étrangère sur le modèle Louerchambre
+            'louerchambre_id',                  // Clé étrangère sur le modèle Historiquepaiement
+            'id',                               // Clé locale sur le modèle User
+            'id'                                // Clé locale sur le modèle Louerchambre
+        );
+    }
 }

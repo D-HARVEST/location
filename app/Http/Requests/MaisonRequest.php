@@ -26,7 +26,7 @@ class MaisonRequest extends FormRequest
 			'Pays' => 'nullable|string',
 			'ville' => 'nullable|string',
 			'quartier' => 'nullable|string',
-            'pourcentage_special' => 'nullable',
+            'pourcentage_special' => 'nullable|numeric|min:0|max:100',
             'date_fin_mois' => 'nullable',
 			'adresse' => 'nullable|string',
 			'jourPaiementLoyer' => 'nullable',

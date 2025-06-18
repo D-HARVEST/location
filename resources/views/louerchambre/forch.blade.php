@@ -1,9 +1,9 @@
 <!-- Modal -->
-<div class="modal fade" id="modalLouerChambre" tabindex="-1" aria-labelledby="modalLouerChambreLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade" id="modalLouerChambre" tabindex="-1" aria-labelledby="modalLouerChambreLabel"   style="backdrop-filter: blur(8px)" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
     <div class="modal-content border-0">
       <div class="modal-header">
-    
+
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
       </div>
       <div class="modal-body">

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained("users")->cascadeOnDelete()->cascadeOnUpdate();
             $table->unsignedTinyInteger('jourPaiementLoyer');
             $table->unsignedTinyInteger('pourcentage_special')->nullable();
-             $table->date('date_fin_mois')->nullable();
+            $table->date('date_fin_mois')->nullable();
             $table->timestamps();
         });
     }

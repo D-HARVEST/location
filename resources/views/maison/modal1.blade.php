@@ -1,6 +1,6 @@
 <!-- Modal Assigner Locataire -->
-<div class="modal fade" id="createChambreModal" tabindex="-1" aria-labelledby="createChambreModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal fade" id="createChambreModal" tabindex="-1" aria-labelledby="createChambreModalLabel" style="backdrop-filter: blur(8px)" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-dialog-scrollable modal-sm">
     <form action="{{ route('louerchambres.store') }}" method="POST">
       @csrf
 

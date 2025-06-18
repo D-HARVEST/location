@@ -120,7 +120,7 @@ class DashboardController extends Controller
             ->where('statut', 'CONFIRMER')
             ->sum('loyer');
 
-        $montantAbonnement =  $revenusMensuels * 4 / 100;
+        // $montantAbonnement =  $revenusMensuels * 4 / 100;
 
 
         $abonnementEnAttente = HistoriquePaiAdm::where('user_id', $userId)
@@ -185,7 +185,7 @@ class DashboardController extends Controller
             'moyenPaiements' => $moyenPaiements,
             'paiementespeces' => $paiementespeces,
             'paiementespecesvalid' => $paiementespecesvalid,
-            'montantAbonnement' => $montantAbonnement,
+            // 'montantAbonnement' => $montantAbonnement,
             'abonnementEnAttente' => $abonnementEnAttente,
             'nombreAbonnementEnAttente' => $nombreAbonnementEnAttente,
             'abonnementEnAttenteA' => $abonnementEnAttenteA,

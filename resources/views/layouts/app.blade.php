@@ -30,7 +30,10 @@
         .cursor-pointer {
             cursor: pointer;
         }
+
+
     </style>
+    
 </head>
 
 <body>

@@ -13,9 +13,9 @@
             </li>
         </ul>
 
-        <div class="d-block d-lg-none">
+        {{-- <div class="d-block d-lg-none">
             @include('layouts.partials.logo')
-        </div>
+        </div> --}}
         <a class="navbar-toggler nav-icon-hover p-0 border-0" href="javascript:void(0)" data-bs-toggle="collapse"
             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="p-2">

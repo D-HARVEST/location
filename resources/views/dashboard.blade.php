@@ -8,6 +8,7 @@
 @section('content')
 
 
+
 @role('Super-admin')
  <style>
   .l1 {
@@ -32,6 +33,9 @@
     background-color: #f1f1f1;
 
   }
+
+
+
 </style>
 
 
@@ -129,8 +133,8 @@
 
        @foreach($propriete as $abonnement)
 <!-- Modal -->
-<div class="modal fade" id="editModal{{ $abonnement->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $abonnement->id }}" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+<div class="modal fade" id="editModal{{ $abonnement->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $abonnement->id }}"   style="backdrop-filter: blur(8px)" aria-modal="true" role="dialog">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
     <form method="POST" action="{{ route('maisons.update', $abonnement->id) }}">
       @csrf
       @method('PUT')
@@ -141,19 +145,23 @@
         </div>
         <div class="modal-body row">
           <div class="col-lg-6 form-group mb-2">
-    <strong><label for="pourcentage_special" class="form-label">Pourcentage Spécial</label></strong>
+    <strong><label for="pourcentage_special_{{ $abonnement->id }}" class="form-label">Pourcentage Spécial</label></strong>
 
-    <input type="range"
-           name="pourcentage_special"
-           id="pourcentage_special"
-           min="0"
-           max="100"
-           step="1"
-           value="{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}"
-           class="form-range"
-           oninput="document.getElementById('valeurPourcentage').innerText = this.value + '%';" />
+    <input
+        type="range"
+        name="pourcentage_special"
+        id="pourcentage_special_{{ $abonnement->id }}"
+        min="0"
+        max="100"
+        step="1"
+        value="{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}"
+        class="form-range"
+        oninput="document.getElementById('valeurPourcentage_{{ $abonnement->id }}').textContent = this.value + '%';"
+    />
 
-    <div><strong><span id="valeurPourcentage">{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}%</span></strong></div>
+    <div>
+        <strong><span id="valeurPourcentage_{{ $abonnement->id }}">{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}%</span></strong>
+    </div>
 </div>
 
 
@@ -449,6 +457,7 @@
   <div class="tab-content mt-4">
     <div class="tab-pane fade show active" id="proprietes">
 
+    @if(auth()->user()->isActive)
       <div class="d-flex justify-content-between align-items-center mb-3">
         <div>
           <h4>Mes Propriétés</h4>
@@ -514,6 +523,12 @@
         Some placeholder content for the collapse component. This panel is hidden by default but revealed when the user activates the relevant trigger.
        </div>
      </div>
+      @else
+            <div class="alert alert-danger mt-3">
+                ❌ Accès refusé. Veuillez payer votre abonnement pour accéder à cette section. Merci!
+
+            </div>
+        @endif
     </div>
 
     <!-- Autres onglets (contenu vide pour l'exemple) -->
@@ -521,6 +536,9 @@
 
 
   <div class="tab-pane fade" id="locataires">
+  @if (auth()->user()->isActive)
+
+
       <div class="row">
          @forelse ($louerChambres as $location)
         <div class="col-md-6 col-lg-4 mb-4">
@@ -574,7 +592,7 @@
                         @endrole
                     </div>
                   @if ($location->statut !== 'CONFIRMER')
-    <span class="badge mt-5
+       <span class="badge mt-5
         {{
             match ($location->statut) {
                 'EN ATTENTE' => 'bg-warning text-dark',
@@ -589,7 +607,7 @@
                 : ucfirst(strtolower($location->statut))
         }}
     </span>
-@endif
+  @endif
 
                 </div>
                 <ul class="list-unstyled mb-3">
@@ -643,16 +661,35 @@
         </div>
     @endforelse
    </div>
+     @else
+            <div class="alert alert-danger mt-3">
+                ❌ Accès refusé. Veuillez payer votre abonnement pour accéder à cette section. Merci!
+
+            </div>
+     @endif
 </div>
 
 
 
+
+
+
+
     <div class="tab-pane fade" id="moyenspaiement">
+        @if (auth()->user()->isActive)
        @include('moyen-paiement.index');
+         @else
+            <div class="alert alert-danger mt-3">
+                ❌ Accès refusé. Veuillez payer votre abonnement pour accéder à cette section. Merci!
+
+            </div>
+        @endif
     </div>
 
 
  <div class="tab-pane fade" id="abonnement">
+
+
 
 
     <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (4%)/mois</div>
@@ -699,7 +736,14 @@
 
 
     <div class="tab-pane fade" id="interventions">
+        @if (auth()->user()->isActive)
        @include('intervention.index');
+         @else
+            <div class="alert alert-danger mt-3">
+                ❌ Accès refusé. Veuillez payer votre abonnement pour accéder à cette section. Merci!
+
+            </div>
+        @endif
     </div>
 
 
@@ -707,6 +751,10 @@
     @php $i = 0; @endphp
 
  <div class="tab-pane fade" id="paiementenattentev">
+   @if (auth()->user()->isActive)
+
+
+
     <div class="card-title text-dark fw-bolder">Paiements en espèces</div>
     <hr>
 
@@ -822,12 +870,18 @@
             </tbody>
         </table>
     </div>
+      @else
+            <div class="alert alert-danger mt-3">
+                ❌ Accès refusé. Veuillez payer votre abonnement pour accéder à cette section. Merci!
+
+            </div>
+        @endif
 </div>
 
 {{-- Modales de rejet, à placer en dehors de <tbody> --}}
 @foreach ($paiementespeces as $paiementespece)
     @if ($paiementespece->statut == 'EN ATTENTE')
-        <div class="modal fade" id="modalRejet{{ $paiementespece->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $paiementespece->id }}" aria-hidden="true">
+        <div class="modal fade" id="modalRejet{{ $paiementespece->id }}" tabindex="-1" aria-labelledby="modalLabel{{ $paiementespece->id }}"   style="backdrop-filter: blur(8px)" aria-modal="true" role="dialog"   style="backdrop-filter: blur(8px)" aria-modal="true" role="dialog">
             <div class="modal-dialog">
                 <form method="POST" action="{{ route('paiementespeces.changerStatut', $paiementespece->id) }}">
                     @csrf
@@ -858,6 +912,7 @@
 
 
     <div class="tab-pane fade" id="paiements">
+        @if (auth()->user()->isActive)
 
            <div class="card-title text-dark fw-bolder mb-3">Historique des paiements</div>
                         <hr>
@@ -985,7 +1040,13 @@
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                          @else
+            <div class="alert alert-danger mt-3">
+                ❌ Accès refusé. Veuillez payer votre abonnement pour accéder à cette section. Merci!
+
+            </div>
+        @endif
+         </div>
    </div>
 
   </div>
@@ -1441,7 +1502,6 @@
 <script src="https://cdn.fedapay.com/checkout.js?v=1.1.7"></script>
 <script>
     let fedapayKey = "{{ $clePubliqueSuperAdmin }}";
-    let montant = "{{ $montantAbonnement}}";
 
 
 
@@ -1455,8 +1515,13 @@
             return;
         }
 
+
         let form = btn.closest('form');
         let abonnementId = form.querySelector('input[name="abonnement_id"]').value;
+
+
+         let montantText = btn.innerText.match(/\d+/g); // Extrait les nombres du texte
+         let montant = montantText ? parseInt(montantText.join('')) : 0;
 
         let widget = FedaPay.init({
             public_key: fedapayKey,
@@ -1484,6 +1549,14 @@
             description: 'Paiement de l\'abonnement'
         });
     }
+</script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const range = document.getElementById('pourcentage_special');
+        const output = document.getElementById('valeurPourcentage');
+        output.textContent = range.value + '%';
+    });
 </script>
 
 

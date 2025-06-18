@@ -18,10 +18,21 @@ class GenererPaiementAbonnement extends Command
 
     public function handle()
     {
+
+
+        // Exécuter uniquement le 5 de chaque mois
+        if (Carbon::now()->day !== 5) {
+            $this->info("Cette commande ne s’exécute que le 5 de chaque mois.");
+            return;
+        }
+
         $this->info("Début de la génération des paiements d’abonnement...");
 
         // Pourcentage par défaut depuis settings
-        $pourcentageParDefaut = (float) Setting::where('key', 'pourcentage_abonnement')->value('value') ?? 4;
+        $valeur = Setting::where('key', 'pourcentage_abonnement')->value('value');
+        $pourcentageParDefaut = $valeur === null ? 4 : (float) $valeur;
+
+
 
         $gerants = User::role('gerant')->get();
 
@@ -51,14 +62,24 @@ class GenererPaiementAbonnement extends Command
 
                 if ($revenusMaison <= 0) continue;
 
-                // Appliquer pourcentage spécial si encore valide
-                $pourcentage = $pourcentageParDefaut;
-                if ($maison->pourcentage_special && $maison->date_fin_mois) {
-                    $finSpecial = Carbon::createFromFormat('Y-m', $maison->date_fin_mois)->endOfMonth();
-                    if ($fin->lessThanOrEqualTo($finSpecial)) {
-                        $pourcentage = $maison->pourcentage_special;
+                // Déterminer le pourcentage applicable
+                $pourcentage = $maison->pourcentage_abonnement === null
+                    ? 4
+                    : (float) $maison->pourcentage_abonnement;
+
+                // Gérer pourcentage spécial s’il est encore valide
+                if ($maison->pourcentage_special !== null && $maison->date_fin_mois) {
+                    $finSpecial = Carbon::parse($maison->date_fin_mois);
+                    if (Carbon::now()->lessThanOrEqualTo($finSpecial)) {
+                        $this->info("Maison ID {$maison->id} : application du pourcentage spécial de {$maison->pourcentage_special}% (valide jusqu’au {$finSpecial->toDateString()})");
+                        $pourcentage = (float) $maison->pourcentage_special;
+                    } else {
+                        $this->info("Maison ID {$maison->id} : pourcentage spécial expiré, retour au pourcentage de base ({$pourcentage}%).");
                     }
                 }
+
+
+
 
                 // Calcul du montant
                 $totalMontant += round($revenusMaison * ($pourcentage / 100));
@@ -82,6 +103,19 @@ class GenererPaiementAbonnement extends Command
             $gerant->notify(new \App\Notifications\PaiementEnAttenteNotification($totalMontant, $moisPaiement, $gerant));
 
             $this->info("Paiement généré pour le gérant ID {$gerant->id} - Mois : $moisPaiement - Montant : $totalMontant");
+
+            // --- NOUVEAU : Vérifier le nombre de paiements en attente pour ce gérant
+            $enAttenteCount = HistoriquePaiadm::where('user_id', $gerant->id)
+                ->where('statut', 'EN ATTENTE')
+                ->count();
+
+            // Désactiver si 2 mois ou plus en attente, sinon activer
+            if ($enAttenteCount >= 2) {
+                $gerant->isActive = 0;
+            } else {
+                $gerant->isActive = 1;
+            }
+            $gerant->save();
         }
 
         $this->info("Génération terminée.");

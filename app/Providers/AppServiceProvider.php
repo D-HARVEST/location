@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\Chambre;
+use App\Models\HistoriquePaiAdm;
 use App\Models\Louerchambre;
 use App\Models\MoyenPaiement;
 use App\Models\User;
 use App\Observers\ChambreObserver;
+use App\Observers\HistoriquePaiadmObserver;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -80,5 +82,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Chambre::observe(ChambreObserver::class);
+        HistoriquePaiAdm::observe(HistoriquePaiadmObserver::class);
     }
 }

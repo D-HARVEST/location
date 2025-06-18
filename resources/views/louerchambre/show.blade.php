@@ -215,21 +215,32 @@
                 <div class="card">
                     <div class="card-body border-1">
                         {{-- <h4 class="card-title">Paiement en espèce(s)</h4> --}}
-                        @role('locataire')
-                         @if ($louerchambre->statut === 'CONFIRMER')
-                        <div class="card border">
-                        <div class="btn btn-success w-100 rounded-1">
-                            <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="text-white" >
-                                 <i class="fa fa-credit-card me-2"></i>
-                                    Payer en espèce</a>
-                        </div>
-                        </div>
-                        @else
-                                <div class="alert alert-warning mb-0 text-center">
-                                    Paiement indisponible tant que le statut n’est pas confirmé.
-                                </div>
-                            @endif
-                        @endrole
+                       @role('locataire')
+    @php
+        $gerant = $louerchambre->chambre->maison->user ?? null;
+    @endphp
+
+    @if ($louerchambre->statut === 'CONFIRMER')
+        @if ($gerant && $gerant->isActive)
+            <div class="card border">
+                <div class="btn btn-success w-100 rounded-1">
+                    <a href="{{ route('paiementespeces.create', ['louerchambre_id' => $louerchambre->id]) }}" class="text-white">
+                        <i class="fa fa-credit-card me-2"></i> Payer en espèce
+                    </a>
+                </div>
+            </div>
+        @else
+            <div class="alert alert-danger mb-0 text-center">
+              ❌ Paiement indisponible. Contactez votre propriétaire.
+            </div>
+        @endif
+    @else
+        <div class="alert alert-warning mb-0 text-center">
+            Paiement indisponible tant que le statut n’est pas confirmé.
+        </div>
+    @endif
+@endrole
+
 
                         <div class="card-title text-dark fw-bolder mt-4">Paiements en espèces</div>
                         <hr>
@@ -417,8 +428,15 @@
                 <div class="card">
                     <div class="my-3 mx-3">
                         <div class="card border">
+
                             <div class="card-body">
+
+                                 @php
+                                     $gerant = $louerchambre->chambre->maison->user ?? null;
+                                 @endphp
+
                                 @if ($louerchambre->statut === 'CONFIRMER')
+                                 @if ($gerant && $gerant->isActive)
                                 <form id="formPayer">
                                     @csrf
                                     <div class="mb-3">
@@ -446,6 +464,11 @@
                                   </button>
 
                                 </form>
+                                 @else
+                                     <div class="alert alert-danger mb-0 text-center">
+                                        ❌ Paiement indisponible. contactez votre propriétaire
+                                     </div>
+                                 @endif
                                 @else
                                 <div class="alert alert-warning mb-0 text-center">
                                     Paiement indisponible tant que le statut n’est pas confirmé.
