@@ -34,7 +34,7 @@
      padding-left: 30px;
      padding-right: 30px;
      padding-top: 20px;
- 
+
    }
 /* .tilt-card:hover {
   transform: rotate(-3deg);
@@ -66,7 +66,7 @@
          background: white;
          padding: 20px;
          padding-top: 30px;
-         
+
 
     }
 
@@ -82,7 +82,7 @@
      padding-bottom: 5px;
      background: #eff5fe;
     margin-top: 20px;
-    
+
 }
 .hero li{
     font-size: 1rem;
@@ -252,9 +252,9 @@
 <section class="heero">
   <div class="container">
     <h2 class="text-center">Avantages pour chaque utilisateur</h2>
-    
+
     <div class="row align-items-center">
-      
+
       <!-- Colonne image -->
       <div class="col-md-5 mb-md-0">
         <img src="{{ asset('assets/ri.png') }}" alt="Illustration avantages" height="500vh" class="img-fluid">
@@ -373,7 +373,7 @@
         </div>
       </div>
 
-     
+
 
     </div>
   </div>
@@ -496,7 +496,7 @@
           <div class="row d-flex align-items-stretch">
             <div class="col-3 d-flex justify-content-center align-items-center">
               <div class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center">
-                <img src="{{ asset('assets/www.jpeg') }}" class="img-fluid" alt="">
+                <img src="{{ asset('assets/www.jpeg') }}" class="img-fluid" alt="" style="height: 70px; width: 300px">
               </div>
             </div>
             <div class="col-9 d-flex flex-column justify-content-center">
@@ -556,13 +556,13 @@
         <p class="mb-0">&copy; 2024 D-Go. Tous droits réservés.</p>
         <p class="mb-0">Réalisé par:
             <a href="https://d-harvest.com/" class="mx-1"><span  style="font-size: 1.1 rem; color: #54b435">D-HARVEST</span></a>
-           
+
         </p>
     </div>
 </footer>
 
 
-    
+
         <!-- Scripts -->
         <script src="{{ asset('spike/assets/js/vendor.min.js') }}"></script>
         <script src="{{ asset('spike/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js') }}"></script>
