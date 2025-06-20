@@ -10,6 +10,7 @@
 
 
 @role('Super-admin')
+
  <style>
   .l1 {
     background-color: white;
@@ -18,24 +19,20 @@
   }
 
   .nav-tabs .nav-link {
-    font-weight: 500;
-    border: 1px solid transparent;
+    font-weight: 400;
+    /* border: 1px solid transparent; */
     transition: all 0.3s ease;
   }
 
   .nav-tabs .nav-link.active {
-    background-color: #f8f9fa;
-    border-color: #dee2e6 #dee2e6 #fff;
+    background-color: #F3F1EDFF;
+    /* border-color: #dee2e6 #dee2e6 #fff; */
     color: #1d1a1a;
   }
 
   .nav-tabs .nav-link:hover {
     background-color: #f1f1f1;
-
   }
-
-
-
 </style>
 
 
@@ -63,26 +60,35 @@
   <div class="row justify-content-center">
    <div class="col-md-12">
   <!-- Onglets de navigation -->
+<ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center  p-2"  style="background: rgba(19, 18, 18, 0.12);" >
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#moyenspaiement">
+      <iconify-icon icon="mdi:credit-card-outline" class="me-1"></iconify-icon>
+      Moyens de paiement
+    </a>
+  </li>
 
-      <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
-        <li class="nav-item">
-           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
-         </li>
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#tousproprietes">
+      <iconify-icon icon="mdi:home-group" class="me-1"></iconify-icon>
+      Tous les Propriétés
+    </a>
+  </li>
 
-        <li class="nav-item">
-           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#tousproprietes" > Tous les Propriétés</a>
-         </li>
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#proprietes">
+      <iconify-icon icon="mdi:alert-octagon-outline" class="me-1"></iconify-icon>
+      Abonnements impayés
+    </a>
+  </li>
 
-
-         <li class="nav-item">
-           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Abonnements impayés</a>
-         </li>
-
-         <li class="nav-item">
-           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#historique" >Historique paiement d'abonnement</a>
-         </li>
-
-       </ul>
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#historique">
+      <iconify-icon icon="mdi:history" class="me-1"></iconify-icon>
+      Historique paiement d'abonnement
+    </a>
+  </li>
+</ul>
 
   <!-- Contenu des onglets -->
   <div class="tab-content mt-4">
@@ -313,20 +319,19 @@
   }
 
   .nav-tabs .nav-link {
-    font-weight: 500;
-    border: 1px solid transparent;
+    font-weight: 400;
+    /* border: 1px solid transparent; */
     transition: all 0.3s ease;
   }
 
   .nav-tabs .nav-link.active {
-    background-color: #f8f9fa;
-    border-color: #dee2e6 #dee2e6 #fff;
+    background-color: #F3F1EDFF;
+    /* border-color: #dee2e6 #dee2e6 #fff; */
     color: #1d1a1a;
   }
 
   .nav-tabs .nav-link:hover {
     background-color: #f1f1f1;
-
   }
 </style>
 
@@ -386,7 +391,7 @@
       <div class="card h-100 shadow-sm">
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-start">
-            <div><small class="text-muted">Paiements en attente</small></div>
+            <div><small class="text-muted">Paiements en attente de validation</small></div>
             <i class="fas fa-credit-card text-muted"></i>
           </div>
           <h4 class="mt-2 mb-0 text-warning">{{ $paiementespecesvalid ?? 0 }}</h4>
@@ -424,34 +429,58 @@
   <div class="row justify-content-center">
    <div class="col-md-12">
   <!-- Onglets de navigation -->
+<ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center p-2"  style="background: rgba(19, 18, 18, 0.12);" >
 
-      <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
+  <li class="nav-item">
+    <a class="nav-link rounded-1 " data-bs-toggle="tab" href="#moyenspaiement">
+      <iconify-icon icon="mdi:credit-card-outline" class="me-1"></iconify-icon>
+      Moyens de paiement
+    </a>
+  </li>
 
-        <li class="nav-item">
-           <a class="nav-link rounded-1 "  data-bs-toggle="tab" href="#moyenspaiement" >Moyens de paiement</a>
-         </li>
-         <li class="nav-item">
-           <a class="nav-link  active rounded-1 "  data-bs-toggle="tab" href="#proprietes" >Propriétés</a>
-         </li>
-         <li class="nav-item">
-          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#locataires">Locataires</a>
-         </li>
+  <li class="nav-item">
+    <a class="nav-link active rounded-1" data-bs-toggle="tab" href="#proprietes">
+      <iconify-icon icon="mdi:home-outline" class="me-1"></iconify-icon>
+      Propriétés
+    </a>
+  </li>
 
-          <li class="nav-item">
-           <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">Abonnements impayés</a>
-          </li>
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#locataires">
+      <iconify-icon icon="mdi:account-group-outline" class="me-1"></iconify-icon>
+      Locataires
+    </a>
+  </li>
 
-         <li class="nav-item">
-         <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiementenattentev">Paiements en attente de validation</a>
-         </li>
-         <li class="nav-item">
-          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">Historiques Paiements</a>
-         </li>
-         <li class="nav-item ">
-          <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">Interventions</a>
-         </li>
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#abonnement">
+      <iconify-icon icon="mdi:alert-octagon-outline" class="me-1"></iconify-icon>
+      Abonnements impayés
+    </a>
+  </li>
 
-       </ul>
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiementenattentev">
+      <iconify-icon icon="mdi:clock-outline" class="me-1"></iconify-icon>
+      Paiements en attente
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">
+      <iconify-icon icon="mdi:history" class="me-1"></iconify-icon>
+      Historiques
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">
+      <iconify-icon icon="mdi:tools" class="me-1"></iconify-icon>
+      Interventions
+    </a>
+  </li>
+
+</ul>
 
   <!-- Contenu des onglets -->
   <div class="tab-content mt-4">
@@ -1093,6 +1122,7 @@
 @role('locataire')
 
 @include('louerchambre.forch')
+
  <style>
   .l1 {
     background-color: white;
@@ -1101,20 +1131,19 @@
   }
 
   .nav-tabs .nav-link {
-    font-weight: 500;
-    border: 1px solid transparent;
+    font-weight: 400;
+    /* border: 1px solid transparent; */
     transition: all 0.3s ease;
   }
 
   .nav-tabs .nav-link.active {
-    background-color: #f8f9fa;
-    border-color: #dee2e6 #dee2e6 #fff;
+    background-color: #F3F1EDFF;
+    /* border-color: #dee2e6 #dee2e6 #fff; */
     color: #1d1a1a;
   }
 
   .nav-tabs .nav-link:hover {
     background-color: #f1f1f1;
-
   }
 </style>
 
@@ -1200,20 +1229,38 @@
   <div class="row justify-content-center">
    <div class="col-md-12">
   <!-- Onglets de navigation -->
-      <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center">
-         <li class="nav-item">
-           <a class="nav-link active rounded-1 "  data-bs-toggle="tab" href="#meschambres" >Mes chambres</a>
-         </li>
-         <li class="nav-item">
-      <a class="nav-link rounded-1" data-bs-toggle="tab" href="#mesinterventions">Mes interventions</a>
-         </li>
-         <li class="nav-item">
-      <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">Hitoriques</a>
-         </li>
-         {{-- <li class="nav-item ">
-      <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">Interventions</a>
-         </li> --}}
-       </ul>
+    <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center p-2" style="background: rgba(19, 18, 18, 0.12);">
+  <li class="nav-item">
+    <a class="nav-link active rounded-1" data-bs-toggle="tab" href="#meschambres">
+      <iconify-icon icon="mdi:bed-outline" class="me-1"></iconify-icon>
+      Mes chambres
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#mesinterventions">
+      <iconify-icon icon="mdi:tools" class="me-1"></iconify-icon>
+      Mes interventions
+    </a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#paiements">
+      <iconify-icon icon="mdi:history" class="me-1"></iconify-icon>
+      Historiques
+    </a>
+  </li>
+
+  {{--
+  <li class="nav-item">
+    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#interventions">
+      <iconify-icon icon="mdi:alert-circle-outline" class="me-1"></iconify-icon>
+      Interventions
+    </a>
+  </li>
+  --}}
+</ul>
+
 
   <!-- Contenu des onglets -->
   <div class="tab-content mt-4">

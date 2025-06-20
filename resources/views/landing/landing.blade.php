@@ -346,8 +346,8 @@
 
   <div class="card mx-auto shadow mb-4" style="max-width: 800px;">
     <div class="card-body text-white text-center rounded-2" style="background-color: #54b435">
-      <h3 class="mb-3">Frais de gestion</h3>
-      <h5 class="mb-2"><strong>4% du loyer</strong> mensuel</h5>
+      <h3 class="mb-3 text-white">Frais de gestion</h3>
+      <h5 class="mb-2 text-white"><strong>4% du loyer</strong> mensuel</h5>
       <p>Négociable selon vos besoins et le volume de biens</p>
       {{-- <a href="#" class="btn btn-light mt-2">Demander un devis personnalisé</a> --}}
     </div>
@@ -486,7 +486,7 @@
 
 
 
-   <section id="contact" class="hiro">
+<section id="contact" class="hiro">
   <h2 class="text-center mb-5">Contactez-nous</h2>
   <div class="container">
     <div class="row d-flex align-items-stretch">
