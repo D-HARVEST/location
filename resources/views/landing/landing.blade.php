@@ -495,9 +495,11 @@
         <div class="card h-100 border shadow-sm p-3 border-radius-xl shadow">
           <div class="row d-flex align-items-stretch">
             <div class="col-3 d-flex justify-content-center align-items-center">
-              <div class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center">
-                <img src="{{ asset('assets/www.jpeg') }}" class="img-fluid" alt="" style="height: 70px; width: 300px">
-              </div>
+             <div class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center">
+  <img src="{{ asset('assets/wwww.png') }}" class="img-fluid" alt=""
+       style="height: 100px; width: 300px; transform: rotate(-30deg);">
+</div>
+
             </div>
             <div class="col-9 d-flex flex-column justify-content-center">
               <h4>Messagerie</h4>
