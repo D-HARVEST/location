@@ -495,9 +495,9 @@
         <div class="card h-100 border shadow-sm p-3 border-radius-xl shadow">
           <div class="row d-flex align-items-stretch">
             <div class="col-3 d-flex justify-content-center align-items-center">
-             <div class="bg-light-primary rounded py-2 px-3 d-flex justify-content-center align-items-center">
+             <div class="bg-light-primary rounded d-flex justify-content-center align-items-center">
   <img src="{{ asset('assets/wwww.png') }}" class="img-fluid" alt=""
-       style="height: 100px; width: 300px; transform: rotate(-30deg);">
+       style="height: 70px; width: 300px; transform: rotate(-20deg);">
 </div>
 
             </div>
