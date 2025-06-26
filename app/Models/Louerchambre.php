@@ -31,7 +31,7 @@ use App\Models\Intervention;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Louerchambre extends Model
+class LouerChambre extends Model
 {
 
     protected $perPage = 20;

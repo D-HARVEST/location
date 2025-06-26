@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 
 class HistoriquepaiementController extends Controller
 {
@@ -108,7 +108,7 @@ class HistoriquepaiementController extends Controller
     {
         $user = auth()->user();
 
-        $louerchambre = Louerchambre::where('user_id', $user->id)
+        $louerchambre = LouerChambre::where('user_id', $user->id)
                             ->latest()
                             ->first();
 

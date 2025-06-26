@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\InterventionRequest;
 use App\Models\Intervention;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 use App\Notifications\InterventionSoumise;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -34,7 +34,7 @@ class InterventionController extends Controller
             })->pluck('id');
 
             // Récupère les ID des louerchambres associées à ces chambres
-            $louerchambreIds = Louerchambre::whereIn('chambre_id', $chambreIds)->pluck('id');
+            $louerchambreIds = LouerChambre::whereIn('chambre_id', $chambreIds)->pluck('id');
 
             // Récupère les interventions associées à ces louerchambres
             $interventions = Intervention::whereIn('louerchambre_id', $louerchambreIds)

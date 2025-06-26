@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $created_at
  * @property $updated_at
  *
- * @property Louerchambre $louerchambre
+ * @property LouerChambre $louerchambre
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
@@ -41,8 +41,8 @@ class Paiementespece extends Model
      */
     public function louerchambre()
     {
-        return $this->belongsTo(\App\Models\Louerchambre::class, 'louerchambre_id', 'id');
+        return $this->belongsTo(\App\Models\LouerChambre::class, 'louerchambre_id', 'id');
     }
-    
+
 
 }

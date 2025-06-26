@@ -9,7 +9,7 @@ use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 use App\Models\MoyenPaiement;
 use App\Models\Chambre;
 
@@ -63,7 +63,7 @@ class User extends Authenticatable
     // User.php
     public function louerchambres()
     {
-        return $this->hasMany(\App\Models\Louerchambre::class, 'user_id', 'id');
+        return $this->hasMany(\App\Models\LouerChambre::class, 'user_id', 'id');
     }
 
 
@@ -81,7 +81,7 @@ class User extends Authenticatable
 
     public function louerchambre()
     {
-        return $this->hasOne(Louerchambre::class)->latestOfMany();
+        return $this->hasOne(LouerChambre::class)->latestOfMany();
     }
 
     // app/Models/User.php
@@ -95,7 +95,7 @@ class User extends Authenticatable
     {
         return $this->hasManyThrough(
             \App\Models\Intervention::class,    // Le modèle final
-            \App\Models\Louerchambre::class,    // Le modèle intermédiaire
+            \App\Models\LouerChambre::class,    // Le modèle intermédiaire
             'user_id',                          // Clé étrangère sur le modèle Louerchambre
             'louerchambre_id',                  // Clé étrangère sur le modèle Intervention
             'id',                               // Clé locale sur le modèle User
@@ -108,7 +108,7 @@ class User extends Authenticatable
 
         return $this->hasManyThrough(
             \App\Models\Historiquepaiement::class,    // Le modèle final
-            \App\Models\Louerchambre::class,    // Le modèle intermédiaire
+            \App\Models\LouerChambre::class,    // Le modèle intermédiaire
             'user_id',                          // Clé étrangère sur le modèle Louerchambre
             'louerchambre_id',                  // Clé étrangère sur le modèle Historiquepaiement
             'id',                               // Clé locale sur le modèle User

@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LouerchambreRequest;
+use App\Http\Requests\LouerhambreRequest;
 use App\Models\Chambre;
 use App\Models\Historiquepaiement;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 use App\Models\Paiementenattente;
 use App\Models\Paiementespece;
 use App\Models\User;
@@ -52,7 +52,7 @@ class LouerchambreController extends Controller
         }
 
         // Vérifie s'il existe une réservation avec statut en attente
-        $louer = Louerchambre::where('chambre_id', $chambre->id)
+        $louer = LouerChambre::where('chambre_id', $chambre->id)
             ->where('statut', 'EN ATTENTE')
             ->first();
 
@@ -79,7 +79,7 @@ class LouerchambreController extends Controller
      */
     public function create(): View
     {
-        $louerchambre = new Louerchambre();
+        $louerchambre = new LouerChambre();
 
         $chambres = Chambre::pluck('libelle', 'id');
         $user = new User();
@@ -171,10 +171,10 @@ class LouerchambreController extends Controller
 
         $user = Auth::user();
         $chambres = Chambre::pluck('libelle', 'id');
-        $louerchambre = Louerchambre::with(['chambre', 'user', 'historiquesPaiements'])
+        $louerchambre = LouerChambre::with(['chambre', 'user', 'historiquesPaiements'])
             ->findOrFail($id);
         $historiquepaiements = $user->historiquesPaiements()->where('louerchambre_id', $id)->get();
-        $louer = Louerchambre::with(['chambre.maison', 'user'])
+        $louer = LouerChambre::with(['chambre.maison', 'user'])
             ->findOrFail($id);
         $paiements = HistoriquePaiement::where('louerchambre_id', $louer->id)->get();
         $montantLoyer = $louerchambre->loyer;
@@ -376,7 +376,7 @@ class LouerchambreController extends Controller
 
     public function initialiserPaiement(Request $request)
     {
-        $louerchambre = Louerchambre::where('id', $request->chambre_id)
+        $louerchambre = LouerChambre::where('id', $request->chambre_id)
             ->where('user_id', auth()->id())
             ->where('statut', 'CONFIRMER')
             ->latest()
@@ -474,7 +474,7 @@ class LouerchambreController extends Controller
 
     public function enregistrerPaiement(string $transaction_id)
     {
-        $louerchambre = Louerchambre::where('user_id', auth()->id())
+        $louerchambre = LouerChambre::where('user_id', auth()->id())
             ->latest()
             ->first();
 
@@ -580,7 +580,7 @@ class LouerchambreController extends Controller
      */
     public function edit($id): View
     {
-        $louerchambre = Louerchambre::findOrFail($id);
+        $louerchambre = LouerChambre::findOrFail($id);
         $chambres = Chambre::pluck('libelle', 'id');
         $user = $louerchambre->user;
         $chambre = $louerchambre->chambre;
@@ -592,7 +592,7 @@ class LouerchambreController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(LouerchambreRequest $request, Louerchambre $louerchambre): RedirectResponse
+    public function update(LouerchambreRequest $request, LouerChambre $louerchambre): RedirectResponse
     {
         $data = $request->validated();
         $user = $louerchambre->user;
@@ -705,7 +705,7 @@ class LouerchambreController extends Controller
             'file' => $request->file('copieContrat'),
             'all_inputs' => $request->all()
         ]);
-        $data = Louerchambre::findOrFail($id);
+        $data = LouerChambre::findOrFail($id);
 
         try {
 

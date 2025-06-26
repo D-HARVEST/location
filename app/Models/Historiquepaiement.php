@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 
 /**
  * Class Historiquepaiement
@@ -20,12 +20,12 @@ use App\Models\Louerchambre;
  * @property $created_at
  * @property $updated_at
  *
- * @property Louerchambre $louerchambre
+ * @property LouerChambre $louerchambre
  * @property User $user
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Historiquepaiement extends Model
+class HistoriquePaiement extends Model
 {
 
     protected $perPage = 20;
@@ -43,7 +43,7 @@ class Historiquepaiement extends Model
      */
     public function louerchambre()
     {
-        return $this->belongsTo(Louerchambre::class, 'louerchambre_id');
+        return $this->belongsTo(LouerChambre::class, 'louerchambre_id');
     }
 
 

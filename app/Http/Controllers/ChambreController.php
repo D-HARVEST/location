@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\ChambreRequest;
 use App\Models\Category;
 use App\Models\Chambre;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 use App\Models\Maison;
 use App\Models\Type;
 use App\Models\User;
@@ -51,7 +51,7 @@ class ChambreController extends Controller
     public function store(ChambreRequest $request): RedirectResponse
     {
         $all = $request->validated();
-        
+
         Chambre::create($all);
 
         return Redirect::route('dashboard')
@@ -71,7 +71,7 @@ class ChambreController extends Controller
         // }
 
         if ($user->hasRole('locataire')) {
-            $hasRented = Louerchambre::where('chambre_id', $id)
+            $hasRented = LouerChambre::where('chambre_id', $id)
                 ->where('user_id', $user->id)
                 ->exists();
 
@@ -80,19 +80,19 @@ class ChambreController extends Controller
             }
 
             // Ne montrer que ses propres locations
-            $louerchambres = Louerchambre::where('chambre_id', $id)
+            $louerchambres = LouerChambre::where('chambre_id', $id)
                 ->where('user_id', $user->id)
                 ->paginate(10);
         } else {
             // Pour les gérants (ayant passé la vérification plus haut)
-            $louerchambres = Louerchambre::where('chambre_id', $id)
+            $louerchambres = LouerChambre::where('chambre_id', $id)
                 ->with('user')
                 ->paginate(10);
         }
 
         $user = new User();
         $chambres = Chambre::pluck('libelle', 'id');
-        $louerchambre = Louerchambre::where('chambre_id', $id)->first(); // ou selon ta logique métier
+        $louerchambre = LouerChambre::where('chambre_id', $id)->first(); // ou selon ta logique métier
 
         return view('chambre.show', compact('chambre', 'louerchambres', 'user', 'chambres', 'louerchambre'));
     }
@@ -157,7 +157,7 @@ class ChambreController extends Controller
             'id' => ['required', 'exists:louerchambres,id'],
         ]);
 
-        $louerchambre = Louerchambre::findOrFail($request->id);
+        $louerchambre = LouerChambre::findOrFail($request->id);
         $louerchambre->update([
             'statut' => $request->statut
         ]);

@@ -6,7 +6,7 @@ use App\Http\Requests\ChambreRequest;
 use App\Http\Requests\MaisonRequest;
 use App\Models\Category;
 use App\Models\Chambre;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 use App\Models\Maison;
 use App\Models\MoyenPaiement;
 use App\Models\Type;

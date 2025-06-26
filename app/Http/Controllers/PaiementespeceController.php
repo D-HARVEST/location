@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Carbon\Carbon;
 use Illuminate\View\View;
-use App\Models\Louerchambre;
+use App\Models\LouerChambre;
 use Illuminate\Http\Request;
 use App\Models\Paiementespece;
 use App\Models\Historiquepaiement;
@@ -34,7 +34,7 @@ class PaiementespeceController extends Controller
     {
         $paiementespece = new Paiementespece();
 
-        $louerchambre = Louerchambre::with('user', 'chambre.maison')
+        $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($request->louerchambre_id);
 
         return view('paiementespece.create', compact('paiementespece', 'louerchambre'));
@@ -88,7 +88,7 @@ class PaiementespeceController extends Controller
     public function store(PaiementespeceRequest $request): RedirectResponse
     {
         $all = $request->validated();
-        $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
+        $louerchambre = LouerChambre::findOrFail($all['louerchambre_id']);
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
         // Récupère tous les mois déjà payés
@@ -148,7 +148,7 @@ class PaiementespeceController extends Controller
     {
         $paiementespece = Paiementespece::findOrFail($id);
 
-        $louerchambre = Louerchambre::with('user', 'chambre.maison')
+        $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($paiementespece->louerchambre_id);
 
         return view('paiementespece.show', compact('paiementespece', 'louerchambre'));
@@ -160,7 +160,7 @@ class PaiementespeceController extends Controller
     public function edit($id): View
     {
         $paiementespece = Paiementespece::findOrFail($id);
-        $louerchambre = Louerchambre::with('user', 'chambre.maison')
+        $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($paiementespece->louerchambre_id);
 
         return view('paiementespece.edit', compact('paiementespece', 'louerchambre'));
@@ -215,7 +215,7 @@ class PaiementespeceController extends Controller
     public function update(PaiementespeceRequest $request, Paiementespece $paiementespece): RedirectResponse
     {
         $all = $request->validated();
-        $louerchambre = Louerchambre::findOrFail($all['louerchambre_id']);
+        $louerchambre = LouerChambre::findOrFail($all['louerchambre_id']);
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
         // Récupère tous les mois déjà payés par d'autres paiements (hors celui qu'on modifie)
@@ -301,7 +301,7 @@ class PaiementespeceController extends Controller
         $paiement->save();
 
         if ($request->statut == 'CONFIRMER') {
-            $louerchambre = Louerchambre::findOrFail($paiement->louerchambre_id);
+            $louerchambre = LouerChambre::findOrFail($paiement->louerchambre_id);
 
             Historiquepaiement::create([
                 'louerchambre_id' => $paiement->louerchambre_id,
@@ -320,7 +320,7 @@ class PaiementespeceController extends Controller
     public function telechargerFacture($id)
     {
         $paiement = Paiementespece::findOrFail($id);
-        $louerchambre = Louerchambre::with('user', 'chambre.maison')
+        $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($paiement->louerchambre_id);
 
         $data = [
