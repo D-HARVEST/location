@@ -218,24 +218,26 @@ class PaiementespeceController extends Controller
         $louerchambre = LouerChambre::findOrFail($all['louerchambre_id']);
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
-        // Récupère tous les mois déjà payés par d'autres paiements (hors celui qu'on modifie)
+        // Récupère tous les mois déjà payés
         $moisDejaPayes = HistoriquePaiement::where('louerchambre_id', $all['louerchambre_id'])
-            ->where('id', '!=', $paiementespece->id)
             ->pluck('moisPaiement')
-            ->flatMap(fn($item) => json_decode($item, true))
+            ->flatMap(function ($item) {
+                return json_decode($item, true);
+            })
             ->map(fn($mois) => Carbon::parse($mois . '-01')->startOfMonth())
             ->sort()
             ->values();
 
-        // Déterminer le premier mois à payer : dernier payé + 1 ou date d’entrée
-        $moisAttendu = $moisDejaPayes->isNotEmpty()
-            ? $moisDejaPayes->last()->copy()->addMonth()
-            : $debutOccupation;
+        // Détermine le mois minimum à payer (dernier mois payé +1 ou début occupation)
+        if ($moisDejaPayes->isNotEmpty()) {
+            $dernierMoisPaye = $moisDejaPayes->last();
+            $moisAttendu = $dernierMoisPaye->copy()->addMonth();
+        } else {
+            $moisAttendu = $debutOccupation;
+        }
 
-        $moisDemandes = collect($all['moisPayes'])
-            ->map(fn($m) => Carbon::parse($m . '-01')->startOfMonth())
-            ->sort()
-            ->values();
+        // Trie les mois envoyés
+        $moisDemandes = collect($all['moisPayes'])->map(fn($m) => Carbon::parse($m . '-01')->startOfMonth())->sort()->values();
 
         $moisAEnregistrer = [];
 
@@ -244,16 +246,18 @@ class PaiementespeceController extends Controller
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} est antérieur à la date d'entrée.");
             }
 
+            // Mois déjà payé
             if ($moisDejaPayes->contains(fn($d) => $d->equalTo($moisDate))) {
                 return Redirect::back()->withInput()->with('error', "Le mois {$moisDate->translatedFormat('F Y')} a déjà été payé.");
             }
 
+            // Vérifie si les mois suivent bien la séquence attendue
             if (!$moisDate->equalTo($moisAttendu)) {
                 return Redirect::back()->withInput()->with('error', "Vous devez payer le mois de {$moisAttendu->translatedFormat('F Y')} avant {$moisDate->translatedFormat('F Y')}.");
             }
 
             $moisAEnregistrer[] = $moisDate->format('Y-m');
-            $moisAttendu->addMonth();
+            $moisAttendu->addMonth(); // Passe au mois suivant
         }
 
         // Mettre à jour les données
@@ -265,6 +269,8 @@ class PaiementespeceController extends Controller
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiementespece->louerchambre_id])
             ->with('success', 'Paiement en espèce mis à jour avec succès !');
     }
+
+
 
 
     public function destroy($id): RedirectResponse
