@@ -22,7 +22,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class PaiementEspece extends Model
 {
-
+     protected $table = 'paiementespeces';
     protected $perPage = 20;
     protected $casts = [
     'moisPayes' => 'array',
