@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Historiquepaiement;
+use App\Models\Paiementespece;
+use App\Models\Intervention;
 
 /**
  * Class Louerchambre
