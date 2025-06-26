@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PaiementenattenteRequest;
-use App\Models\Historiquepaiement;
+use App\Models\HistoriquePaiement;
 use App\Models\Paiementenattente;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -35,7 +35,7 @@ class PaiementenattenteController extends Controller
                 }
 
                 // 2. Vérifie si un paiement existe déjà pour le mois
-                $existeDeja = Historiquepaiement::where('louerchambre_id', $paiement->louerchambre_id)
+                $existeDeja = HistoriquePaiement::where('louerchambre_id', $paiement->louerchambre_id)
                     ->whereYear('datePaiement', $annee)
                     ->whereMonth('datePaiement', $mois)
                     ->exists();

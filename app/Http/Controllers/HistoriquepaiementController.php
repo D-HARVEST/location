@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\HistoriquepaiementRequest;
-use App\Models\Historiquepaiement;
+use App\Models\HistoriquePaiement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
@@ -19,7 +19,7 @@ class HistoriquepaiementController extends Controller
      */
     public function index(Request $request): View
     {
-        $historiquepaiements = Historiquepaiement::paginate();
+        $historiquepaiements = HistoriquePaiement::paginate();
 
         return view('historiquepaiement.index', compact('historiquepaiements'))
             ->with('i', ($request->input('page', 1) - 1) * $historiquepaiements->perPage());
@@ -35,7 +35,7 @@ class HistoriquepaiementController extends Controller
     public function store(HistoriquepaiementRequest $request): RedirectResponse
     {
         $all = $request->validated();
-        Historiquepaiement::create($all);
+        HistoriquePaiement::create($all);
 
         return Redirect::route('historiquepaiements.index')
             ->with('success', 'Historiquepaiement a été créé(e) avec succes !');
@@ -46,7 +46,7 @@ class HistoriquepaiementController extends Controller
      */
     public function show($id): View
     {
-        $historiquepaiement = Historiquepaiement::findOrFail($id);
+        $historiquepaiement = HistoriquePaiement::findOrFail($id);
 
         return view('historiquepaiement.show', compact('historiquepaiement'));
     }
@@ -56,7 +56,7 @@ class HistoriquepaiementController extends Controller
      */
     public function edit($id): View
     {
-        $historiquepaiement = Historiquepaiement::findOrFail($id);
+        $historiquepaiement = HistoriquePaiement::findOrFail($id);
 
         return view('historiquepaiement.edit', compact('historiquepaiement'));
     }
@@ -64,7 +64,7 @@ class HistoriquepaiementController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(HistoriquepaiementRequest $request, Historiquepaiement $historiquepaiement): RedirectResponse
+    public function update(HistoriquepaiementRequest $request, HistoriquePaiement $historiquepaiement): RedirectResponse
     {
         $data = $request->validated();
 
@@ -88,7 +88,7 @@ class HistoriquepaiementController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        $data = Historiquepaiement::findOrFail($id);
+        $data = HistoriquePaiement::findOrFail($id);
 
         try {
             $data->delete();
@@ -127,11 +127,11 @@ class HistoriquepaiementController extends Controller
 
    public function aprespaiement(string $transaction_id)
    {
-       if (Historiquepaiement::where("idTransaction", $transaction_id)->exists()) {
+       if (HistoriquePaiement::where("idTransaction", $transaction_id)->exists()) {
            return redirect("/historiquepaiements")->with("error", "Ce paiement a déjà été enregistré.");
        }
 
-       $historiquepaiements = Historiquepaiement::where("idTransaction", $transaction_id)->first();
+       $historiquepaiements = HistoriquePaiement::where("idTransaction", $transaction_id)->first();
 
        $response = Http::withToken(env("FEDAPAY_PRIVATE_KEY"))
            ->accept('application/json')
@@ -144,7 +144,7 @@ class HistoriquepaiementController extends Controller
        $res = $response->json();
 
 
-       if (isset($res['v1/transaction']['status']) && $res['v1/transaction']['status'] == 'approved' && intval($res['v1/transaction']['amount']) == intval($$historiquepaiements->getMontant())) {
+       if (isset($res['v1/transaction']['status']) && $res['v1/transaction']['status'] == 'approved' && intval($res['v1/transaction']['amount']) == intval($historiquepaiements->getMontant())) {
            $historiquepaiements->update([
                'TransactionId' => $transaction_id,
 

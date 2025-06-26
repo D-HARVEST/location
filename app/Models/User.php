@@ -107,7 +107,7 @@ class User extends Authenticatable
     {
 
         return $this->hasManyThrough(
-            \App\Models\Historiquepaiement::class,    // Le modèle final
+            \App\Models\HistoriquePaiement::class,    // Le modèle final
             \App\Models\LouerChambre::class,    // Le modèle intermédiaire
             'user_id',                          // Clé étrangère sur le modèle Louerchambre
             'louerchambre_id',                  // Clé étrangère sur le modèle Historiquepaiement

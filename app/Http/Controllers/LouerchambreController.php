@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\LouerhambreRequest;
 use App\Models\Chambre;
-use App\Models\Historiquepaiement;
+use App\Models\HistoriquePaiement;
 use App\Models\LouerChambre;
 use App\Models\Paiementenattente;
 use App\Models\Paiementespece;
@@ -394,7 +394,7 @@ class LouerchambreController extends Controller
         }
 
         // Récupérer tous les mois déjà payés (hors EN_ATTENTE)
-        $paiementsExistants = Historiquepaiement::where('user_id', auth()->id())
+        $paiementsExistants = HistoriquePaiement::where('user_id', auth()->id())
             ->where('louerchambre_id', $louerchambre->id)
             ->where('modePaiement', '!=', 'EN_ATTENTE')
             ->get();
@@ -448,7 +448,7 @@ class LouerchambreController extends Controller
         $montantTotal = count($moisPaiement) * $louerchambre->loyer;
 
         try {
-            $paiement = Historiquepaiement::create([
+            $paiement = HistoriquePaiement::create([
                 'idTransaction' => 'EN_ATTENTE',
                 'louerchambre_id' => $louerchambre->id,
                 'montant' => $montantTotal,
@@ -515,7 +515,7 @@ class LouerchambreController extends Controller
         ) {
 
 
-            $paiement = Historiquepaiement::where('user_id', auth()->id())
+            $paiement = HistoriquePaiement::where('user_id', auth()->id())
                 ->where('idTransaction', 'EN_ATTENTE')
                 ->latest()
                 ->first();
@@ -562,7 +562,7 @@ class LouerchambreController extends Controller
 
     public function annulerPaiement($id)
     {
-        $paiement = Historiquepaiement::where('id', $id)
+        $paiement = HistoriquePaiement::where('id', $id)
             ->where('modePaiement', 'EN_ATTENTE')
             ->where('user_id', auth()->id())
             ->first();

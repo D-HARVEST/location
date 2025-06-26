@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chambre;
 use Illuminate\Http\Request;
-use App\Models\Historiquepaiement;
+use App\Models\HistoriquePaiement;
 use Illuminate\Support\Facades\Auth;
 
 class SuiviController extends Controller

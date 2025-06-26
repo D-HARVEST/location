@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Historiquepaiement;
+use App\Models\HistoriquePaiement;
 use App\Models\Paiementespece;
 use App\Models\Intervention;
 
@@ -26,7 +26,7 @@ use App\Models\Intervention;
  *
  * @property Chambre $chambre
  * @property User $user
- * @property Historiquepaiement[] $historiquepaiements
+ * @property HistoriquePaiement[] $historiquepaiements
  * @property Paiementenattente[] $paiementenattentes
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
@@ -55,7 +55,7 @@ class LouerChambre extends Model
     // Louerchambre.php
     public function historiquesPaiements()
     {
-        return $this->hasMany(Historiquepaiement::class, 'louerchambre_id');
+        return $this->hasMany(HistoriquePaiement::class, 'louerchambre_id');
     }
 
     public function paiements()

@@ -7,7 +7,7 @@ use Illuminate\View\View;
 use App\Models\LouerChambre;
 use Illuminate\Http\Request;
 use App\Models\Paiementespece;
-use App\Models\Historiquepaiement;
+use App\Models\HistoriquePaiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
@@ -92,7 +92,7 @@ class PaiementespeceController extends Controller
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
         // Récupère tous les mois déjà payés
-        $moisDejaPayes = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+        $moisDejaPayes = HistoriquePaiement::where('louerchambre_id', $all['louerchambre_id'])
             ->pluck('moisPaiement')
             ->flatMap(function ($item) {
                 return json_decode($item, true);
@@ -219,7 +219,7 @@ class PaiementespeceController extends Controller
         $debutOccupation = Carbon::parse($louerchambre->debutOccupation)->startOfMonth();
 
         // Récupère tous les mois déjà payés par d'autres paiements (hors celui qu'on modifie)
-        $moisDejaPayes = Historiquepaiement::where('louerchambre_id', $all['louerchambre_id'])
+        $moisDejaPayes = HistoriquePaiement::where('louerchambre_id', $all['louerchambre_id'])
             ->where('id', '!=', $paiementespece->id)
             ->pluck('moisPaiement')
             ->flatMap(fn($item) => json_decode($item, true))
@@ -303,7 +303,7 @@ class PaiementespeceController extends Controller
         if ($request->statut == 'CONFIRMER') {
             $louerchambre = LouerChambre::findOrFail($paiement->louerchambre_id);
 
-            Historiquepaiement::create([
+            HistoriquePaiement::create([
                 'louerchambre_id' => $paiement->louerchambre_id,
                 'datePaiement'    => $paiement->Date,
                 'montant'         => $paiement->Montant,
