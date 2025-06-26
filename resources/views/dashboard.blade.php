@@ -69,14 +69,14 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#tousproprietes">
+    <a class="nav-link  rounded-1" data-bs-toggle="tab" href="#tousproprietes">
       <iconify-icon icon="mdi:home-group" class="me-1"></iconify-icon>
       Tous les Propriétés
     </a>
   </li>
 
   <li class="nav-item">
-    <a class="nav-link rounded-1" data-bs-toggle="tab" href="#proprietes">
+    <a class="nav-link active rounded-1" data-bs-toggle="tab" href="#proprietes">
       <iconify-icon icon="mdi:alert-octagon-outline" class="me-1"></iconify-icon>
       Abonnements impayés
     </a>
