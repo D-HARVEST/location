@@ -21,10 +21,10 @@ class GenererPaiementAbonnement extends Command
 
 
         // Exécuter uniquement le 5 de chaque mois
-        if (Carbon::now()->day !== 5) {
-            $this->info("Cette commande ne s’exécute que le 5 de chaque mois.");
-            return;
-        }
+        // if (Carbon::now()->day !== 5) {
+        //     $this->info("Cette commande ne s’exécute que le 5 de chaque mois.");
+        //     return;
+        // }
 
         $this->info("Début de la génération des paiements d’abonnement...");
 
