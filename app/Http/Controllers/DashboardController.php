@@ -11,7 +11,7 @@ use App\Models\LouerChambre;
 use App\Models\Maison;
 use App\Models\MoyenPaiement;
 use App\Models\Paiementenattente;
-use App\Models\Paiementespece;
+use App\Models\PaiementEspece;
 use App\Models\Type;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;

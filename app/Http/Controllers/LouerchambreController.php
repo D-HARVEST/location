@@ -7,7 +7,7 @@ use App\Models\Chambre;
 use App\Models\HistoriquePaiement;
 use App\Models\LouerChambre;
 use App\Models\Paiementenattente;
-use App\Models\Paiementespece;
+use App\Models\PaiementEspece;
 use App\Models\User;
 use App\Notifications\RappelPaiementLoyer;
 use Carbon\CarbonPeriod;
@@ -264,7 +264,7 @@ class LouerchambreController extends Controller
             }
         }
 
-        $paiementespeces = Paiementespece::where('louerchambre_id', $louerchambre->id)->get();
+        $paiementespeces = PaiementEspece::where('louerchambre_id', $louerchambre->id)->get();
 
 
         return view('louerchambre.show', compact(

@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  * @package App
  * @mixin \Illuminate\Database\Eloquent\Builder
  */
-class Paiementespece extends Model
+class PaiementEspece extends Model
 {
 
     protected $perPage = 20;

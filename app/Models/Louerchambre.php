@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\HistoriquePaiement;
-use App\Models\Paiementespece;
+use App\Models\PaiementEspece;
 use App\Models\Intervention;
 
 /**
@@ -60,7 +60,7 @@ class LouerChambre extends Model
 
     public function paiements()
     {
-        return $this->hasMany(Paiementespece::class, 'louerchambre_id');
+        return $this->hasMany(PaiementEspece::class, 'louerchambre_id');
     }
 
 

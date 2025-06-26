@@ -6,7 +6,7 @@ use Carbon\Carbon;
 use Illuminate\View\View;
 use App\Models\LouerChambre;
 use Illuminate\Http\Request;
-use App\Models\Paiementespece;
+use App\Models\PaiementEspece;
 use App\Models\HistoriquePaiement;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
@@ -21,7 +21,7 @@ class PaiementespeceController extends Controller
      */
     public function index(Request $request): View
     {
-        $paiementespeces = Paiementespece::paginate();
+        $paiementespeces = PaiementEspece::paginate();
 
         return view('paiementespece.index', compact('paiementespeces'))
             ->with('i', ($request->input('page', 1) - 1) * $paiementespeces->perPage());
@@ -32,7 +32,7 @@ class PaiementespeceController extends Controller
      */
     public function create(Request $request): View
     {
-        $paiementespece = new Paiementespece();
+        $paiementespece = new PaiementEspece();
 
         $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($request->louerchambre_id);
@@ -134,7 +134,7 @@ class PaiementespeceController extends Controller
         }
 
         $all['moisPayes'] = json_encode($moisAEnregistrer);
-        $paiement = Paiementespece::create($all);
+        $paiement = PaiementEspece::create($all);
 
         return Redirect::route('louerchambres.show', ['louerchambre' => $paiement->louerchambre_id])
             ->with('success', 'Paiement en espèce enregistré avec succès pour les mois sélectionnés.');
@@ -146,7 +146,7 @@ class PaiementespeceController extends Controller
      */
     public function show($id): View
     {
-        $paiementespece = Paiementespece::findOrFail($id);
+        $paiementespece = PaiementEspece::findOrFail($id);
 
         $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($paiementespece->louerchambre_id);
@@ -159,7 +159,7 @@ class PaiementespeceController extends Controller
      */
     public function edit($id): View
     {
-        $paiementespece = Paiementespece::findOrFail($id);
+        $paiementespece = PaiementEspece::findOrFail($id);
         $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($paiementespece->louerchambre_id);
 
@@ -212,7 +212,7 @@ class PaiementespeceController extends Controller
 
 
 
-    public function update(PaiementespeceRequest $request, Paiementespece $paiementespece): RedirectResponse
+    public function update(PaiementespeceRequest $request, PaiementEspece $paiementespece): RedirectResponse
     {
         $all = $request->validated();
         $louerchambre = LouerChambre::findOrFail($all['louerchambre_id']);
@@ -269,7 +269,7 @@ class PaiementespeceController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        $data = Paiementespece::findOrFail($id);
+        $data = PaiementEspece::findOrFail($id);
 
         try {
             $data->delete();
@@ -290,7 +290,7 @@ class PaiementespeceController extends Controller
             'motif_rejet' => 'required_if:statut,REJETER'
         ]);
 
-        $paiement = Paiementespece::findOrFail($id);
+        $paiement = PaiementEspece::findOrFail($id);
         $paiement->statut = $request->statut;
         // $moisPayes = $request->moisPayes;
 
@@ -319,7 +319,7 @@ class PaiementespeceController extends Controller
 
     public function telechargerFacture($id)
     {
-        $paiement = Paiementespece::findOrFail($id);
+        $paiement = PaiementEspece::findOrFail($id);
         $louerchambre = LouerChambre::with('user', 'chambre.maison')
             ->findOrFail($paiement->louerchambre_id);
 
