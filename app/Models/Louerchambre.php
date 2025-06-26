@@ -33,7 +33,7 @@ use App\Models\Intervention;
  */
 class LouerChambre extends Model
 {
-
+    protected $table = 'louerchambres';
     protected $perPage = 20;
 
     /**

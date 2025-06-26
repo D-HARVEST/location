@@ -61,7 +61,7 @@ Route::middleware(['auth'])->group(function () {
 
         Route::patch('/users/{id}/toggle-activation', [UserController::class, 'toggleActivation'])->name('users.toggleActivation');
 
-        Route::put('/maisons/{id}', [MaisonController::class, 'updatee'])->name('maisons.update');
+        Route::put('/maisons/{id}', [MaisonController::class, 'updatee'])->name('maisons.updatee');
 
 
     });

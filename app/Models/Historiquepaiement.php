@@ -28,6 +28,7 @@ use App\Models\LouerChambre;
 class HistoriquePaiement extends Model
 {
 
+    protected $table = 'historiquepaiements';
     protected $perPage = 20;
 
     /**
