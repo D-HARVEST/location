@@ -18,6 +18,12 @@
     font-family: sans-serif;
   }
 
+
+.nav-tabs {
+  display: flex;
+  gap: 0.5rem; /* ou plus selon ton besoin */
+}
+
   .nav-tabs .nav-link {
     font-weight: 400;
     /* border: 1px solid transparent; */
@@ -38,7 +44,7 @@
 
 
 <div class="container">
-  <div class="row g-3">
+  {{-- <div class="row g-3">
 
     <!-- Propriétés et Chambres -->
     <div class="col-md-4">
@@ -54,7 +60,7 @@
       </div>
     </div>
 
-  </div>
+  </div> --}}
 
 <div class="container mt-5">
   <div class="row justify-content-center">
@@ -306,6 +312,12 @@
     font-size: 1.2rem;
     font-family: sans-serif;
   }
+
+  .nav-tabs {
+  display: flex;
+  gap: 0.5rem; /* ou plus selon ton besoin */
+}
+
 
   .nav-tabs .nav-link {
     font-weight: 400;
@@ -1118,6 +1130,11 @@
     font-size: 1.2rem;
     font-family: sans-serif;
   }
+  .nav-tabs {
+  display: flex;
+  gap: 0.5rem; /* ou plus selon ton besoin */
+}
+
 
   .nav-tabs .nav-link {
     font-weight: 400;

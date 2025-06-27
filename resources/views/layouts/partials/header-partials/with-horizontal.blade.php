@@ -1,12 +1,12 @@
 <div class="app-header with-horizontal  ">
     <nav class="navbar navbar-expand-xl container-fluid p-3">
-        {{-- <ul class="navbar-nav">
+        <ul class="navbar-nav">
             <li class="nav-item d-none d-xl-block">
-                <a href="index.html" class="text-nowrap nav-link">
+                <a href="/" class="text-nowrap nav-link">
                     @include('layouts.partials.logo')
                 </a>
             </li>
-        </ul> --}}
+        </ul>
         <a class="navbar-toggler nav-icon-hover p-0 border-0" href="javascript:void(0)" data-bs-toggle="collapse"
             data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="p-2">
