@@ -40,7 +40,7 @@
               <div class="">
                   <div class="row">
                       <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
-                          <span class=""> Tous droits réservés</span>
+                          <span class="">&copy; {{ date('Y') }} D-Go. Tous droits réservés</span>
 
                       </div>
                       <div class="col-md-6 my-auto text-center text-md-end ">

@@ -552,16 +552,30 @@
 
 
 
-   <!-- Footer -->
-<footer class="footer py-4">
-    <div class="container d-flex justify-content-between align-items-center">
-        <p class="mb-0">&copy; 2024 D-Go. Tous droits réservés.</p>
-        <p class="mb-0">Réalisé par:
-            <a href="https://d-harvest.com/" class="mx-1"><span  style="font-size: 1.1 rem; color: #54b435">D-HARVEST</span></a>
 
-        </p>
-    </div>
+<!-- Footer -->
+ <footer class="w-100 bg-secondary ">
+      <div class="container pt-4">
+     <div class=" copyright bg-secondary  py-4 text-light">
+              <div class="">
+                  <div class="row">
+                      <div class="col-md-6 text-center text-md-start mb-3 mb-md-0">
+                          <span class="">&copy; {{ date('Y') }} D-Go. Tous droits réservés</span>
+
+                      </div>
+                      <div class="col-md-6 my-auto text-center text-md-end ">
+                          <!--/*** This template is free as long as you keep the below author’s credit link/attribution link/backlink. ***/-->
+                          <!--/*** If you'd like to use the template without the below author’s credit link/attribution link/backlink, ***/-->
+                          <!--/*** you can purchase the Credit Removal License from "https://htmlcodex.com/credit-removal". ***/-->
+                          Made with ❤️ By <a class="text-success" target="_blank"
+                              href="https://d-harvest.com">D-HARVEST</a>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
 </footer>
+
 
 
 
