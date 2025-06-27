@@ -14,7 +14,7 @@
             </span>
         </a>
         <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center justify-content-between w-100">
 
                 <ul class="navbar-nav flex-row ms-auto align-items-center justify-content-center">
 

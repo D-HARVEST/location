@@ -60,7 +60,7 @@
   <div class="row justify-content-center">
    <div class="col-md-12">
   <!-- Onglets de navigation -->
-<ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center  p-2"  style="background: rgba(19, 18, 18, 0.12);" >
+  <ul class="nav nav-tabs nav-fill w-100 rounded-1 l1 text-center  p-2"  style="background: rgba(19, 18, 18, 0.12);" >
   <li class="nav-item">
     <a class="nav-link rounded-1" data-bs-toggle="tab" href="#moyenspaiement">
       <iconify-icon icon="mdi:credit-card-outline" class="me-1"></iconify-icon>
@@ -76,7 +76,7 @@
   </li>
 
   <li class="nav-item">
-    <a class="nav-link active rounded-1" data-bs-toggle="tab" href="#proprietes">
+    <a class="nav-link active show rounded-1" data-bs-toggle="tab" href="#proprietes">
       <iconify-icon icon="mdi:alert-octagon-outline" class="me-1"></iconify-icon>
       Abonnements impayés
     </a>
@@ -134,10 +134,10 @@
 
         </td>
 
-    </tr>
+      </tr>
        @endforeach
 
-       @foreach($propriete as $abonnement)
+ @foreach($propriete as $abonnement)
 <!-- Modal -->
 <div class="modal fade" id="editModal{{ $abonnement->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $abonnement->id }}"   style="backdrop-filter: blur(8px)" aria-modal="true" role="dialog">
   <div class="modal-dialog modal-sm modal-dialog-centered">
@@ -151,9 +151,8 @@
         </div>
         <div class="modal-body row">
           <div class="col-lg-6 form-group mb-2">
-    <strong><label for="pourcentage_special_{{ $abonnement->id }}" class="form-label">Pourcentage Spécial</label></strong>
-
-    <input
+          <strong><label for="pourcentage_special_{{ $abonnement->id }}" class="form-label">Pourcentage Spécial</label></strong>
+     <input
         type="range"
         name="pourcentage_special"
         id="pourcentage_special_{{ $abonnement->id }}"
@@ -168,9 +167,7 @@
     <div>
         <strong><span id="valeurPourcentage_{{ $abonnement->id }}">{{ old('pourcentage_special', $abonnement->pourcentage_special ?? 0) }}%</span></strong>
     </div>
-</div>
-
-
+   </div>
           <div class="col-lg-6 form-group mb-2">
             <strong><label for="date_fin_mois" class="form-label">Date Fin mois</label></strong>
             <input type="date" name="date_fin_mois" class="form-control"
@@ -193,7 +190,7 @@
 
     </div>
 
-     <div class="tab-pane fade" id="proprietes">
+     <div class="tab-pane fade active show" id="proprietes">
       <div class="card-title text-dark fw-bolder">Paiement de l’abonnement (4%)/mois</div>
           <hr>
         <div class="table-responsive">
@@ -261,15 +258,7 @@
    </tbody>
     </table>
     </div>
-
-
     </div>
-
-
-
-
-
-
   </div>
  </div>
 
@@ -759,7 +748,7 @@
    @endforeach
    </tbody>
     </table>
-        </div>
+    </div>
 </div>
 
 
@@ -1082,7 +1071,7 @@
  </div>
 
 </div>
- </div>
+</div>
 
 @endrole
 
