@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LouerhambreRequest;
+use App\Http\Requests\LouerchambreRequest;
 use App\Models\Chambre;
 use App\Models\HistoriquePaiement;
 use App\Models\LouerChambre;
