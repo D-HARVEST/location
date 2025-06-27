@@ -4,12 +4,13 @@
             <a class="navbar-brand m-0 p-0 " href="/">
                 <img src="{{ asset('logo-dh.svg') }}" width="50" alt="img-fluid" />
             </a>
-            <button class="navbar-toggler border-0 p-0 shadow-none" type="button" data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
-                <i class="ti ti-menu-2 fs-9"></i>
-            </button>
-
-            <div class="collapse navbar-collapse justify-content-end px-0" id="navbarSupportedContent">
+         <a class="navbar-toggler nav-icon-hover p-0 border-0" href="javascript:void(0)" data-bs-toggle="collapse"
+            data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="p-2">
+                <i class="ti ti-dots fs-7"></i>
+            </span>
+          </a>
+            <div class="collapse navbar-collapse justify-content-end px-0" id="navbarNav">
                 <ul class="navbar-nav align-items-center mb-2 mb-lg-0">
 
 
