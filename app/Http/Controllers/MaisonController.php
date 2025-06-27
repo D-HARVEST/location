@@ -139,7 +139,7 @@ class MaisonController extends Controller
         }
 
 
-        return Redirect::route('maisons.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Maison a été supprimé(e) avec succes !');
     }
 }

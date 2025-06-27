@@ -588,11 +588,13 @@
                     <i class="ti ti-edit me-1"></i> Modifier
                 </a>
               </li>
+              @if (empty($location->copieContrat))
               <li>
                 <a class="dropdown-item" href="{{ route('contrat.show', $location->id) }}">
                     <i class="ti ti-file-text me-1"></i>
                      Générer le contrat</a>
               </li>
+            @endif
               @if ($location->statut === 'CONFIRMER')
               <li>
               <button class="dropdown-item" onclick="submitStatutForm('ARCHIVER', {{ $location->id }})">
