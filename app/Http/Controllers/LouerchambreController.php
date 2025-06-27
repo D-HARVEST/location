@@ -443,6 +443,16 @@ class LouerchambreController extends Controller
             ]);
         }
 
+        $moisVerif = $moisAttendu->copy();
+        foreach ($moisChoisi as $mois) {
+            if (!$mois->equalTo($moisVerif)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Les mois sélectionnés doivent être consécutifs à partir de ' . $moisAttendu->translatedFormat('F Y') . '.'
+                ]);
+            }
+            $moisVerif->addMonthNoOverflow();
+        }
 
 
         $montantTotal = count($moisPaiement) * $louerchambre->loyer;
@@ -549,7 +559,7 @@ class LouerchambreController extends Controller
                     }
                 }
 
-                return Redirect::route('dashboard', ['louerchambre' => $louerchambre->id])
+                return Redirect::route('louerchambres.show', ['louerchambre' => $louerchambre->id])
                     ->with('error', 'Le paiement a échoué ou est introuvable. Veuillez payer d’abord.');
             }
         }

@@ -150,6 +150,7 @@ class DashboardController extends Controller
         $prochainPaiement = null;
         $chambreCount = null;
 
+        
         if ($user->hasRole('locataire')) {
             $loyerMensuel = $louerChambres->sum('loyer');
             $chambreCount = $louerChambres->count();

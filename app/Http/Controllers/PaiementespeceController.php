@@ -289,39 +289,94 @@ class PaiementespeceController extends Controller
             ->with('success', 'Paiement en espèce a été supprimé(e) avec succes !');
     }
 
+    // public function changerStatut(Request $request, $id): RedirectResponse
+    // {
+    //     $request->validate([
+    //         'statut' => 'required|in:CONFIRMER,REJETER',
+    //         'motif_rejet' => 'required_if:statut,REJETER'
+    //     ]);
+
+    //     $paiement = PaiementEspece::findOrFail($id);
+    //     $paiement->statut = $request->statut;
+    //     // $moisPayes = $request->moisPayes;
+
+    //     if ($request->statut === 'REJETER') {
+    //         $paiement->Motif_rejet = $request->motif_rejet;
+    //     }
+
+    //     $paiement->save();
+
+    //     if ($request->statut == 'CONFIRMER') {
+    //         $louerchambre = LouerChambre::findOrFail($paiement->louerchambre_id);
+
+    //         HistoriquePaiement::create([
+    //             'louerchambre_id' => $paiement->louerchambre_id,
+    //             'datePaiement'    => $paiement->Date,
+    //             'montant'         => $paiement->Montant,
+    //             'modePaiement'    => 'Espece',
+    //             'idTransaction'   => $paiement->id,
+    //             'moisPaiement'    => $paiement->moisPayes,
+    //             'user_id'         => $louerchambre->user_id,
+    //         ]);
+    //     }
+
+    //     return back()->with('success', 'Le statut du paiement a été mis à jour avec succès.');
+    // }
+
+
     public function changerStatut(Request $request, $id): RedirectResponse
-    {
-        $request->validate([
-            'statut' => 'required|in:CONFIRMER,REJETER',
-            'motif_rejet' => 'required_if:statut,REJETER'
-        ]);
+{
+    $request->validate([
+        'statut' => 'required|in:CONFIRMER,REJETER',
+        'motif_rejet' => 'required_if:statut,REJETER'
+    ]);
 
-        $paiement = PaiementEspece::findOrFail($id);
-        $paiement->statut = $request->statut;
-        // $moisPayes = $request->moisPayes;
+    $paiement = PaiementEspece::findOrFail($id);
+    $paiement->statut = $request->statut;
 
-        if ($request->statut === 'REJETER') {
-            $paiement->Motif_rejet = $request->motif_rejet;
-        }
-
+    if ($request->statut === 'REJETER') {
+        $paiement->Motif_rejet = $request->motif_rejet;
         $paiement->save();
-
-        if ($request->statut == 'CONFIRMER') {
-            $louerchambre = LouerChambre::findOrFail($paiement->louerchambre_id);
-
-            HistoriquePaiement::create([
-                'louerchambre_id' => $paiement->louerchambre_id,
-                'datePaiement'    => $paiement->Date,
-                'montant'         => $paiement->Montant,
-                'modePaiement'    => 'Espece',
-                'idTransaction'   => $paiement->id,
-                'moisPaiement'    => $paiement->moisPayes,
-                'user_id'         => $louerchambre->user_id,
-            ]);
-        }
-
-        return back()->with('success', 'Le statut du paiement a été mis à jour avec succès.');
+        return back()->with('success', 'Le paiement a été rejeté avec succès.');
     }
+
+    // Vérification pour CONFIRMER
+    $moisDemandes = json_decode($paiement->moisPayes, true); // tableau de mois
+    $moisDemandesCarbon = collect($moisDemandes)->map(fn($m) => \Carbon\Carbon::parse($m)->startOfMonth());
+
+    // Récupérer les mois déjà enregistrés dans historique pour cette location
+    $moisExistants = HistoriquePaiement::where('louerchambre_id', $paiement->louerchambre_id)
+        ->where('modePaiement', '!=', 'EN_ATTENTE')
+        ->get()
+        ->flatMap(function ($p) {
+            return collect(json_decode($p->moisPaiement, true))
+                ->map(fn($m) => \Carbon\Carbon::parse($m)->startOfMonth());
+        });
+
+    foreach ($moisDemandesCarbon as $mois) {
+        if ($moisExistants->contains(fn($m) => $m->equalTo($mois))) {
+            return back()->with('error', 'Le mois de ' . $mois->translatedFormat('F Y') . ' a déjà été payé.');
+        }
+    }
+
+    // Tout est ok, on confirme et on enregistre dans historique
+    $paiement->save();
+
+    $louerchambre = LouerChambre::findOrFail($paiement->louerchambre_id);
+
+    HistoriquePaiement::create([
+        'louerchambre_id' => $paiement->louerchambre_id,
+        'datePaiement'    => $paiement->Date,
+        'montant'         => $paiement->Montant,
+        'modePaiement'    => 'Espece',
+        'idTransaction'   => $paiement->id,
+        'moisPaiement'    => $paiement->moisPayes,
+        'user_id'         => $louerchambre->user_id,
+    ]);
+
+    return back()->with('success', 'Le paiement a été confirmé avec succès.');
+}
+
 
     public function telechargerFacture($id)
     {

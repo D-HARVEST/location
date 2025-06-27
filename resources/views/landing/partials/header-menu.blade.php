@@ -15,12 +15,17 @@
 
                     <div class="nav-item pe-0 me-0">
                         <a class="nav-link me-0 pe-0" target="_blank">
+                            @if (auth()->check())
+                                <a href="{{ route('dashboard') }}"
+                                    class="btn btn-xl btn-outline-success text-dark rounded-1 py-1 px-3 ms-2 me-0 ">Tableau
+                                    de bord</a>
+                            @else
 
                             <div class="dropleft dropdown  hover-dd me-0 pe-0">
                                 {{-- <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 S'authentifier
-                            </button> --}}
+                                </button> --}}
                                 <button class="btn btn-xl btn-outline-success text-dark rounded-1 py-1 px-3 ms-2 me-0 ">
                                     S'authentifier
                                 </button>
@@ -56,13 +61,11 @@
                                     </a>
                                 </div>
                             </div>
-
+                           @endif
                         </a>
                     </div>
                 </ul>
             </div>
-
-   
 
         </div>
     </nav>

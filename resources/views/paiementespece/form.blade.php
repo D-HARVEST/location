@@ -38,10 +38,14 @@
     $now = Carbon::now()->startOfMonth();
     $end = $now->copy()->addMonths(24);
 
-    $selectedMois = old('moisPayes', $paiementespece?->moisPayes ?? []);
-    if (is_string($selectedMois)) {
-        $selectedMois = explode(',', $selectedMois);
-    }
+   $selectedMois = old('moisPayes');
+
+if (!$selectedMois && $paiementespece?->moisPayes) {
+    $selectedMois = is_array($paiementespece->moisPayes)
+        ? $paiementespece->moisPayes
+        : json_decode($paiementespece->moisPayes, true);
+}
+$selectedMois = is_array($selectedMois) ? $selectedMois : [];
   @endphp
 
                 @while ($start <= $end)

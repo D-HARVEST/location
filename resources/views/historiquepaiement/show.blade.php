@@ -2,7 +2,11 @@
     $pagetitle = 'Détails Historiquepaiement';
     $breadcrumbs = ['Liste des Historiquepaiement' => route('historiquepaiements.index'), 'Détails Historiquepaiement' => ''];
     use Carbon\Carbon;
-    $mois = explode(',', $historiquepaiement->moisPaiement);
+  $mois = is_array($historiquepaiement->moisPaiement)
+    ? $historiquepaiement->moisPaiement
+    : json_decode($historiquepaiement->moisPaiement, true);
+
+
 @endphp
 
 @extends('layouts.app')

@@ -121,7 +121,7 @@ class InterventionController extends Controller
         $all = $request->validated();
         $intervention->update($all);
 
-        return Redirect::route('interventions.index')
+        return Redirect::route('dashboard')
             ->with('success', 'Intervention mise à jour avec succès !');
     }
 

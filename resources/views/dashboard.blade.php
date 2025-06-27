@@ -1165,7 +1165,7 @@
             <div><small class="text-muted">Mes chambres</small></div>
             <i class="fas fa-building text-muted"></i>
           </div>
-          <h4 class="mt-2 mb-0">{{ $chambreCount }}</h4>
+          <h4 class="mt-2 mb-0">{{ $chambreCount ?? 0 }}</h4>
         </div>
       </div>
     </div>
@@ -1179,7 +1179,7 @@
             <div><small class="text-muted">Loyer mensuel</small></div>
             <i class="fas fa-credit-card text-muted"></i>
           </div>
-          <h4 class="mt-2 mb-0">{{ number_format($loyerMensuel, 0, ',', ' ') }} FCFA</h4>
+          <h4 class="mt-2 mb-0">{{ number_format($loyerMensuel, 0, ',', ' ' ) }} FCFA</h4>
         </div>
       </div>
     </div>

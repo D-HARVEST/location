@@ -6,58 +6,67 @@
 @extends('layouts.app')
 
 @section('template_title')
-    Détails  Moyen Paiement
+    Détails Moyen Paiement
 @endsection
 
 @section('content')
-    <section class="">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="card">
+<section class="">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
 
-
-                    <div class="card-body">
-                        <div class="text-end">
-                            <a href="{{ route('moyen-paiements.index') }}" class="btn btn-sm btn-primary"> Retour</a>
-                        </div>
-                        <div class="row">
-
-                            
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Designation:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $moyenPaiement->Designation }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Cle Privee:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $moyenPaiement->Cle_privee }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Cle Public:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $moyenPaiement->Cle_public }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">Isactif:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $moyenPaiement->isActif }}"
-                                readonly>
-                        </div>
-
-                        <div class="col-lg-4">
-                            <strong class="text-dark ">User Id:</strong>
-                            <input type="text" class="form-control rounded-05 my-1 text-dark" value="{{ $moyenPaiement->user_id }}"
-                                readonly>
-                        </div>
-
-                        </div>
+                    <div class="text-end mb-3">
+                        <a href="{{ route('dashboard') }}" class="btn btn-sm btn-primary">Retour</a>
                     </div>
+
+                    <div class="row g-4">
+
+                        <div class="col-lg-4">
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Désignation</div>
+                                <div class="fw-semibold text-dark">{{ $moyenPaiement->Designation }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Clé Privée</div>
+                                <div class="fw-semibold text-dark">{{ $moyenPaiement->Cle_privee }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Clé Publique</div>
+                                <div class="fw-semibold text-dark">{{ $moyenPaiement->Cle_public }}</div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Statut Actif</div>
+                                <div class="fw-semibold text-dark">
+                                                                                @if($moyenPaiement->isActive == 1)
+                                                <span class="">Oui</span>
+                                            @else
+                                                <span class="">Non</span>
+                                            @endif
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4">
+                            <div class="bg-light p-3 rounded">
+                                <div class="text-muted small">Utilisateur</div>
+                                <div class="fw-semibold text-dark">{{ $moyenPaiement->user->name }}</div>
+                            </div>
+                        </div>
+
+                    </div> <!-- end .row -->
                 </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 @endsection
