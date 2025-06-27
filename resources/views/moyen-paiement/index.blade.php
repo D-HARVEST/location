@@ -21,9 +21,12 @@
                             </div>
                         @endif
 
+                        @if ($moyenPaiements->isEmpty())
                         <div class="text-end">
                             <a href="{{ route('moyen-paiements.create') }}" class="btn btn-sm btn-primary rounded-05"> Nouveau</a>
                         </div>
+                        @endif
+                        
                         <div class="col mb-2">
                             <h5 class="card-title text-dark fw-bolder mb-0">Moyen Paiement(s)</h5>
                             <span>Liste des Moyen Paiement(s)</span>

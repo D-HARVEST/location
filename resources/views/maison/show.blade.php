@@ -17,6 +17,7 @@
                                     <i class="ti ti-edit"></i> Modifier
                                 </a>
                             </li>
+                            @if ($chambre->statut != 'Non disponible')
                             <li>
                                 <form action="{{ route('chambres.destroy', $chambre->id) }}" method="POST"
                                        onsubmit="event.preventDefault(); showDeleteAlert(() => this.submit());">
@@ -28,6 +29,7 @@
                                     </button>
                                 </form>
                             </li>
+                            @endif
                         </ul>
                     </div>
 

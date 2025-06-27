@@ -632,10 +632,11 @@
             }
         }} ms-auto">
         {{
-            $location->statut === 'ARCHIVER'
-                ? 'Désactivé'
-                : ucfirst(strtolower($location->statut))
-        }}
+        match ($location->statut) {
+            'ARCHIVER'   => 'Désactivée',
+            default      => ucfirst(strtolower($location->statut))
+        }
+    }}
     </span>
   @endif
 

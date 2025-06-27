@@ -63,14 +63,20 @@
                                 <div class="bg-light p-3 rounded">
                                     <div class="text-muted small">Quittance</div>
                                     @if($historiquepaiement->quittanceUrl)
-                                      <a href="{{ $historiquepaiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
-                                          Télécharger la quittance
-                                      </a>
-                                  @else
-                                      <span class="badge bg-danger">
-                                          Aucune quittance
-                                      </span>
-                                  @endif
+                                                    <a href="{{ $historiquepaiement->quittanceUrl }}" target="_blank" download class="btn btn-sm btn-success">
+                                                        Télécharger la quittance
+                                                    </a>
+                                                @elseif($historiquepaiement->modePaiement == 'Espece')
+                                                    <a href="{{ route('paiementespeces.facture', $historiquepaiement->idTransaction) }}"
+                                                        target="_blank" download class="btn btn-sm btn-success">
+                                                        Télécharger la facture PDF
+                                                    </a>
+
+                                                @else
+                                                    <span class="badge bg-danger">
+                                                        Aucune quittance
+                                                    </span>
+                                                    @endif
                                 </div>
                             </div>
 

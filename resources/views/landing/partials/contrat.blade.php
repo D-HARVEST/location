@@ -30,6 +30,15 @@
 </head>
 
 <body>
+    <div class="container mt-3 rounded-1">
+    <div class="d-flex justify-content-end mb-3">
+        <a href="{{ url()->previous() }}" class="btn btn-primary rounded-1">
+            <i class="fa fa-arrow-left"></i> Retour
+        </a>
+    </div>
+</div>
+
+
     <div id="contract-app" class="container mt-5">
         <contract-generator></contract-generator>
     </div>
