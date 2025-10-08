@@ -85,7 +85,7 @@
 
 
         <div class="mb-3">
-            <label class="form-label">Vous êtes ?<strong class="text-danger">*</strong></label>
+            <label class="form-label">Vous êtes ? <strong class="text-danger">*</strong></label>
             <div class="d-flex gap-3">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role_locataire" value="locataire" {{ old('role') == 'locataire' ? 'checked' : '' }} required>
