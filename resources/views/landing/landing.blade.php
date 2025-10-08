@@ -496,10 +496,7 @@
           <div class="row d-flex align-items-stretch">
             <div class="col-3 d-flex justify-content-center align-items-center">
              <div class="bg-light-primary rounded d-flex justify-content-center align-items-center">
-  <img src="{{ asset('assets/wwww.png') }}" class="img-fluid" alt=""
-       style="height: 70px; width: 300px; transform: rotate(-20deg);">
-</div>
-
+             <img src="{{ asset('assets/wwww.png') }}" class="img-fluid" alt="" style="height: 70px; width: 300px; transform: rotate(-20deg);"></div>
             </div>
             <div class="col-9 d-flex flex-column justify-content-center">
               <h4>Messagerie</h4>

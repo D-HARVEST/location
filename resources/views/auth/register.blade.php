@@ -46,7 +46,7 @@
             @enderror
         </div>
 
-        <div class="mb-3">
+        {{-- <div class="mb-3">
             <label for="npi" class="form-label">Numéro personnel d'identifiaction(NPI)</label>
            <input id="npi" type="text"
     class="form-control @error('npi') is-invalid @enderror"
@@ -60,7 +60,7 @@
                     <strong>{{ $message }}</strong>
                 </span>
             @enderror
-        </div>
+        </div> --}}
 
         <div class="mb-3">
             <label for="phone" class="form-label">Numéro de téléphone</label>
@@ -85,7 +85,7 @@
 
 
         <div class="mb-3">
-            <label class="form-label">Choisissez votre rôle <strong class="text-danger">*</strong></label>
+            <label class="form-label">Vous êtes ?<strong class="text-danger">*</strong></label>
             <div class="d-flex gap-3">
                 <div class="form-check">
                     <input class="form-check-input" type="radio" name="role" id="role_locataire" value="locataire" {{ old('role') == 'locataire' ? 'checked' : '' }} required>

@@ -30,7 +30,7 @@ class LouerchambreRequest extends FormRequest
             'cautionLoyer' => 'nullable',
             'cautionElectricite' => 'nullable',
             'cautionEau' => 'nullable',
-            'copieContrat' =>  'nullable|file|mimes:pdf,jpg,jpeg,png,svg',
+            'copieContrat' => 'nullable|file|mimes:pdf,jpg,jpeg,png,svg|max:5024',
             'jourPaiementLoyer' => 'nullable',
         ];
     }

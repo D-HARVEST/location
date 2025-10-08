@@ -41,7 +41,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
-            'npi' => ['required', 'string', 'max:50', 'unique:users,npi'],
+            // 'npi' => ['required', 'string', 'max:50', 'unique:users,npi'],
             'phone' => ['required', 'string', 'max:50', 'unique:users,phone'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', 'string', 'exists:roles,name'],
@@ -51,8 +51,8 @@ class RegisterController extends Controller
             'email.unique' => 'L\'email est deja utilisé',
             'phone.required' => 'Le numéro de tелефone est obligatoire',
             'phone.unique' => 'Le numéro de tелефone est deja utilisé',
-            'npi.required' => 'Le NPI est obligatoire',
-            'npi.unique' => 'Le NPI est deja utilisé',
+            // 'npi.required' => 'Le NPI est obligatoire',
+            // 'npi.unique' => 'Le NPI est deja utilisé',
             'email.email' => 'L\'email doit être valide',
             'password.required' => 'Le mot de passe est obligatoire',
             'password.min' => 'Le mot de passe doit contenir au moins 8 caractères',
@@ -79,7 +79,7 @@ class RegisterController extends Controller
             'name' => $data['name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
-            'npi' => $data['npi'] ?? null,
+            // 'npi' => $data['npi'] ?? null,
             'password' => Hash::make($data['password']),
         ]);
 

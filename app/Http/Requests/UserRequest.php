@@ -27,7 +27,7 @@ class UserRequest extends FormRequest
 			'password' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:1024',
             // 'phone' => 'nullable|string',
-            'npi' => 'nullable|string',
+            // 'npi' => 'nullable|string',
         ];
     }
 }
