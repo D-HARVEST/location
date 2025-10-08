@@ -5,7 +5,7 @@
         Connectez-vous à votre compte pour continuer.
     </p>
     <hr>
-    <div class="row">
+    {{-- <div class="row">
 
         <div class="col-12">
             <a class="btn btn-white shadow-sm text-dark link-primary border fw-semibold d-flex align-items-center justify-content-center rounded-1 py-6"
@@ -15,13 +15,13 @@
                 <span class="d-none d-xxl-inline-flex"> Se connecter avec Google</span>
             </a>
         </div>
-    </div>
-    <div class="position-relative text-center my-4">
+    </div> --}}
+    {{-- <div class="position-relative text-center my-4">
         <p class="mb-0 fs-12 px-3 d-inline-block bg-body z-index-5 position-relative">
             Ou connectez-vous avec
         </p>
         <span class="border-top w-100 position-absolute top-50 start-50 translate-middle"></span>
-    </div>
+    </div> --}}
     <form method="POST" action="{{ route('login') }}" role="form">
         @csrf
         <div class="mb-3">
